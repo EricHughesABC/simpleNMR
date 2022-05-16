@@ -1,0 +1,244 @@
+df:
+    C1:
+        C1: ''
+        C13 hyb: 0
+        C2: ''
+        C3: ''
+        C4: ''
+        H1: x
+        H2: x
+        H3: x
+        J Hz:
+        - 0.0
+        J type: s
+        attached protons: 0
+        cosy: ''
+        hmbc:
+        - H1
+        - H2
+        - H3
+        hsqc: []
+        integral: 1
+        ppm: 177.7
+        symmetry: ''
+        symmetry factor: ''
+    C2:
+        C1: ''
+        C13 hyb: 1
+        C2: ''
+        C3: ''
+        C4: ''
+        H1: o
+        H2: x
+        H3: x
+        J Hz:
+        - 0.0
+        J type: s
+        attached protons: 1
+        cosy: ''
+        hmbc:
+        - H2
+        - H3
+        hsqc:
+        - H1
+        integral: 1
+        ppm: 58.6
+        symmetry: ''
+        symmetry factor: ''
+    C3:
+        C1: ''
+        C13 hyb: 2
+        C2: ''
+        C3: ''
+        C4: ''
+        H1: x
+        H2: o
+        H3: x
+        J Hz:
+        - 0.0
+        J type: s
+        attached protons: 2
+        cosy: ''
+        hmbc:
+        - H1
+        - H3
+        hsqc:
+        - H2
+        integral: 1
+        ppm: 26.4
+        symmetry: ''
+        symmetry factor: ''
+    C4:
+        C1: ''
+        C13 hyb: 3
+        C2: ''
+        C3: ''
+        C4: ''
+        H1: x
+        H2: x
+        H3: o
+        J Hz:
+        - 0.0
+        J type: s
+        attached protons: 3
+        cosy: ''
+        hmbc:
+        - H1
+        - H2
+        hsqc:
+        - H3
+        integral: 1
+        ppm: 11.2
+        symmetry: ''
+        symmetry factor: ''
+    H1:
+        C1: x
+        C13 hyb: 1
+        C2: o
+        C3: x
+        C4: x
+        H1: ''
+        H2: o
+        H3: ''
+        J Hz:
+        - 8.0
+        J type: t
+        attached protons: ''
+        cosy:
+        - H2
+        hmbc:
+        - C1
+        - C3
+        - C4
+        hsqc:
+        - C2
+        integral: 1
+        ppm: 3.7
+        symmetry: ''
+        symmetry factor: ''
+    H2:
+        C1: x
+        C13 hyb: 2
+        C2: x
+        C3: o
+        C4: x
+        H1: o
+        H2: ''
+        H3: o
+        J Hz:
+        - 10.0
+        - 8.0
+        J type: qt
+        attached protons: ''
+        cosy:
+        - H1
+        - H3
+        hmbc:
+        - C1
+        - C2
+        - C4
+        hsqc:
+        - C3
+        integral: 2
+        ppm: 1.89
+        symmetry: ''
+        symmetry factor: ''
+    H3:
+        C1: x
+        C13 hyb: 3
+        C2: x
+        C3: x
+        C4: o
+        H1: ''
+        H2: o
+        H3: ''
+        J Hz:
+        - 10.0
+        J type: t
+        attached protons: ''
+        cosy:
+        - H2
+        hmbc:
+        - C1
+        - C2
+        - C3
+        hsqc:
+        - C4
+        integral: 3
+        ppm: 0.96
+        symmetry: ''
+        symmetry factor: ''
+    ppm:
+        C1: 177.7
+        C13 hyb: ''
+        C2: 58.6
+        C3: 26.4
+        C4: 11.2
+        H1: 3.7
+        H2: 1.89
+        H3: 0.96
+        J Hz: ''
+        J type: ''
+        attached protons: ''
+        cosy: ''
+        hmbc: ''
+        hsqc: ''
+        integral: ''
+        ppm: ''
+        symmetry: ''
+        symmetry factor: ''
+dfColumns:
+- ppm
+- H1
+- H2
+- H3
+- C1
+- C2
+- C3
+- C4
+dfIndex:
+- integral
+- symmetry
+- symmetry factor
+- J type
+- J Hz
+- C13 hyb
+- attached protons
+- ppm
+- H3
+- H2
+- H1
+- C4
+- C3
+- C2
+- C1
+- hsqc
+- hmbc
+- cosy
+moleculeAtomsStr: C4H9NO2
+numCarbonGroups: 4
+numProtonGroups: 3
+udic:
+    ndim: 2
+    0:
+        car: 2400.0
+        complex: true
+        dw: 0.00020833333333333335
+        encoding: direct
+        label: 1H
+        lb: 0.5
+        obs: 400.0
+        size: 32768
+        sw: 4800.0
+        time: false
+    1:
+        car: 10500.0
+        complex: true
+        dw: 4.761904761904762e-05
+        encoding: direct
+        label: 13C
+        lb: 0.5
+        obs: 100.0
+        size: 32768
+        sw: 21000.0
+        time: false
