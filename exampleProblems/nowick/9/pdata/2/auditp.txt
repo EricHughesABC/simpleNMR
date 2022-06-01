@@ -1,0 +1,29 @@
+##TITLE= Audit trail, XWIN-NMR		Version 3.5
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr14t
+$$ /v/data/nmr14t/nmr/partII_A/9/pdata/2/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, WHAT)
+(   1,<2014-12-05 07:19:07.04 -0800>,<nmr14t>,<lowe.ps.uci.edu>,
+      <created by zg, POWCHK enabled, PULCHK disabled
+       configuration hash MD5:
+       30 00 E0 1B 21 4A 98 6A 64 58 3F 45 F4 A6 8F 83
+       data hash MD5: 2K * 256
+       CF 04 05 7A F5 69 65 D3 1D 4D 48 36 33 0B 5F 2D>)
+(   2,<2014-12-18 17:05:16.91 -0800>,<nmr14t>,<psqe.ps.uci.edu>,
+      <Start of raw data processing
+       xfb F2: SI = 2K WDW = 4 SSB = 2 FT_mod = 6 PKNL = 1 PHC0 = 147.3376 PHC1 = -8.45 F1: SI = 512 ME_mod = 1 NCOEF = 100 WDW = 4 SSB = 2 FT_mod = 5 PHC0 = 189.8006 PHC1 = -23.1125
+       data hash MD5: 2K * 512
+       E1 C3 8E 08 A8 82 91 3F 75 59 DB 5F F8 25 09 2D>)
+(   3,<2014-12-18 17:05:26.42 -0800>,<nmr14t>,<psqe.ps.uci.edu>,
+      <abs2 F2: ABSG = 5 ABSF1 = 9.928811 ABSF2 = -0.06679058
+       data hash MD5: 2K * 512
+       AA 8D 54 8F EB 5E F4 B0 0C F7 FC C1 56 00 58 33>)
+(   4,<2014-12-18 17:05:38.89 -0800>,<nmr14t>,<psqe.ps.uci.edu>,
+      <abs1 F1: ABSG = 5 ABSF1 = 9.928811 ABSF2 = -0.06679058
+       data hash MD5: 2K * 512
+       F4 DE 87 33 10 AD 3D C9 F1 66 FA AD B3 DF D9 87>)
+##END=
+
+$$ hash MD5
+$$ 9E 1C 81 25 44 4B EF BC 59 5A FD 0E 99 32 3A B4

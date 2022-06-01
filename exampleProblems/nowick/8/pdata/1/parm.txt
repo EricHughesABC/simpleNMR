@@ -1,0 +1,85 @@
+
+Current Data Parameters
+NAME           partII_A              
+EXPNO                 8              
+PROCNO                1              
+DATPATH  /Volumes/PRDMacProHD/Users/dennison/NMRdata/pdenni              
+
+F2 - Acquisition Parameters
+Date_          20141205              
+Time               3.37              
+INSTRUM         cryo500              
+PROBHD   5 mm CPTCI 1H-              
+PULPROG        ghmbc.wu              
+TD                 4096              
+SOLVENT           CDCl3              
+NS                    8              
+DS                   16              
+SWH            5000.000 Hz           
+FIDRES         1.220703 Hz           
+AQ            0.4096000 sec          
+RG               4597.6              
+DW              100.000 usec         
+DE                 6.00 usec         
+TE                298.0 K            
+CNST2       145.0000000              
+d0           0.00000300 sec          
+D1           1.25000000 sec          
+d2           0.00344828 sec          
+D6           0.05000000 sec          
+d13          0.00000300 sec          
+D16          0.00020000 sec          
+IN0          0.00001806 sec          
+
+======== CHANNEL f1 ========
+NUC1                 1H              
+P1                 7.50 usec         
+p2                15.00 usec         
+PL1                1.60 dB           
+SFO1        500.2225000 MHz          
+
+======== CHANNEL f2 ========
+NUC2                13C              
+P3                15.50 usec         
+PL2               -1.00 dB           
+SFO2        125.7941690 MHz          
+
+====== GRADIENT CHANNEL =====
+GPNAM[1]       sine.100              
+GPNAM[2]       sine.100              
+GPNAM[3]       sine.100              
+GPX1                  0 %            
+GPX2                  0 %            
+GPX3                  0 %            
+GPY1                  0 %            
+GPY2                  0 %            
+GPY3                  0 %            
+GPZ1              50.00 %            
+GPZ2              30.00 %            
+GPZ3              40.00 %            
+P16             1000.00 usec         
+
+F1 - Acquisition parameters
+TD                  512              
+SFO1           125.7942 MHz          
+FIDRES       108.131485 Hz           
+SW              220.055 ppm          
+FnMODE        undefined              
+
+F2 - Processing parameters
+SI                 2048              
+SF          500.2200334 MHz          
+WDW                SINE              
+SSB                   0              
+LB                    0 Hz           
+GB                    0              
+PC                 1.40              
+
+F1 - Processing parameters
+SI                 1024              
+MC2                  QF              
+SF          125.7804117 MHz          
+WDW                SINE              
+SSB                   0              
+LB                    0 Hz           
+GB                    0              

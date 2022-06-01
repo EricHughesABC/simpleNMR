@@ -1,0 +1,70 @@
+##TITLE= Audit trail, XWIN-NMR		Version 3.5
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr14t
+$$ /v/data/nmr14t/nmr/partII_A/1/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, WHAT)
+(   1,<2014-12-04 22:39:46.57 -0800>,<nmr14t>,<lowe.ps.uci.edu>,
+      <created by zg, POWCHK enabled, PULCHK disabled
+       configuration hash MD5:
+       30 00 E0 1B 21 4A 98 6A 64 58 3F 45 F4 A6 8F 83
+       data hash MD5: 128202
+       CD 7F D8 CA 38 91 8F 82 BD B7 B6 42 B5 1D 5A 52>)
+(   2,<2014-12-04 22:39:55.58 -0800>,<nmr14t>,<lowe.ps.uci.edu>,
+      <wrpa from 1 99 "partII_A" "nmr14t" "/v" overriding existing data
+       data hash MD5: 128202
+       CD 7F D8 CA 38 91 8F 82 BD B7 B6 42 B5 1D 5A 52>)
+(   3,<2015-01-05 17:33:24.59 -0800>,<nmr14t>,<psqe.ps.uci.edu>,
+      <Start of raw data processing
+       efp LB = 0.3 FT_mod = 6 PKNL = 1 PHC0 = -69.56152 PHC1 = 1.075955 SI = 64K 
+       data hash MD5: 64K
+       BC 3D 3D 77 43 CD 1C CE C8 7A AC 80 93 14 5D 0C>)
+(   4,<2015-01-05 17:33:29.09 -0800>,<nmr14t>,<psqe.ps.uci.edu>,
+      <apks 
+       data hash MD5: 64K
+       3C F9 21 86 6C B8 B8 28 BC 39 FC E2 5F 09 53 6E>)
+(   5,<2015-01-05 17:33:31.44 -0800>,<nmr14t>,<psqe.ps.uci.edu>,
+      <abs n ABSG = 5 
+       data hash MD5: 64K
+       06 B4 C0 3A 93 82 D3 33 FE 16 C8 58 DF E9 50 C9>)
+$$ /Volumes/PRDMacProHD/Users/dennison/NMRdata/pdenni/partII_A/1/pdata/1/auditp.txt
+(   6,<2022-05-23 13:37:10.178 -0700>,<dennison>,<magnet.ps.uci.edu>,<proc1d>,<TopSpin 4.1.1>,
+      <Start of raw data processing
+       fp FT_mod = 6 PKNL = 1 PHC0 = -64.2001 PHC1 = -5.567725 SI = 64K 
+       data hash MD5: 64K
+       38 14 08 39 D8 03 5C 9E 96 5C 5A 9E 2D 99 BF 12>)
+(   7,<2022-05-23 16:42:43.108 -0700>,<dennison>,<magnet.ps.uci.edu>,<dataserver>,<TopSpin 4.1.1>,
+      <Spectrum calibrated, SF was set. Old value: 500.220000 New value: 500.220029. Peak list modified: Yes
+       data hash MD5: 64K
+       38 14 08 39 D8 03 5C 9E 96 5C 5A 9E 2D 99 BF 12>)
+(   8,<2022-05-23 16:42:43.110 -0700>,<dennison>,<magnet.ps.uci.edu>,<dataserver>,<TopSpin 4.1.1>,
+      <Spectrum calibrated, OFFSET was set. Old value: 15.009300 New value: 14.951985. Peak list modified: Yes
+       data hash MD5: 64K
+       38 14 08 39 D8 03 5C 9E 96 5C 5A 9E 2D 99 BF 12>)
+(   9,<2022-05-23 16:43:01.605 -0700>,<dennison>,<magnet.ps.uci.edu>,<proc1d>,<TopSpin 4.1.1>,
+      <Start of raw data processing
+       efp LB = 0.3 FT_mod = 6 PKNL = 1 PHC0 = -64.2001 PHC1 = -5.567725 SI = 64K 
+       data hash MD5: 64K
+       A4 12 16 A6 03 DC 46 29 C5 CE 68 4F 59 D3 8A 96>)
+(  10,<2022-05-23 16:43:21.574 -0700>,<dennison>,<magnet.ps.uci.edu>,<proc1d>,<TopSpin 4.1.1>,
+      <pk fgphup PHC0 = -3.608752 PHC1 = 4.2 
+       data hash MD5: 64K
+       16 F4 0F A8 9A A2 75 0E 87 F5 08 CE CF 0D CF 95>)
+(  11,<2022-05-23 16:43:46.259 -0700>,<dennison>,<magnet.ps.uci.edu>,<proc1d>,<TopSpin 4.1.1>,
+      <bcm 0 0 65536 4.511740e+05 2.544224e+00 0.000000e+00 0.000000e+00 -5.139765e-15 
+       data hash MD5: 64K
+       5E DC 31 59 02 AF 69 2B B7 E9 9F D7 41 C3 E9 3D>)
+(  12,<2022-05-23 16:44:31.991 -0700>,<dennison>,<magnet.ps.uci.edu>,<dataserver>,<TopSpin 4.1.1>,
+      <Spectrum calibrated, SF was set. Old value: 500.220000 New value: 500.220029. Peak list modified: Yes
+       data hash MD5: 64K
+       5E DC 31 59 02 AF 69 2B B7 E9 9F D7 41 C3 E9 3D>)
+(  13,<2022-05-23 16:44:31.993 -0700>,<dennison>,<magnet.ps.uci.edu>,<dataserver>,<TopSpin 4.1.1>,
+      <Spectrum calibrated, OFFSET was set. Old value: 15.009300 New value: 14.951963. Peak list modified: Yes
+       data hash MD5: 64K
+       5E DC 31 59 02 AF 69 2B B7 E9 9F D7 41 C3 E9 3D>)
+(  14,<2022-05-23 16:52:33.296 -0700>,<dennison>,<magnet.ps.uci.edu>,<disknew>,<TopSpin 4.1.1>,
+      <imaginary data deleted by deli>)
+##END=
+
+$$ hash MD5
+$$ 16 48 A1 A1 1B 4A 64 13 56 2B EC D1 29 86 DA 18

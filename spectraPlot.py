@@ -53,43 +53,74 @@ def createH1C13interactivePlot(nmrproblem, h1c13distlist, ax0):
 
     return peak_overlays_dict, peak_overlays
 
-class MatplotlibH1C13Plot(Figure):
 
+class MatplotlibH1C13Plot(Figure):
     def __init__(self, nmrproblem):
 
         self.nmrproblem = nmrproblem
 
-        super(MatplotlibH1C13Plot, self).__init__(constrained_layout=True, figsize=(4,4), dpi=100)
+        super(MatplotlibH1C13Plot, self).__init__(
+            constrained_layout=True, figsize=(4, 4), dpi=100
+        )
         gs = GridSpec(2, 6, figure=self)
 
-        self.c13spec_ax = self.add_subplot(gs[0, :4], label="C13_1Dspect", gid="C13_1Dspect_id")  # carbon 1D spectrum
-        self.c13dist_ax = self.add_subplot(gs[0, 4:], label="C13_1Ddist", gid="C13_1Ddist_id")  # carbon distribution
-        self.h1spec_ax = self.add_subplot(gs[-1, :4], label="H1_1Dspect", gid="H1_1Dspect_id")  # proton 1D spectrum
-        self.h1dist_ax = self.add_subplot(gs[-1, 4:], label="H1_1Ddist", gid="H1_1Ddist_id")  # proton ppm distribution
+        self.c13spec_ax = self.add_subplot(
+            gs[0, :4], label="C13_1Dspect", gid="C13_1Dspect_id"
+        )  # carbon 1D spectrum
+        self.c13dist_ax = self.add_subplot(
+            gs[0, 4:], label="C13_1Ddist", gid="C13_1Ddist_id"
+        )  # carbon distribution
+        self.h1spec_ax = self.add_subplot(
+            gs[-1, :4], label="H1_1Dspect", gid="H1_1Dspect_id"
+        )  # proton 1D spectrum
+        self.h1dist_ax = self.add_subplot(
+            gs[-1, 4:], label="H1_1Ddist", gid="H1_1Ddist_id"
+        )  # proton ppm distribution
 
-        self.nmrproblem.peak_overlays_data = self.create1H13C1DSpectraOverlayData(self.nmrproblem)
+
+        if self.nmrproblem.data_complete:
+            self.draw_spectra(self.nmrproblem, self.c13spec_ax, self.c13dist_ax, self.h1spec_ax, self.h1dist_ax)
+
+    def draw_spectra(self, nmrproblem, c13spec_ax, c13dist_ax, h1spec_ax, h1dist_ax):
+
+        self.nmrproblem = nmrproblem 
+        self.c13spec_ax = c13spec_ax
+        self.c13dist_ax = c13dist_ax
+        self.h1spec_ax  = h1spec_ax
+        self.h1dist_ax  = h1dist_ax
+
+        self.nmrproblem.peak_overlays_data = self.create1H13C1DSpectraOverlayData(
+            self.nmrproblem
+        )
         self.nmrproblem.spectra1D = self.create1H13C1DspectraData(self.nmrproblem)
-        self.nmrproblem.distribution_data = self.createH1C13PlotDistributionsData(self.nmrproblem, 3)
+        self.nmrproblem.distribution_data = self.createH1C13PlotDistributionsData(
+            self.nmrproblem, 3
+        )
 
-        self.display1H13C1DmatplotlibSpectra(nmrproblem,[self.h1spec_ax, self.c13spec_ax])
-        self.peak_overlays_dict, self.peak_overlays = self.createH1C13matplotlibOverlaysPlot(
-                                                                self.nmrproblem,
-                                                                [self.h1spec_ax, self.c13spec_ax]
-                                                        )
+        self.display1H13C1DmatplotlibSpectra(
+            nmrproblem, [self.h1spec_ax, self.c13spec_ax]
+        )
+        (
+            self.peak_overlays_dict,
+            self.peak_overlays,
+        ) = self.createH1C13matplotlibOverlaysPlot(
+            self.nmrproblem, [self.h1spec_ax, self.c13spec_ax]
+        )
         # self.display1H13C1Dspectra([self.c13spec_ax, self.h1spec_ax], nmrproblem)
 
-        self.h1distdict, self.c13distdict = self.plotDistributions(self.nmrproblem, [self.h1dist_ax, self.c13dist_ax])
+        self.h1distdict, self.c13distdict = self.plotDistributions(
+            self.nmrproblem, [self.h1dist_ax, self.c13dist_ax]
+        )
 
         # self.c13distdict = self.plotC13Distributions(self.c13dist_ax, 3, self.nmrproblem)
         # self.h1distdict = self.plotH1Distributions(self.h1dist_ax, 3, self.nmrproblem)
 
         self.h1c13distlist = [self.h1distdict, self.c13distdict]
 
-
     def createH1C13PlotDistributionsData(self, nmrproblem, numCandidates):
 
         C13_ppm_axis = np.linspace(-30, 250, 500)
-        H1_ppm_axis = np.linspace(-2, 12, 500)
+        H1_ppm_axis = np.linspace(-2, 16, 500)
         catoms = nmrproblem.carbonAtoms
         hatoms = nmrproblem.protonAtoms
         atoms = [hatoms, catoms]
@@ -106,11 +137,16 @@ class MatplotlibH1C13Plot(Figure):
                 distributions[ci] = {}
                 for j in iprobs[ci][:numCandidates]:
 
+                    distributions[ci][j] = pd.DataFrame(
+                        {
+                            "xxx": ppm_axis[i],
+                            "yyy": H1C13df[i].loc[j, "norm"].pdf(ppm_axis[i]),
+                        }
+                    )
 
-                    distributions[ci][j] = pd.DataFrame({"xxx": ppm_axis[i], 
-                                                        "yyy": H1C13df[i].loc[j, "norm"].pdf(ppm_axis[i])})
-
-                    distributions[ci][j]["label"] = H1C13df[i].loc[j, "sF_latex_matplotlib"]
+                    distributions[ci][j]["label"] = H1C13df[i].loc[
+                        j, "sF_latex_matplotlib"
+                    ]
                     distributions[ci][j]["vline"] = float(df.loc["ppm", ci])
 
         return distributions
@@ -119,7 +155,7 @@ class MatplotlibH1C13Plot(Figure):
 
         spectra1D = {}
 
-        h1c13 = ['proton1Dspectrum', 'carbon1Dspectrum']
+        h1c13 = ["proton1Dspectrum", "carbon1Dspectrum"]
 
         udic = nmrproblem.udic
 
@@ -136,13 +172,11 @@ class MatplotlibH1C13Plot(Figure):
                 columns=["xxx", "yyy", "iii"],
             )
 
-            df = df[df["iii"] == 1.0][["xxx","yyy"]]
-
+            df = df[df["iii"] == 1.0][["xxx", "yyy"]]
 
             spectra1D[h1c13[i]] = df
 
         return spectra1D
-
 
     def create1H13C1DSpectraOverlayData(self, nmrproblem):
 
@@ -164,11 +198,14 @@ class MatplotlibH1C13Plot(Figure):
                 il = int(udic[i]["info"].loc[Hi, "pk_left"])
                 ir = int(udic[i]["info"].loc[Hi, "pk_right"])
 
-                peak_overlays_data[Hi] = pd.DataFrame({'xxx': udic[i]["axis"].ppm_scale()[il:ir],
-                                                    'yyy': udic[i]["spec"][il:ir]})
+                peak_overlays_data[Hi] = pd.DataFrame(
+                    {
+                        "xxx": udic[i]["axis"].ppm_scale()[il:ir],
+                        "yyy": udic[i]["spec"][il:ir],
+                    }
+                )
 
         return peak_overlays_data
-
 
     def createH1C13interactivePlot(self, nmrproblem, h1c13distlist, ax0):
 
@@ -206,8 +243,7 @@ class MatplotlibH1C13Plot(Figure):
 
         return peak_overlays_dict, peak_overlays
 
-
-    def createH1C13matplotlibOverlaysPlot(self, nmrproblem,  ax0):
+    def createH1C13matplotlibOverlaysPlot(self, nmrproblem, ax0):
 
         # w1 = widgets.Output()
 
@@ -237,19 +273,19 @@ class MatplotlibH1C13Plot(Figure):
 
         return peak_overlays_dict, peak_overlays
 
-
     def display1H13C1DmatplotlibSpectra(self, nmrproblem: nmrProblem.NMRproblem, ax0):
 
         xxx_labels = ["$^{1}$H [ppm]", "$^{13}$C [ppm]"]
         gid = ["h1ppm", "c13ppm"]
         spectra_id = list(nmrproblem.spectra1D.keys())
 
-
         for i, ax in enumerate(ax0):
-            ax.plot(nmrproblem.spectra1D[spectra_id[i]]["xxx"],
-                     nmrproblem.spectra1D[spectra_id[i]]["yyy"],
-                      color="black",
-                    lw=0.5)
+            ax.plot(
+                nmrproblem.spectra1D[spectra_id[i]]["xxx"],
+                nmrproblem.spectra1D[spectra_id[i]]["yyy"],
+                color="black",
+                lw=0.5,
+            )
 
             ax.set_xlim(ax.get_xlim()[::-1])
 
@@ -258,10 +294,6 @@ class MatplotlibH1C13Plot(Figure):
             ax.spines["right"].set_visible(False)
             ax.set_xlabel(xxx_labels[i], fontsize=10, gid=gid[i])
             ax.set_yticks([])
-
-
-
-
 
     # def display1H13C1Dspectra(self, ax0, nmrproblem: nmrProblem.NMRproblem):
     #     """_summary_
@@ -333,12 +365,7 @@ class MatplotlibH1C13Plot(Figure):
     #     ax0[1].set_xlabel("$^{1}$H [ppm]", fontsize=10, gid="h1ppm")
     #     ax0[1].set_yticks([])
 
-
-
-
-
-    def plotDistributions(self,  nmrproblem, ax0):
-
+    def plotDistributions(self, nmrproblem, ax0):
 
         atoms = [nmrproblem.protonAtoms, nmrproblem.carbonAtoms]
         xxx_labels = ["$^{1}$H [ppm]", "$^{13}$C [ppm]"]
@@ -358,15 +385,16 @@ class MatplotlibH1C13Plot(Figure):
 
                 for j, d in nmrproblem.distribution_data[atom_id].items():
                     if isinstance(j, (int, float)):
-                        distr, = ax.plot(d["xxx"], 
-                                         d["yyy"], 
-                                         '-', 
-                                         label=d.loc[0,"label"])
+                        (distr,) = ax.plot(
+                            d["xxx"], d["yyy"], "-", label=d.loc[0, "label"]
+                        )
 
                         distr.set_visible(False)
                         distlist.append(distr)
-                    
-                dline = ax.axvline(nmrproblem.distribution_data[atom_id][j].loc[0,"vline"], c='r')
+
+                dline = ax.axvline(
+                    nmrproblem.distribution_data[atom_id][j].loc[0, "vline"], c="r"
+                )
                 dline.set_visible(False)
                 distlist.append(dline)
 
@@ -375,8 +403,6 @@ class MatplotlibH1C13Plot(Figure):
             ax.set_xlim(ax.get_xlim()[::-1])
 
         return distdict[0], distdict[1]
-
-
 
         # plot top three candidates for each carbon present
 
@@ -409,7 +435,6 @@ class MatplotlibH1C13Plot(Figure):
         ax.set_xlabel("$^{13}$C [ppm]")
         ax.set_xlim(260, -40)
         return c13distdict
-
 
     def plotC13Distributions(self, ax, numCandidates, nmrproblem):
 

@@ -1,0 +1,50 @@
+##TITLE= Audit trail, XWIN-NMR		Version 3.5
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr14t
+$$ /v/data/nmr14t/nmr/partII_A/2/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, WHAT)
+(   1,<2014-12-04 23:35:26.22 -0800>,<nmr14t>,<lowe.ps.uci.edu>,
+      <created by zg, POWCHK enabled, PULCHK disabled
+       configuration hash MD5:
+       30 00 E0 1B 21 4A 98 6A 64 58 3F 45 F4 A6 8F 83
+       data hash MD5: 64K
+       01 C5 E2 6F EF 0A 11 6A B0 CE 60 B6 15 BD 04 E3>)
+(   2,<2015-01-05 17:40:18.30 -0800>,<nmr14t>,<psqe.ps.uci.edu>,
+      <Start of raw data processing
+       efp BC_mod = 2 LB = 1 FT_mod = 6 PKNL = 1 PHC0 = 217.5308 PHC1 = 104.3878 SI = 64K 
+       data hash MD5: 64K
+       14 17 19 1A 2B 58 79 88 0C 25 5F 34 47 35 B4 80>)
+(   3,<2015-01-05 17:40:20.93 -0800>,<nmr14t>,<psqe.ps.uci.edu>,
+      <apks 
+       data hash MD5: 64K
+       33 CD 78 9B 47 17 40 31 EC 02 59 50 C9 B1 87 1D>)
+(   4,<2015-01-05 17:40:22.12 -0800>,<nmr14t>,<psqe.ps.uci.edu>,
+      <abs n ABSG = 5 
+       data hash MD5: 64K
+       DA DA 68 9A 9F 42 80 04 E7 50 69 4B 51 7C 9A 40>)
+$$ /Volumes/PRDMacProHD/Users/dennison/NMRdata/pdenni/partII_A/2/pdata/1/auditp.txt
+(   5,<2022-05-23 13:38:29.399 -0700>,<dennison>,<magnet.ps.uci.edu>,<proc1d>,<TopSpin 4.1.1>,
+      <Start of raw data processing
+       efp BC_mod = 2 LB = 1 FT_mod = 6 PKNL = 1 PHC0 = 215.0842 PHC1 = 107.6489 SI = 64K 
+       data hash MD5: 64K
+       E8 24 E5 5E 88 AD DF 46 B4 7F 1B F1 E2 FF 14 36>)
+(   6,<2022-05-23 16:44:50.452 -0700>,<dennison>,<magnet.ps.uci.edu>,<proc1d>,<TopSpin 4.1.1>,
+      <Start of raw data processing
+       efp BC_mod = 2 LB = 1 FT_mod = 6 PKNL = 1 PHC0 = 215.0842 PHC1 = 107.6489 SI = 64K 
+       data hash MD5: 64K
+       E8 24 E5 5E 88 AD DF 46 B4 7F 1B F1 E2 FF 14 36>)
+(   7,<2022-05-23 16:44:53.391 -0700>,<dennison>,<magnet.ps.uci.edu>,<proc1d>,<TopSpin 4.1.1>,
+      <apk 
+       data hash MD5: 64K
+       79 DF 85 46 41 54 C3 65 E2 7F A4 F9 A5 80 82 59>)
+(   8,<2022-05-23 16:44:56.673 -0700>,<dennison>,<magnet.ps.uci.edu>,<proc1d>,<TopSpin 4.1.1>,
+      <abs n ABSG = 5 
+       data hash MD5: 64K
+       7A DC B9 07 F3 2A E4 CE 58 98 54 A6 6B BF 3C EB>)
+(   9,<2022-05-23 16:52:33.296 -0700>,<dennison>,<magnet.ps.uci.edu>,<disknew>,<TopSpin 4.1.1>,
+      <imaginary data deleted by deli>)
+##END=
+
+$$ hash MD5
+$$ E0 30 D4 9B CC 4A C5 6B 9F D0 3C 95 E7 75 0C 46

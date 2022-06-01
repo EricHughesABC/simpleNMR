@@ -1,0 +1,25 @@
+##TITLE= Audit trail, XWIN-NMR		Version 3.5
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr14t
+$$ /v/data/nmr14t/nmr/partII_A/99/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, WHAT)
+(   1,<2014-12-04 22:30:45.72 -0800>,<nmr14t>,<lowe.ps.uci.edu>,
+      <acquisition in progress>)
+(   2,<2014-12-04 22:36:24.89 -0800>,<nmr14t>,<lowe.ps.uci.edu>,
+      <Start of raw data processing
+       efp LB = 0.3 FT_mod = 6 PKNL = 1 PHC0 = -67.22361 PHC1 = -1.441576 SI = 64K 
+       data hash MD5: 64K
+       31 BF 1D B2 F3 83 82 E4 E0 18 CA 29 85 63 C1 75>)
+$$ /Volumes/PRDMacProHD/Users/dennison/NMRdata/pdenni/partII_A/99/pdata/1/auditp.txt
+(   3,<2022-05-23 16:52:02.362 -0700>,<dennison>,<magnet.ps.uci.edu>,<proc1d>,<TopSpin 4.1.1>,
+      <Start of raw data processing
+       efp LB = 0.3 FT_mod = 6 PKNL = 1 PHC0 = -67.22361 PHC1 = -1.441576 SI = 64K 
+       data hash MD5: 64K
+       7D 08 F5 5F BF 1D 87 D0 4F B3 00 11 69 1E C0 12>)
+(   4,<2022-05-23 16:52:33.299 -0700>,<dennison>,<magnet.ps.uci.edu>,<disknew>,<TopSpin 4.1.1>,
+      <imaginary data deleted by deli>)
+##END=
+
+$$ hash MD5
+$$ A3 5C 81 91 0E FE DD 67 7D EB 0C 3B A9 9B 8A 41

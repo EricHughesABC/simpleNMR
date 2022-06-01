@@ -1,0 +1,85 @@
+
+Current Data Parameters
+USER             nmr14t                
+NAME           partII_A                
+EXPNO                 2                
+PROCNO                1                
+
+F2 - Acquisition Parameters
+Date_          20141204                
+Time              23.35                
+INSTRUM         cryo500                
+PROBHD   5 mm CPTCI 1H-                
+PULPROG  SpinEchopg30gp.prd                
+TD                65536                
+SOLVENT           CDCl3                
+NS                 1024                
+DS                   16                
+SWH           30303.031 Hz             
+FIDRES         0.462388 Hz             
+AQ            1.0813940 sec            
+RG               7298.2                
+DW               16.500 usec           
+DE                 6.00 usec           
+TE                298.0 K              
+D1           0.25000000 sec            
+d11          0.03000000 sec            
+D16          0.00020000 sec            
+d17          0.00019600 sec            
+MCREST       0.00000000 sec            
+MCWRK        0.01500000 sec            
+P2                33.10 usec           
+
+======== CHANNEL f1 ========
+NUC1                13C                
+P1                16.55 usec           
+P11              500.00 usec           
+P12             2000.00 usec           
+PL0              120.00 dB             
+PL1               -1.00 dB             
+SFO1        125.7942548 MHz            
+SP1                2.70 dB             
+SP2                2.70 dB             
+SPNAM1   Crp60,0.5,20.1                
+SPNAM2      Crp60comp.4                
+SPOFF1             0.00 Hz             
+SPOFF2             0.00 Hz             
+
+======== CHANNEL f2 ========
+CPDPRG2         waltz16                
+NUC2                 1H                
+PCPD2            100.00 usec           
+PL2                1.60 dB             
+PL12              24.50 dB             
+SFO2        500.2225011 MHz            
+
+====== GRADIENT CHANNEL =====
+GPNAM1         SINE.100                
+GPNAM2         SINE.100                
+GPX1               0.00 %              
+GPX2               0.00 %              
+GPY1               0.00 %              
+GPY2               0.00 %              
+GPZ1              30.00 %              
+GPZ2              50.00 %              
+p15              500.00 usec           
+p16             1000.00 usec           
+
+F2 - Processing parameters
+SI                65536                
+SF          125.7804117 MHz            
+WDW                  EM                
+SSB                   0                
+LB                 1.00 Hz             
+GB                    0                
+PC                 2.00                
+
+1D NMR plot parameters
+CX                22.80 cm             
+CY                 3.56 cm             
+F1P              37.000 ppm            
+F1              4653.88 Hz             
+F2P              16.000 ppm            
+F2              2012.49 Hz             
+PPMCM           0.92105 ppm/cm         
+HZCM          115.85038 Hz/cm          

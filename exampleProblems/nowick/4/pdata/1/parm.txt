@@ -1,0 +1,71 @@
+
+Current Data Parameters
+USER             nmr14t                
+NAME           partII_A                
+EXPNO                 4                
+PROCNO                1                
+
+F2 - Acquisition Parameters
+Date_          20141205                
+Time               0.29                
+INSTRUM         cryo500                
+PROBHD   5 mm CPTCI 1H-                
+PULPROG        deptsp90                
+TD                65536                
+SOLVENT           CDCl3                
+NS                  512                
+DS                    8                
+SWH           30303.031 Hz             
+FIDRES         0.462388 Hz             
+AQ            1.0813940 sec            
+RG               7298.2                
+DW               16.500 usec           
+DE                 6.00 usec           
+TE                298.0 K              
+CNST2       145.0000000                
+D1           2.00000000 sec            
+d2           0.00344828 sec            
+d12          0.00002000 sec            
+DELTA        0.00002107 sec            
+MCREST       0.00000000 sec            
+MCWRK        0.01500000 sec            
+
+======== CHANNEL f1 ========
+NUC1                13C                
+P1                16.55 usec           
+P12             2000.00 usec           
+PL0              120.00 dB             
+PL1               -1.00 dB             
+SFO1        125.7942548 MHz            
+SP2                2.70 dB             
+SPNAM2      Crp60comp.4                
+SPOFF2             0.00 Hz             
+
+======== CHANNEL f2 ========
+CPDPRG2         waltz16                
+NUC2                 1H                
+P3                 7.70 usec           
+p4                15.40 usec           
+PCPD2            100.00 usec           
+PL2                1.60 dB             
+PL12              24.50 dB             
+SFO2        500.2225011 MHz            
+
+F2 - Processing parameters
+SI                65536                
+SF          125.7804117 MHz            
+WDW                  EM                
+SSB                   0                
+LB                 1.00 Hz             
+GB                    0                
+PC                 1.00                
+
+1D NMR plot parameters
+CX                22.80 cm             
+CY                 3.56 cm             
+F1P             230.460 ppm            
+F1             28987.37 Hz             
+F2P             -10.460 ppm            
+F2             -1315.67 Hz             
+PPMCM          10.56668 ppm/cm         
+HZCM         1329.08069 Hz/cm          

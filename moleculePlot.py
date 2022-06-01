@@ -1,4 +1,5 @@
 import sys
+
 # from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QMessageBox
 # from PyQt5.QtWidgets import QApplication
 # from PyQt5.QtWebEngineWidgets import QWebEngineView
@@ -21,6 +22,7 @@ import mplcursors
 # import networkx as nx
 import nx_pylab
 import numpy as np
+
 # import pandas as pd
 
 # import PIL
@@ -30,8 +32,9 @@ import nmrProblem
 
 
 class MatplotlibMoleculePlot(Figure):
-
     def __init__(self, nmrproblem):
+
+        self.nmrproblem = nmrproblem
 
         self.mol_ind = None
         self.hmbc_ind = None
@@ -40,16 +43,48 @@ class MatplotlibMoleculePlot(Figure):
         # global mol_vertices_moved
         self.label_id = None
         self.nmrproblem = nmrproblem
-        super(MatplotlibMoleculePlot, self).__init__(figsize=(5,5), dpi=100)
+        super(MatplotlibMoleculePlot, self).__init__(figsize=(4, 4), dpi=100)
         self.ax = self.add_subplot(label="molecule", gid="molecule_id")
+        self.ax.tick_params(
+            axis="both",
+            which="both",
+            bottom=False,
+            left=False,
+            labelbottom=False,
+            labelleft=False,
+        )
+        
+        self.ax.spines["top"].set_visible(False)
+        self.ax.spines["bottom"].set_visible(False)
+        self.ax.spines["left"].set_visible(False)
+        self.ax.spines["right"].set_visible(False)
 
-        self.nmrproblem.hmbc_graph_edges = nmrProblem.create_hmbc_edges_dict(self.nmrproblem)
-        self.nmrproblem.hmbc_graphs = nmrProblem.create_hmbc_graph_fragments(self.nmrproblem, self.nmrproblem.hmbc_graph_edges)
+        if self.nmrproblem.data_complete:
+            self.draw_molecule(self.nmrproblem, self.ax)
 
-        self.mol_edges, self.mol_nodes, self.mol_labels = self.init_molecule_plots(self.ax, self.nmrproblem)
+    def draw_molecule(self, nmrproblem, ax):
+        self.nmrproblem = nmrproblem
+        self.ax = ax
+
+        self.nmrproblem.hmbc_graph_edges = nmrProblem.create_hmbc_edges_dict(
+            self.nmrproblem
+        )
+        self.nmrproblem.hmbc_graphs = nmrProblem.create_hmbc_graph_fragments(
+            self.nmrproblem, self.nmrproblem.hmbc_graph_edges
+        )
+
+        for k in self.nmrproblem.hmbc_graphs:
+            if None in self.nmrproblem.hmbc_graphs[k]['graph'].nodes():
+                self.nmrproblem.hmbc_graphs[k]['graph'].remove_node(None)
+
+        self.mol_edges, self.mol_nodes, self.mol_labels = self.init_molecule_plots(
+            self.ax, self.nmrproblem
+        )
         self.mol_vertices_moved = self.init_mol_vertices_moved(self.mol_edges)
 
-        self.hmbc_graph_plots = self.init_hmbc_graph_plots(self.ax, self.nmrproblem.hmbc_graphs)
+        self.hmbc_graph_plots = self.init_hmbc_graph_plots(
+            self.ax, self.nmrproblem.hmbc_graphs
+        )
 
         self.xmin, self.xmax = self.ax.get_xlim()
         self.ymin, self.ymax = self.ax.get_ylim()
@@ -66,14 +101,16 @@ class MatplotlibMoleculePlot(Figure):
         self.ax.set_xlim(self.xmax, self.xmin)
         self.ax.set_ylim(self.ymin, self.ymax)
 
-        
+        self.bkgnd = self.ax.imshow(
+            nmrproblem.png,
+            aspect="auto",
+            extent=[self.xmax, self.xmin, 1.3 * self.ymin, 1.3 * self.ymax],
+            alpha=0.4,
+        )
 
-        self.bkgnd = self.ax.imshow(nmrproblem.png, aspect='auto', extent=[self.xmax, self.xmin, 1.3 * self.ymin, 1.3 * self.ymax], alpha=0.4)
-
-        self.canvas.mpl_connect('pick_event', self.onpick3)
+        self.canvas.mpl_connect("pick_event", self.onpick3)
         self.canvas.mpl_connect("motion_notify_event", self.motion_notify_callback)
         self.canvas.mpl_connect("button_release_event", self.button_release_callback)
-
 
     def onpick3(self, event):
 
@@ -81,7 +118,7 @@ class MatplotlibMoleculePlot(Figure):
         ptcoords = np.ma.compressed(self.mol_nodes.get_offsets()[self.mol_ind])
 
         # find label id
-        self.label_id =  list(self.mol_labels.keys())[self.mol_ind[0]]
+        self.label_id = list(self.mol_labels.keys())[self.mol_ind[0]]
 
         # for each carbon atom in moleule check to see if it is in
         # the associated hmbc network then set the vertices_moved flag
@@ -90,14 +127,14 @@ class MatplotlibMoleculePlot(Figure):
         # update them even if they are not visible so that keep in sync
         # with the moved display
         for n in self.nmrproblem.molecule.nodes:
-            hmbc_nodes = self.hmbc_graph_plots[n]['hmbc_nodes']
-            hmbc_edges = self.hmbc_graph_plots[n]['hmbc_edges']
-            hmbc_labels = self.hmbc_graph_plots[n]['hmbc_labels']
-            hmbc_vertices_moved = self.hmbc_graph_plots[n]['hmbc_vertices_moved']
+            hmbc_nodes = self.hmbc_graph_plots[n]["hmbc_nodes"]
+            hmbc_edges = self.hmbc_graph_plots[n]["hmbc_edges"]
+            hmbc_labels = self.hmbc_graph_plots[n]["hmbc_labels"]
+            hmbc_vertices_moved = self.hmbc_graph_plots[n]["hmbc_vertices_moved"]
 
             # check if picked node is in hmbc network and then
             # if the picked coords match of the edges match set them to True
-            # so that the values of the edges will be moved during the motion notify 
+            # so that the values of the edges will be moved during the motion notify
             # event
             if self.label_id in hmbc_labels.keys():
                 self.hmbc_ind = [list(hmbc_labels.keys()).index(self.label_id)]
@@ -133,7 +170,6 @@ class MatplotlibMoleculePlot(Figure):
 
         # print(vertices_moved)
 
-
     def motion_notify_callback(self, event):
 
         if self.mol_ind is None:
@@ -149,11 +185,11 @@ class MatplotlibMoleculePlot(Figure):
         # move nodes, edges and labels associated with hmbc network for each carbon atom
         for n in self.nmrproblem.molecule.nodes:
             if n in self.hmbc_graph_plots:
-                
-                hmbc_nodes = self.hmbc_graph_plots[n]['hmbc_nodes']
-                hmbc_edges = self.hmbc_graph_plots[n]['hmbc_edges']
-                hmbc_labels = self.hmbc_graph_plots[n]['hmbc_labels']
-                hmbc_vertices_moved = self.hmbc_graph_plots[n]['hmbc_vertices_moved']
+
+                hmbc_nodes = self.hmbc_graph_plots[n]["hmbc_nodes"]
+                hmbc_edges = self.hmbc_graph_plots[n]["hmbc_edges"]
+                hmbc_labels = self.hmbc_graph_plots[n]["hmbc_labels"]
+                hmbc_vertices_moved = self.hmbc_graph_plots[n]["hmbc_vertices_moved"]
 
                 if self.label_id in hmbc_labels.keys():
                     self.hmbc_ind = [list(hmbc_labels.keys()).index(self.label_id)]
@@ -169,18 +205,17 @@ class MatplotlibMoleculePlot(Figure):
 
                     if not isinstance(hmbc_edges, list):
                         verts = []
-                        for i,e in enumerate(hmbc_edges.get_paths()):
+                        for i, e in enumerate(hmbc_edges.get_paths()):
                             v = []
-                            for j,c in enumerate(e.vertices):
+                            for j, c in enumerate(e.vertices):
                                 if hmbc_vertices_moved[i][j] == True:
-                                    v.append([x,y])
+                                    v.append([x, y])
                                 else:
                                     v.append(c)
 
                             verts.append(v)
                         # readjust coords of edges in hmbc network
                         hmbc_edges.set_verts(verts)
-
 
         # move nodes, edges and labels associated with molecule
         xy = np.asarray(self.mol_nodes.get_offsets())
@@ -195,11 +230,11 @@ class MatplotlibMoleculePlot(Figure):
 
         verts = []
 
-        for i,e in enumerate(self.mol_edges.get_paths()):
+        for i, e in enumerate(self.mol_edges.get_paths()):
             v = []
-            for j,c in enumerate(e.vertices):
+            for j, c in enumerate(e.vertices):
                 if self.mol_vertices_moved[i][j] == True:
-                    v.append([x,y])
+                    v.append([x, y])
                 else:
                     v.append(c)
 
@@ -234,8 +269,6 @@ class MatplotlibMoleculePlot(Figure):
 
         # print("hmbc_graphs\n", hmbc_graphs)
 
-
-
     def init_hmbc_graph_plots(self, ax, hmbc_graphs):
         hmbc_graph_plots = {}
 
@@ -244,85 +277,86 @@ class MatplotlibMoleculePlot(Figure):
         for n in self.nmrproblem.molecule.nodes:
             if n not in hmbc_graphs:
                 continue
-            hmbc_graph_plots[n]['hmbc_nodes'] = nx_pylab.draw_networkx_nodes(hmbc_graphs[n]['graph'], 
-                                                    hmbc_graphs[n]['xy'], 
-                                                    ax=ax,
-                                                    label=n+'_node',
-                                                    node_color='w',
-                                                    edgecolors=["r"] + hmbc_graphs[n]["colors"],
-                                                    node_size=500,
-                                                    picker=False)
+            hmbc_graph_plots[n]["hmbc_nodes"] = nx_pylab.draw_networkx_nodes(
+                hmbc_graphs[n]["graph"],
+                hmbc_graphs[n]["xy"],
+                ax=ax,
+                label=n + "_node",
+                node_color="w",
+                edgecolors=["r"] + hmbc_graphs[n]["colors"],
+                node_size=500,
+                picker=False,
+            )
 
-            hmbc_graph_plots[n]['hmbc_nodes'].set_visible(False)
+            hmbc_graph_plots[n]["hmbc_nodes"].set_visible(False)
 
-            hmbc_graph_plots[n]['hmbc_edges'] = nx_pylab.draw_networkx_edges(hmbc_graphs[n]['graph'], 
-                                                    hmbc_graphs[n]['xy'], 
-                                                    edge_color= hmbc_graphs[n]["colors"],
-                                                    width=5,
-                                                    ax=ax,
-                                                    label=n+'_edge'
-                                                    )
+            hmbc_graph_plots[n]["hmbc_edges"] = nx_pylab.draw_networkx_edges(
+                hmbc_graphs[n]["graph"],
+                hmbc_graphs[n]["xy"],
+                edge_color=hmbc_graphs[n]["colors"],
+                width=5,
+                ax=ax,
+                label=n + "_edge",
+            )
 
-            
-            hmbc_graph_plots[n]['hmbc_labels'] = nx_pylab.draw_networkx_labels(hmbc_graphs[n]['graph'], 
-                                                    hmbc_graphs[n]['xy'], 
-                                                    ax=ax)
-                                            
-            for k, v  in hmbc_graph_plots[n]['hmbc_labels'].items():                                    
+            hmbc_graph_plots[n]["hmbc_labels"] = nx_pylab.draw_networkx_labels(
+                hmbc_graphs[n]["graph"], hmbc_graphs[n]["xy"], ax=ax
+            )
+
+            for k, v in hmbc_graph_plots[n]["hmbc_labels"].items():
                 v.set_visible(False)
 
-            if not isinstance(hmbc_graph_plots[n]['hmbc_edges'], list):
-                hmbc_graph_plots[n]['hmbc_edges'].set_visible(False)
+            if not isinstance(hmbc_graph_plots[n]["hmbc_edges"], list):
+                hmbc_graph_plots[n]["hmbc_edges"].set_visible(False)
 
+                hmbc_graph_plots[n]["hmbc_vertices_moved"] = []
 
-                hmbc_graph_plots[n]['hmbc_vertices_moved'] = []
-
-                for e in hmbc_graph_plots[n]['hmbc_edges'].get_paths():
-                        vertices =[]
-                        for c in e.vertices:
-                            vertices.append(False)
-                        hmbc_graph_plots[n]['hmbc_vertices_moved'].append(vertices)
+                for e in hmbc_graph_plots[n]["hmbc_edges"].get_paths():
+                    vertices = []
+                    for c in e.vertices:
+                        vertices.append(False)
+                    hmbc_graph_plots[n]["hmbc_vertices_moved"].append(vertices)
 
             else:
-                hmbc_graph_plots[n]['hmbc_vertices_moved'] = [False]
-
-
+                hmbc_graph_plots[n]["hmbc_vertices_moved"] = [False]
 
         return hmbc_graph_plots
-
 
     def init_mol_vertices_moved(self, mol_edges):
         mol_vertices_moved = []
         for e in mol_edges.get_paths():
-            vertices =[]
+            vertices = []
             for c in e.vertices:
                 vertices.append(False)
             mol_vertices_moved.append(vertices)
 
         return mol_vertices_moved
 
+    def init_molecule_plots(self, ax, nmrproblem):
 
-    def  init_molecule_plots(self,ax, nmrproblem):
+        mol_edges = nx_pylab.draw_networkx_edges(
+            nmrproblem.molecule,
+            nmrproblem.xy3,
+            ax=ax,
+            edge_color="r",
+            label="mol_edges",
+        )
 
-        mol_edges = nx_pylab.draw_networkx_edges(nmrproblem.molecule, 
-                                                nmrproblem.xy3, 
-                                                ax=ax,                                            
-                                                edge_color='r',
-                                                label='mol_edges'
-                                                )
+        mol_nodes = nx_pylab.draw_networkx_nodes(
+            nmrproblem.molecule,
+            nmrproblem.xy3,
+            node_color=[nmrproblem.molecule.nodes[n]['node_color'] for n in nmrproblem.molecule.nodes],
+            edgecolors="r",
+            linewidths=0.2,
+            node_size=500,
+            ax=ax,
+            label="mol_nodes",
+            picker=True,
+            pickradius=5,
+        )
 
-        mol_nodes = nx_pylab.draw_networkx_nodes(nmrproblem.molecule,
-                                                    nmrproblem.xy3,
-                                                    node_color='w',
-                                                    edgecolors='w',
-                                                    node_size=500,
-                                                    ax=ax,
-                                                    label='mol_nodes',
-                                                    picker=True, pickradius=5)
-
-        mol_labels = nx_pylab.draw_networkx_labels(nmrproblem.molecule,
-                                                    nmrproblem.xy3,
-                                                    ax=ax)
+        mol_labels = nx_pylab.draw_networkx_labels(
+            nmrproblem.molecule, nmrproblem.xy3, ax=ax
+        )
 
         return mol_edges, mol_nodes, mol_labels
-

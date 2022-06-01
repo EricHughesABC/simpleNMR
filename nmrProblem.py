@@ -157,10 +157,8 @@ def read_in_cs_tables(
 
 def parse_argv(my_argv=None):
 
-    if my_argv==None:
+    if my_argv == None:
         my_argv = sys.argv
-
-    print( my_argv)
 
     datadirectories = None
     smilefilenames = None
@@ -171,32 +169,37 @@ def parse_argv(my_argv=None):
     excel_fn = None
 
     datadirectories = [d for d in my_argv[1:] if os.path.isdir(d)]
-    print("datadirectories", datadirectories)
-    excelfilenames = [ e for e in my_argv[1:] if e.endswith(".xlsx") ]
-    pngfilenames = [ s for s in my_argv[1:] if s.endswith(".png")]
-    smilefilenames = [ s for s in my_argv[1:] if s.endswith(".smi")]
-
-    print("datadirectories", datadirectories)
+    excelfilenames = [e for e in my_argv[1:] if e.endswith(".xlsx")]
+    pngfilenames = [s for s in my_argv[1:] if s.endswith(".png")]
+    smilefilenames = [s for s in my_argv[1:] if s.endswith(".smi")]
 
     data_directory = "."
     if len(datadirectories) > 0:
         data_directory = datadirectories[0]
-        print(data_directory)
 
     if len(excelfilenames) > 0:
         if os.path.exists(os.path.join(data_directory, excelfilenames[0])):
-            excel_fn =  os.path.join(data_directory, excelfilenames[0])
+            excel_fn = os.path.join(data_directory, excelfilenames[0])
         else:
-            print(os.path.join(data_directory, excelfilenames[0]), "does not exist")
-            return {'data_directory':None, 'excel_fn': None, 'smiles_fn': None, 'png_fn': None}
+            return {
+                "data_directory": None,
+                "excel_fn": None,
+                "smiles_fn": None,
+                "png_fn": None,
+            }
 
     else:
         excelfilenames = [e for e in os.listdir(data_directory) if e.endswith(".xlsx")]
         if len(excelfilenames) > 0:
-            excel_fn = os.path.join(data_directory,excelfilenames[0])
+            excel_fn = os.path.join(data_directory, excelfilenames[0])
         else:
             print("No excel files found in directory", data_directory)
-            return {'data_directory':os.getcwd(), 'excel_fn': None, 'smiles_fn': None, 'png_fn': None}
+            return {
+                "data_directory": os.getcwd(),
+                "excel_fn": None,
+                "smiles_fn": None,
+                "png_fn": None,
+            }
             # print("Program stopping")
             # sys.exit()
 
@@ -222,9 +225,14 @@ def parse_argv(my_argv=None):
         if len(pngfilenames) > 0:
             png_fn = os.path.join(data_directory, pngfilenames[0])
         else:
-            png_fn = None            
+            png_fn = None
 
-    return {'data_directory': data_directory, 'excel_fn': excel_fn, 'smiles_fn': smiles_fn, 'png_fn': png_fn}
+    return {
+        "data_directory": data_directory,
+        "excel_fn": excel_fn,
+        "smiles_fn": smiles_fn,
+        "png_fn": png_fn,
+    }
 
 
 def read_smiles_file(problemdata_info):
@@ -246,11 +254,12 @@ def read_png_file(problemdata_info):
 
 
 def create_png_from_smiles(smiles_str):
-        png = None
-        molecule = Chem.MolFromSmiles(smiles_str)
-        Draw.MolToFile(molecule,'molecule.png')
-        png = Image.open("molecule.png")
-        return png
+    png = None
+    molecule = Chem.MolFromSmiles(smiles_str)
+    Draw.MolToFile(molecule, "molecule.png")
+    png = Image.open("molecule.png")
+    return png
+
 
 def center_molecule(nmrproblem, ax, pc_x, pc_y):
 
@@ -278,6 +287,8 @@ def create_hmbc_edges_dict(nmrproblem):
     hmbc = nmrproblem.hmbc
     for i in hmbc.index:
         ci, cj = hmbc.loc[i, ["f1C_i", "f2Cp_i"]]
+        if ci == None or cj == None:
+            continue
         if ci in hmbc_edges:
             hmbc_edges[ci].add(cj)
         else:
@@ -291,8 +302,6 @@ def create_hmbc_edges_dict(nmrproblem):
     for c in nmrproblem.carbonAtoms:
         if c not in hmbc_edges:
             hmbc_edges[c] = set()
-
-    print("hmbc_edges\n", hmbc_edges)
 
     return hmbc_edges
 
@@ -326,6 +335,7 @@ def build_molecule_graph_network(nmrproblem):
     df = nmrproblem.df
     catoms = nmrproblem.carbonAtoms
     hsqc = nmrproblem.hsqc
+    c13 = nmrproblem.c13
 
     # create graph of molecule
     nmrproblem.molecule = nx.Graph()
@@ -335,7 +345,6 @@ def build_molecule_graph_network(nmrproblem):
 
     # add some node information
     for n in catoms:
-        print(n, df.loc[n, "ppm"])
         molecule.nodes[n]["c13ppm"] = str(df.loc[n, "ppm"])
         molecule.nodes[n]["label"] = n
 
@@ -351,9 +360,14 @@ def build_molecule_graph_network(nmrproblem):
     # add links to graph from cosy data
     for c in catoms:
         for l in df.loc["cosy", c]:
-            print(c, l)
             if not molecule.has_edge(c, l) and (c != l):
                 molecule.add_edge(c, l)
+
+
+    # add node color to graph
+    for i,n in enumerate(catoms):
+        print(c13.loc[i+1,"attached_protons"])
+        molecule.nodes[n]["node_color"] = nmrproblem.hmbc_edge_colors[c13.loc[i+1,"attached_protons"]]
 
 
 def build_xy3_representation_of_molecule(nmrproblem):
@@ -363,7 +377,6 @@ def build_xy3_representation_of_molecule(nmrproblem):
     atomicNumberfromSymbol = {"H": 1, "C": 6, "O": 8, "N": 7}
 
     for node in molecule.nodes:
-        print(node)
         molecule.nodes[node]["atomic_num"] = atomicNumberfromSymbol[
             "".join([c for c in node if c.isalpha()])
         ]
@@ -376,7 +389,6 @@ def build_xy3_representation_of_molecule(nmrproblem):
         molecule.nodes[node]["num_explicit_hs"] = 0
 
     for e in molecule.edges:
-        print(e)
         molecule.edges[e]["bond_type"] = rdkit.Chem.rdchem.BondType.SINGLE
 
     mmm = nx_to_mol(molecule)
@@ -387,10 +399,10 @@ def build_xy3_representation_of_molecule(nmrproblem):
 
     xy3 = {}
     for i, n in enumerate(molecule.nodes()):
-        print(i, n)
         xy3[n] = xy[i]
 
     nmrproblem.xy3 = xy3
+
 
 def nx_to_mol(G: nx.Graph) -> rdkit.Chem.Mol:
     """convert a nx.Graph to a rdkit.Chem.Mol
@@ -411,10 +423,9 @@ def nx_to_mol(G: nx.Graph) -> rdkit.Chem.Mol:
     node_is_aromatics = nx.get_node_attributes(G, "is_aromatic")
     node_hybridizations = nx.get_node_attributes(G, "hybridization")
     num_explicit_hss = nx.get_node_attributes(G, "num_explicit_hs")
-    print(atomic_nums)
     node_to_idx = {}
-    for node in G.nodes():
 
+    for node in G.nodes():
         a = Chem.Atom(atomic_nums[node])
         a.SetChiralTag(chiral_tags[node])
         a.SetFormalCharge(formal_charges[node])
@@ -425,6 +436,7 @@ def nx_to_mol(G: nx.Graph) -> rdkit.Chem.Mol:
         node_to_idx[node] = idx
 
     bond_types = nx.get_edge_attributes(G, "bond_type")
+    
     for edge in G.edges():
         first, second = edge
         ifirst = node_to_idx[first]
@@ -434,6 +446,7 @@ def nx_to_mol(G: nx.Graph) -> rdkit.Chem.Mol:
 
     Chem.SanitizeMol(mol)
     return mol
+
 
 def center_molecule(nmrproblem, ax, pc_x, pc_y):
 
@@ -465,7 +478,7 @@ def center_molecule(nmrproblem, ax, pc_x, pc_y):
 #     xy3 = nmrproblem.xy3
 #     molecule = nmrproblem.molecule
 #     udic = nmrproblem.udic
-    
+
 #     ret1 = None
 #     ret2 = None
 
@@ -504,12 +517,14 @@ def create_hmbc_graph_fragments(nmrproblem, hmbc_edges):
     xy3 = nmrproblem.xy3
     molecule = nmrproblem.molecule
     udic = nmrproblem.udic
-    
+
     ret1 = None
     ret2 = None
 
     lineCollections = []
-    hmbc_edge_colors = ["b", "g", "c", "y", "m"]
+    # hmbc_edge_colors = ["b", "g", "c", "y", "m", "w"]
+    # hmbc_edge_colors = ('#1f77b4', '#ff7f0e', '#2ca02c',  '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
+    #                     '#1f77b4', '#ff7f0e', '#2ca02c',  '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf')
     for i, c in enumerate(catoms):
 
         if c not in hmbc_edges.keys():
@@ -518,9 +533,8 @@ def create_hmbc_graph_fragments(nmrproblem, hmbc_edges):
         # create hmbc graph for node c and add  xy coodinates
         hmbc_graphs[c] = {}
         hmbc_graphs[c]["graph"] = nx.Graph()
-        hmbc_graphs[c]["xy"] = dict(
-            (k, xy3[k]) for k in [c] + list(hmbc_edges[c])
-        )
+        print("[c] + list(hmbc_edges[c])\n", [c] + list(hmbc_edges[c]))
+        hmbc_graphs[c]["xy"] = dict((k, xy3[k]) for k in [c] + list(hmbc_edges[c]) if k)
         hmbc_graphs[c]["colors"] = []
 
         # add nodes to hmbc graph
@@ -528,10 +542,10 @@ def create_hmbc_graph_fragments(nmrproblem, hmbc_edges):
 
         # add edges
         for i, c1 in enumerate(hmbc_edges[c]):
-            hmbc_graphs[c]["graph"].add_edge(c, c1)
-            hmbc_graphs[c]["colors"].append(hmbc_edge_colors[i])
-
-    print("hmbc_graphs[C1]\n", hmbc_graphs["C1"])
+            if c1:
+                print("c1", c1)
+                hmbc_graphs[c]["graph"].add_edge(c, c1)
+                hmbc_graphs[c]["colors"].append(nmrproblem.hmbc_edge_colors[i])
 
     return hmbc_graphs
 
@@ -539,12 +553,14 @@ def create_hmbc_graph_fragments(nmrproblem, hmbc_edges):
 class NMRproblem:
     def __init__(self, problemdata_info: dict, loadfromwhere=None, H1LarmorFreq=None):
 
+        self.problemDirectoryPath = problemdata_info["data_directory"]
+        self.problemDirectory = problemdata_info["data_directory"]
+        self.rootDirectory, self.problemDirectory = os.path.split(
+            problemdata_info["data_directory"]
+        )
 
-        self.problemDirectoryPath = problemdata_info['data_directory']
-        self.problemDirectory = problemdata_info['data_directory']
-        print(self.problemDirectoryPath)
-        self.rootDirectory, self.problemDirectory = os.path.split(problemdata_info['data_directory'])
-
+        self.hmbc_edge_colors = ('#1f77b4', '#ff7f0e', '#2ca02c',  '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
+                                  '#1f77b4', '#ff7f0e', '#2ca02c',  '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf')
         self.data_complete = False
 
         self.pngFiles = []
@@ -569,17 +585,16 @@ class NMRproblem:
         self.iprobs = {}
 
         self.numProtonGroups = 0
-        self.numCarbonGroups = 0
+        self.C = 0
 
         # pandas dataframes
 
-        self.h1 = pd.DataFrame(columns=excel_df_columns['h1'])
-        self.c13 = pd.DataFrame(columns=excel_df_columns['c13'])
-        self.pureshift = pd.DataFrame(columns=excel_df_columns['pureshift'])
-        self.cosy = pd.DataFrame(columns=excel_df_columns['cosy'])
-        self.hsqc = pd.DataFrame(columns=excel_df_columns['hsqc'])
-        self.hmbc = pd.DataFrame(columns=excel_df_columns['hmbc'])
-
+        self.h1 = pd.DataFrame(columns=excel_df_columns["h1"])
+        self.c13 = pd.DataFrame(columns=excel_df_columns["c13"])
+        self.pureshift = pd.DataFrame(columns=excel_df_columns["pureshift"])
+        self.cosy = pd.DataFrame(columns=excel_df_columns["cosy"])
+        self.hsqc = pd.DataFrame(columns=excel_df_columns["hsqc"])
+        self.hmbc = pd.DataFrame(columns=excel_df_columns["hmbc"])
 
         # png and smiles
 
@@ -595,9 +610,9 @@ class NMRproblem:
             "ndim": 2,
             0: {
                 "obs": obs,
-                "sw": 12 * obs,
-                "dw": 1.0 / (12 * obs),
-                "car": 12 * obs / 2.0,
+                "sw": 18 * obs,
+                "dw": 1.0 / (18 * obs),
+                "car": (((16.0-(-2.0))/2)-2.0) * obs,
                 "size": int(32 * 1024),
                 "label": "1H",
                 "complex": True,
@@ -637,7 +652,7 @@ class NMRproblem:
             self.udic[1]["car"],
         )
 
-        if isinstance(problemdata_info['excel_fn'], str ):
+        if isinstance(problemdata_info["excel_fn"], str):
             loadfromwhere = "xlsx"
 
         if isinstance(loadfromwhere, type(None)):
@@ -653,21 +668,16 @@ class NMRproblem:
                 if self.init_class_from_yml(self.problemDirectory):
                     self.data_complete = True
             elif loadfromwhere == "xlsx":
-                if self.init_class_from_excel(self.problemDirectory, problemdata_info['excel_fn']):
+                if self.init_class_from_excel(
+                    self.problemDirectory, problemdata_info["excel_fn"]
+                ):
                     self.data_complete = True
-
-        print("self.data_complete", self.data_complete)
 
         self.png = read_png_file(problemdata_info)
         self.smiles = read_smiles_file(problemdata_info)
 
-        print("self.smiles", self.smiles)
-        
         if isinstance(self.smiles, str):
             self.png = create_png_from_smiles(self.smiles)
-
-
-    
 
     def init_class_from_excel(self, excelFileNameDirName: str, excel_fn=None):
         """
@@ -689,13 +699,14 @@ class NMRproblem:
 
         if isinstance(excel_fn, str):
             self.excelFiles = [excel_fn]
-            self.excelsheets = pd.read_excel( self.excelFiles[0], sheet_name=None, index_col=0)
+            self.excelsheets = pd.read_excel(
+                self.excelFiles[0], sheet_name=None, index_col=0
+            )
 
         else:
             # Look for excel file in directory and use first one found
 
             if os.path.isdir(excelFileNameDirName):
-                print(excelFileNameDirName, os.listdir(excelFileNameDirName))
                 self.excelFiles = [
                     os.path.join(excelFileNameDirName, f)
                     for f in os.listdir(excelFileNameDirName)
@@ -717,7 +728,6 @@ class NMRproblem:
             self.excelsheets = pd.read_excel(
                 self.excelFiles[0], sheet_name=None, index_col=0
             )
-        print(self.excelsheets.keys())
 
         # define a consistant set of column names for dataframes
         # For now we a re only working with excel sheets created from MestresNove
@@ -744,28 +754,33 @@ class NMRproblem:
             print("molecule not in sheet")
             self.dbe = 0
 
-        print("self.dbe", self.dbe)
-
         #  define a consistant set of 1H and 13C chemical shifts taken fron 1D C13 and 1H pureshift spectra
-        self.c13 = self.excelsheets["C13_1D"][["ppm"]].copy()
-        self.h1 = self.excelsheets["H1_pureshift"][["ppm"]].copy()
+        # self.c13 = self.excelsheets["C13_1D"][["ppm", "Type"]].copy()
+        # self.h1 = self.excelsheets["H1_pureshift"][["ppm"]].copy()
 
-        self.numCarbonGroups, _ = self.c13.shape
-        self.numProtonGroups, _ = self.h1.shape
+
 
         # define short names for the dataframes
-        self.h1_1d_df = self.excelsheets["H1_1D"]
+        self.h1_df = self.excelsheets["H1_1D"]
         self.cosy_df = self.excelsheets["COSY"]
         self.hsqc_df = self.excelsheets["HSQC"]
         self.hmbc_df = self.excelsheets["HMBC"]
         self.pureshift_df = self.excelsheets["H1_pureshift"]
         self.c13_df = self.excelsheets["C13_1D"]
 
-        self.c13["attached_protons"] = 0
-        self.c13["ppmH1s"] = None
+
 
         # define short views of the dataframes and tidy up column names
-        self.hsqc = self.hsqc_df[["f1_ppm", "f2_ppm", "intensity"]].copy()
+        # attempt to remove solvent peaks
+        self.hsqc = self.hsqc_df[self.hsqc_df.Type == "Compound"][['f2_ppm', 'f1_ppm', 'intensity']].copy()
+        self.c13 = self.c13_df[self.c13_df.Type == "Compound"][['ppm']].copy()
+        self.h1 = self.pureshift_df[self.pureshift_df.Type == "Compound"][['ppm']].copy()
+
+        self.numCarbonGroups = self.c13.shape[0]
+        self.numProtonGroups = self.h1.shape[0]
+
+        self.c13["attached_protons"] = 0
+        self.c13["ppmH1s"] = None
 
         self.hsqc["f1_i"] = 0
         self.hsqc["f2_i"] = 0
@@ -798,11 +813,10 @@ class NMRproblem:
         self.cosy["f2Cp_i"] = ""
 
         self.c13["max_bonds"] = 4
-        print(self.h1_1d_df)
-        self.h1["integral"] = self.h1_1d_df["numProtons"]
-        self.h1["jCouplingClass"] = self.h1_1d_df["jCouplingClass"]
-        self.h1["jCouplingVals"] = self.h1_1d_df["jCouplingVals"]
-        self.h1["range"] = self.h1_1d_df["range"]
+        self.h1["integral"] = self.h1_df["numProtons"]
+        self.h1["jCouplingClass"] = self.h1_df["jCouplingClass"]
+        self.h1["jCouplingVals"] = self.h1_df["jCouplingVals"]
+        self.h1["range"] = self.h1_df["range"]
 
         # tidy up chemical shift values by replacing cosy, hsqc and hmbc picked peaks with values from c13ppm and h1ppm dataframes
 
@@ -900,38 +914,38 @@ class NMRproblem:
         for hppm in self.h1.ppm:
             self.cosy.loc[
                 self.cosy[self.cosy.f1_ppm == hppm].index, "f1_i"
-            ] = self.H1ppmH1index[hppm]
+            ] = self.H1ppmH1index.get(hppm)
             self.cosy.loc[
                 self.cosy[self.cosy.f2_ppm == hppm].index, "f2_i"
-            ] = self.H1ppmH1index[hppm]
+            ] = self.H1ppmH1index.get(hppm)
 
             self.cosy.loc[
                 self.cosy[self.cosy.f1_ppm == hppm].index, "f1p_i"
-            ] = self.hsqcH1ppmC13index[hppm]
+            ] = self.hsqcH1ppmC13index.get(hppm)
             self.cosy.loc[
                 self.cosy[self.cosy.f2_ppm == hppm].index, "f2p_i"
-            ] = self.hsqcH1ppmC13index[hppm]
+            ] = self.hsqcH1ppmC13index.get(hppm)
 
             self.cosy.loc[
                 self.cosy[self.cosy.f1_ppm == hppm].index, "f1p_ppm"
-            ] = self.hsqcH1ppmC13ppm[hppm]
+            ] = self.hsqcH1ppmC13ppm.get(hppm)
             self.cosy.loc[
                 self.cosy[self.cosy.f2_ppm == hppm].index, "f2p_ppm"
-            ] = self.hsqcH1ppmC13ppm[hppm]
+            ] = self.hsqcH1ppmC13ppm.get(hppm)
 
             self.cosy.loc[
                 self.cosy[self.cosy.f1_ppm == hppm].index, "f1H_i"
-            ] = self.H1ppmH1label[hppm]
+            ] = self.H1ppmH1label.get(hppm)
             self.cosy.loc[
                 self.cosy[self.cosy.f2_ppm == hppm].index, "f2H_i"
-            ] = self.H1ppmH1label[hppm]
+            ] = self.H1ppmH1label.get(hppm)
 
             self.cosy.loc[
                 self.cosy[self.cosy.f1_ppm == hppm].index, "f1Cp_i"
-            ] = self.hsqcH1ppmC13label[hppm]
+            ] = self.hsqcH1ppmC13label.get(hppm)
             self.cosy.loc[
                 self.cosy[self.cosy.f2_ppm == hppm].index, "f2Cp_i"
-            ] = self.hsqcH1ppmC13label[hppm]
+            ] = self.hsqcH1ppmC13label.get(hppm)
 
         # add index columns to hmbc
         self.hmbc["f1C_i"] = ""
@@ -940,21 +954,21 @@ class NMRproblem:
 
         # fill in hmbc dataframe
         for i in self.hmbc.index:
-            self.hmbc.loc[i, "f2p_ppm"] = self.hsqcH1ppmC13ppm[
+            self.hmbc.loc[i, "f2p_ppm"] = self.hsqcH1ppmC13ppm.get(
                 self.hmbc.loc[i, "f2_ppm"]
-            ]
-            self.hmbc.loc[i, "f2p_i"] = self.hsqcH1ppmC13index[
+            )
+            self.hmbc.loc[i, "f2p_i"] = self.hsqcH1ppmC13index.get(
                 self.hmbc.loc[i, "f2_ppm"]
-            ]
+            )
 
-            self.hmbc.loc[i, "f2_i"] = self.H1ppmH1index[self.hmbc.loc[i, "f2_ppm"]]
-            self.hmbc.loc[i, "f1_i"] = self.C13ppmC13index[self.hmbc.loc[i, "f1_ppm"]]
+            self.hmbc.loc[i, "f2_i"] = self.H1ppmH1index.get(self.hmbc.loc[i, "f2_ppm"])
+            self.hmbc.loc[i, "f1_i"] = self.C13ppmC13index.get(self.hmbc.loc[i, "f1_ppm"])
 
-            self.hmbc.loc[i, "f1C_i"] = self.C13ppmC13label[self.hmbc.loc[i, "f1_ppm"]]
-            self.hmbc.loc[i, "f2H_i"] = self.H1ppmH1label[self.hmbc.loc[i, "f2_ppm"]]
-            self.hmbc.loc[i, "f2Cp_i"] = self.hsqcH1ppmC13label[
+            self.hmbc.loc[i, "f1C_i"] = self.C13ppmC13label.get(self.hmbc.loc[i, "f1_ppm"])
+            self.hmbc.loc[i, "f2H_i"] = self.H1ppmH1label.get(self.hmbc.loc[i, "f2_ppm"])
+            self.hmbc.loc[i, "f2Cp_i"] = self.hsqcH1ppmC13label.get(
                 self.hmbc.loc[i, "f2_ppm"]
-            ]
+            )
 
         self.create_new_nmrproblem_df()
 
@@ -988,12 +1002,15 @@ class NMRproblem:
         # df = nmrproblem_excel.df
         for hi in self.cosy.f1H_i.unique():
             lll = self.cosy[self.cosy.f1H_i == hi]["f2H_i"].tolist()
-            lll.remove(hi)
+            print("lll", lll, hi)
+            if hi in lll:
+                lll.remove(hi)
             self.df.loc["cosy", hi] = lll
 
         for ci in self.cosy.f1Cp_i.unique():
             lll = self.cosy[self.cosy.f1Cp_i == ci]["f2Cp_i"].tolist()
-            lll.remove(ci)
+            if ci in lll:
+                lll.remove(ci)
             self.df.loc["cosy", ci] = lll
 
         self.updateHSQCHMBCgridfromExcel()
@@ -1196,8 +1213,6 @@ class NMRproblem:
                 num = "1"
 
             self.elements[e] = int(num)
-
-        print(self.elements)
 
         # calcluate DBE value formolecule
         if "C" in self.elements:
@@ -1438,24 +1453,22 @@ class NMRproblem:
         self.df = self.df.fillna("")
 
         # update df with default values
-        self.df.loc["integral", self.protonAtoms + self.carbonAtoms] = [
-            1,
-        ] * len(self.protonAtoms + self.carbonAtoms)
-        self.df.loc["J type", self.protonAtoms + self.carbonAtoms] = [
-            "s",
-        ] * len(self.protonAtoms + self.carbonAtoms)
-        self.df.loc["J Hz", self.protonAtoms + self.carbonAtoms] = [
-            "[0]",
-        ] * len(self.protonAtoms + self.carbonAtoms)
-        self.df.loc["hsqc", self.protonAtoms + self.carbonAtoms] = [
-            "[]",
-        ] * len(self.protonAtoms + self.carbonAtoms)
-        self.df.loc["hmbc", self.protonAtoms + self.carbonAtoms] = [
-            "[]",
-        ] * len(self.protonAtoms + self.carbonAtoms)
-        self.df.loc["cosy", self.protonAtoms] = [
-            "[]",
-        ] * len(self.protonAtoms)
+        self.df.loc["integral", self.protonAtoms + self.carbonAtoms] = [1,] * len(
+            self.protonAtoms + self.carbonAtoms
+        )
+        self.df.loc["J type", self.protonAtoms + self.carbonAtoms] = ["s",] * len(
+            self.protonAtoms + self.carbonAtoms
+        )
+        self.df.loc["J Hz", self.protonAtoms + self.carbonAtoms] = ["[0]",] * len(
+            self.protonAtoms + self.carbonAtoms
+        )
+        self.df.loc["hsqc", self.protonAtoms + self.carbonAtoms] = ["[]",] * len(
+            self.protonAtoms + self.carbonAtoms
+        )
+        self.df.loc["hmbc", self.protonAtoms + self.carbonAtoms] = ["[]",] * len(
+            self.protonAtoms + self.carbonAtoms
+        )
+        self.df.loc["cosy", self.protonAtoms] = ["[]",] * len(self.protonAtoms)
 
         self.udic[0]["atoms"] = self.protonAtoms
         self.udic[1]["atoms"] = self.carbonAtoms
@@ -1752,7 +1765,6 @@ class NMRproblem:
         catoms = self.carbonAtoms
 
         for i, j in enumerate(df.loc["J Hz", patoms]):
-            print(j, type(j))
             if isinstance(j, str):
                 df.loc["J Hz", patoms[i]] = [
                     float(k.strip()) for k in j.strip("][").split(",")
@@ -1808,12 +1820,12 @@ class NMRproblem:
                 )
 
                 # add jcoupling modulation by iterating over string coupling values
-                for i, j in enumerate(jType):
-                    print("i,j", i, j, type(j))
-                    for k in range(couplings[j]):
-                        print("i,j, k", i, j, k)
-                        print(jHz)
-                        fid0 = fid0 * cos(pi * jHz[i] * ttt)
+                # for i, j in enumerate(jType):
+                #     for k in range(couplings[j]):
+                #         fid0 = fid0 * cos(pi * jHz[i] * ttt)
+
+                for jc in jHz:
+                    fid0 = fid0 * cos(pi * jc * ttt)
                 fid += fid0
 
                 # fft individual peaks to define peak limits
@@ -1850,21 +1862,18 @@ class NMRproblem:
 
         for i, j in enumerate(df.loc["hsqc", pcatoms]):
             if isinstance(j, str):
-                # print( [ float(k.strip()) for k in j.strip('][').split(',')])
                 df.loc["hsqc", pcatoms[i]] = [
                     float(k.strip()) for k in j.strip("][").split(",")
                 ]
 
         for i, j in enumerate(df.loc["hmbc", pcatoms]):
             if isinstance(j, str):
-                # print( [ k.strip() for k in j.strip('][').split(',')])
                 df.loc["hmbc", pcatoms[i]] = [
                     k.strip() for k in j.strip("][").split(",")
                 ]
 
         for i, j in enumerate(df.loc["cosy", patoms]):
             if isinstance(j, str):
-                # print( [ float(k.strip()) for k in j.strip('][').split(',')])
                 df.loc["cosy", patoms[i]] = [
                     k.strip() for k in j.strip("][").split(",")
                 ]
@@ -1955,7 +1964,6 @@ class NMRproblem:
                 p = udic[i]["info"].loc[j, "peak_ranges_pts"]
                 udic[i]["info"].loc[j, "pk_left"] = p[0] - udic[i]["size"]
                 udic[i]["info"].loc[j, "pk_right"] = p[1] - udic[i]["size"]
-
 
 
 if __name__ == "__main__":

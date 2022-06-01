@@ -1,0 +1,5 @@
+P    #regions in PPM
+# 2022-05-23 16:44:34 -0700  dennison@magnet.ps.uci.edu
+# low field   high field   mi   maxi
+  14.951979637146  14.9519696099854  0.500  10000.000  # for region 1
+  14.9519596099854  -1.06663231642381  0.500  10000.000  # for region 2

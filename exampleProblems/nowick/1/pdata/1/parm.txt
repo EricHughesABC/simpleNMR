@@ -1,0 +1,52 @@
+
+Current Data Parameters
+USER             nmr14t                
+NAME           partII_A                
+EXPNO                 1                
+PROCNO                1                
+
+F2 - Acquisition Parameters
+Date_          20141204                
+Time              22.32                
+INSTRUM         cryo500                
+PROBHD   5 mm CPTCI 1H-                
+PULPROG            zg30                
+TD               128202                
+SOLVENT           CDCl3                
+NS                   64                
+DS                    2                
+SWH            8012.820 Hz             
+FIDRES         0.062502 Hz             
+AQ            7.9998546 sec            
+RG                  3.2                
+DW               62.400 usec           
+DE                 6.00 usec           
+TE                298.0 K              
+D1           0.10000000 sec            
+MCREST       0.00000000 sec            
+MCWRK        0.01500000 sec            
+
+======== CHANNEL f1 ========
+NUC1                 1H                
+P1                 7.50 usec           
+PL1                1.60 dB             
+SFO1        500.2235015 MHz            
+
+F2 - Processing parameters
+SI                65536                
+SF          500.2200334 MHz            
+WDW                  EM                
+SSB                   0                
+LB                 0.30 Hz             
+GB                    0                
+PC                 4.00                
+
+1D NMR plot parameters
+CX                22.80 cm             
+CY                15.00 cm             
+F1P               9.000 ppm            
+F1              4501.98 Hz             
+F2P               0.000 ppm            
+F2                 0.00 Hz             
+PPMCM           0.39474 ppm/cm         
+HZCM          197.45528 Hz/cm          

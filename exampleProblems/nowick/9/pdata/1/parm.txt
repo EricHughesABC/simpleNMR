@@ -1,0 +1,90 @@
+
+Current Data Parameters
+USER             nmr14t                
+NAME           partII_A                
+EXPNO                 9                
+PROCNO                1                
+
+F2 - Acquisition Parameters
+Date_          20141205                
+Time               5.36                
+INSTRUM         cryo500                
+PROBHD   5 mm CPTCI 1H-                
+PULPROG       noesygptp                
+TD                 2048                
+SOLVENT           CDCl3                
+NS                    8                
+DS                   16                
+SWH            5000.000 Hz             
+FIDRES         2.441406 Hz             
+AQ            0.2048500 sec            
+RG                    5                
+DW              100.000 usec           
+DE                 6.00 usec           
+TE                298.0 K              
+D0           0.00000300 sec            
+D1           2.00000000 sec            
+D8           0.80000001 sec            
+D16          0.00020000 sec            
+d20          0.39880002 sec            
+IN0          0.00010000 sec            
+
+======== CHANNEL f1 ========
+NUC1                 1H                
+P1                 7.50 usec           
+P2                15.00 usec           
+PL1                1.60 dB             
+SFO1        500.2225000 MHz            
+
+====== GRADIENT CHANNEL =====
+GPNAM1         sine.100                
+GPNAM2         sine.100                
+GPX1               0.00 %              
+GPX2               0.00 %              
+GPY1               0.00 %              
+GPY2               0.00 %              
+GPZ1              40.00 %              
+GPZ2             -40.00 %              
+P16             1000.00 usec           
+
+F1 - Acquisition parameters
+ND0                   2                
+TD                  256                
+SFO1           500.2225 MHz            
+FIDRES        19.531250 Hz             
+SW                9.996 ppm            
+FnMODE        undefined                
+
+F2 - Processing parameters
+SI                 2048                
+SF          500.2200334 MHz            
+WDW               QSINE                
+SSB                   2                
+LB                 0.00 Hz             
+GB                    0                
+PC                 1.40                
+
+F1 - Processing parameters
+SI                 1024                
+MC2                TPPI                
+SF          500.2200334 MHz            
+WDW               QSINE                
+SSB                   2                
+LB                 0.00 Hz             
+GB                    0                
+
+2D NMR plot parameters
+CX2               15.00 cm             
+CX1               15.00 cm             
+F2PLO             9.000 ppm            
+F2LO            4501.98 Hz             
+F2PHI             0.000 ppm            
+F2HI               0.00 Hz             
+F1PLO             9.000 ppm            
+F1LO            4501.98 Hz             
+F1PHI             0.000 ppm            
+F1HI               0.00 Hz             
+F2PPMCM         0.60000 ppm/cm         
+F2HZCM        300.13202 Hz/cm          
+F1PPMCM         0.60000 ppm/cm         
+F1HZCM        300.13202 Hz/cm          
