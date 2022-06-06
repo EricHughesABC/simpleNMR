@@ -16,10 +16,42 @@ Furthermore, when a peak is highlighed in the spectra panel, the peak is highlig
 
 The program comes with a requirements file. Due to the use of the module RDKIT, the best way to install the software is to use a CONDA installation. RDKIT can be installed using pip, but requires a python version of 3.7
 
-# Running the program
+## Running the program
 
 The program can be run from the command line by typing 
 
-python simpleNMR.py
+```python simpleNMR.py```
 
-An example excel file can be loaded from the File dr
+Then an  example excel file can be opened  from the **File** dropdown menu by clicking the **open** item.
+
+A problem directory can be opened directly for the command line by starting the program with the path of the example directory on the commandline
+
+```python simpleNMR.py exampleProblems\ethyleneDiamine```
+
+## Example problems
+
+There are a number of example problems in the **exampleProblems** folder and are listed below. Some are from real data and others are taken from extracting the data from examples in the book:
+
+```Guide to NMR Spectral Interpretation A Problem-Based Approach to Determining the Structures of Small Organic Molecules. Antonio Randazzo, 2018, Loghia Publishing. ISBN: 978-88-95122-40-3```
+
+ - ch9_013
+ - ch9_016
+ - ch9_021
+ - ch9_025
+ - ch9_041
+ - ch9_048
+ - ch9_053
+ - ch9_069
+ - ch9_092
+ - ch9_102
+ 
+ - ethyleneDiamine
+ - glycidyl_methacrylate
+ - nowick
+ - Problem74
+ - Problem79
+ - Problem90
+ - Problem90a
+ 
+
+
