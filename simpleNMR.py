@@ -1,5 +1,7 @@
 import sys
 import os
+import json
+
 from PyQt5.QtWidgets import (
     QWidget,
     QMainWindow,
@@ -46,55 +48,56 @@ from rdkit.Chem import Draw
 import networkx as nx
 # import nx_pylab
 import numpy as np
-# import pandas as pd
+import pandas as pd
 
 import PIL
 from PIL import Image
 
 import nmrProblem
-# import qt5_tabs_001
+import qt5_tabs_001 
+from qt5_tabs_001 import EditDataFrameDialog
 from moleculePlot import MatplotlibMoleculePlot
 from spectraPlot import MatplotlibH1C13Plot
 
 from numbers import Number
 
 
-def create_hmbc_graph_fragments(nmrproblem, hmbc_edges):
-    hmbc_graphs = {}
-    ntwk_labels = []
+# def create_hmbc_graph_fragments(nmrproblem, hmbc_edges):
+#     hmbc_graphs = {}
+#     ntwk_labels = []
 
-    catoms = nmrproblem.carbonAtoms
-    df = nmrproblem.df
-    xy3 = nmrproblem.xy3
-    molecule = nmrproblem.molecule
-    udic = nmrproblem.udic
+#     catoms = nmrproblem.carbonAtoms
+#     df = nmrproblem.df
+#     xy3 = nmrproblem.xy3
+#     molecule = nmrproblem.molecule
+#     udic = nmrproblem.udic
 
-    ret1 = None
-    ret2 = None
+#     ret1 = None
+#     ret2 = None
 
-    lineCollections = []
-    hmbc_edge_colors = nmrproblem.hmbc_edge_colors
+#     lineCollections = []
+#     hmbc_edge_colors = nmrproblem.hmbc_edge_colors
     
-    for i, c in enumerate(catoms):
+#     for i, c in enumerate(catoms):
 
-        if c not in hmbc_edges.keys():
-            continue
+#         if c not in hmbc_edges.keys():
+#             continue
 
-        # create hmbc graph for node c and add  xy coodinates
-        hmbc_graphs[c] = {}
-        hmbc_graphs[c]["graph"] = nx.Graph()
-        hmbc_graphs[c]["xy"] = dict((k, xy3[k]) for k in [c] + list(hmbc_edges[c]))
-        hmbc_graphs[c]["colors"] = []
+#         # create hmbc graph for node c and add  xy coodinates
+#         hmbc_graphs[c] = {}
+#         hmbc_graphs[c]["graph"] = nx.Graph()
+#         hmbc_graphs[c]["xy"] = dict((k, xy3[k]) for k in [c] + list(hmbc_edges[c]))
+#         hmbc_graphs[c]["colors"] = []
 
-        # add nodes to hmbc graph
-        hmbc_graphs[c]["graph"].add_nodes_from([c] + list(hmbc_edges[c]))
+#         # add nodes to hmbc graph
+#         hmbc_graphs[c]["graph"].add_nodes_from([c] + list(hmbc_edges[c]))
 
-        # add edges
-        for i, c1 in enumerate(hmbc_edges[c]):
-            hmbc_graphs[c]["graph"].add_edge(c, c1)
-            hmbc_graphs[c]["colors"].append(hmbc_edge_colors[i])
+#         # add edges
+#         for i, c1 in enumerate(hmbc_edges[c]):
+#             hmbc_graphs[c]["graph"].add_edge(c, c1)
+#             hmbc_graphs[c]["colors"].append(hmbc_edge_colors[i])
 
-    return hmbc_graphs
+#     return hmbc_graphs
 
 
 class MoleculePlotCanvas(FigureCanvasQTAgg):
@@ -169,8 +172,8 @@ class MainWidget(QMainWindow):
         moltoolbar = NavigationToolbar(self.moleculeCanvas, self)
         spctoolbar = NavigationToolbar(self.spectraCanvas, self)
 
-        self.webEngineView = QWebEngineView()
-        self.loadPage()
+        # self.webEngineView = QWebEngineView()
+        # self.loadPage()
 
         self.smilesInput = QLineEdit()
         self.button = QPushButton("Display Smiles Molecule", self)
@@ -180,6 +183,7 @@ class MainWidget(QMainWindow):
 
         splitter1 = QSplitter(Qt.Vertical)
         splitter2 = QSplitter(Qt.Horizontal)
+        
 
         hbox = QHBoxLayout()
         molvbox = QVBoxLayout()
@@ -196,7 +200,7 @@ class MainWidget(QMainWindow):
 
         moleculewidget.setLayout(molvbox)
 
-        jsmevbox.addWidget(self.webEngineView)
+        # jsmevbox.addWidget(self.webEngineView)
         jsmevbox.addWidget(self.smilesInput)
         jsmevbox.addWidget(self.button)
 
@@ -211,6 +215,7 @@ class MainWidget(QMainWindow):
         hbox.addWidget(splitter2)
         # hbox.addLayout(molvbox)
         self.centralWidget.setLayout(hbox)
+        splitter2.setSizes([700,400])
 
         # hover=mplcursors.HoverMode.Transient
         self.cursor = mplcursors.cursor(
@@ -230,25 +235,30 @@ class MainWidget(QMainWindow):
         # File menu
         fileMenu = QMenu("&File", self)
         menuBar.addMenu(fileMenu)
-        fileMenu.addAction(self.newAction)
+        # fileMenu.addAction(self.newAction)
+        fileMenu.addAction(self.newFromMresNovaAction)
+        # fileMenu.addAction(self.newFromTopspinAction)
         fileMenu.addAction(self.openAction)
         # Open Recent submenu
-        self.openRecentMenu = fileMenu.addMenu("Open Recent")
+        # self.openRecentMenu = fileMenu.addMenu("Open Recent")
         fileMenu.addAction(self.saveAction)
         # Separator
         fileMenu.addSeparator()
         fileMenu.addAction(self.exitAction)
+
         # Edit menu
-        editMenu = menuBar.addMenu("&Edit")
-        editMenu.addAction(self.copyAction)
-        editMenu.addAction(self.pasteAction)
-        editMenu.addAction(self.cutAction)
+        # editMenu = menuBar.addMenu("&Edit")
+        # editMenu.addAction(self.copyAction)
+        # editMenu.addAction(self.pasteAction)
+        # editMenu.addAction(self.cutAction)
+
         # Separator
-        editMenu.addSeparator()
+        # editMenu.addSeparator()
         # Find and Replace submenu
-        findMenu = editMenu.addMenu("Find and Replace")
-        findMenu.addAction("Find...")
-        findMenu.addAction("Replace...")
+        # findMenu = editMenu.addMenu("Find and Replace")
+        # findMenu.addAction("Find...")
+        # findMenu.addAction("Replace...")
+
         # Help menu
         # helpMenu = menuBar.addMenu(QIcon(":help-content.svg"), "&Help")
         helpMenu = menuBar.addMenu( "&Help")
@@ -259,15 +269,17 @@ class MainWidget(QMainWindow):
         # File toolbar
         fileToolBar = self.addToolBar("File")
         fileToolBar.setMovable(False)
-        fileToolBar.addAction(self.newAction)
+        # fileToolBar.addAction(self.newAction)
+        fileToolBar.addAction(self.newFromMresNovaAction)
+        # fileToolBar.addAction(self.newFromTopspinAction)
         fileToolBar.addAction(self.openAction)
         fileToolBar.addAction(self.saveAction)
         # Edit toolbar
-        editToolBar = QToolBar("Edit", self)
-        self.addToolBar(editToolBar)
-        editToolBar.addAction(self.copyAction)
-        editToolBar.addAction(self.pasteAction)
-        editToolBar.addAction(self.cutAction)
+        # editToolBar = QToolBar("Edit", self)
+        # self.addToolBar(editToolBar)
+        # editToolBar.addAction(self.copyAction)
+        # editToolBar.addAction(self.pasteAction)
+        # editToolBar.addAction(self.cutAction)
         # Widgets
         self.fontSizeSpinBox = QSpinBox()
         self.fontSizeSpinBox.setFocusPolicy(Qt.NoFocus)
@@ -285,6 +297,13 @@ class MainWidget(QMainWindow):
         # File actions
         self.newAction = QAction(self)
         self.newAction.setText("&New")
+
+        self.newFromMresNovaAction = QAction(self)
+        self.newFromMresNovaAction.setText("New from MNova")
+
+        # self.newFromTopspinAction = QAction(self)
+        # self.newFromTopspinAction.setText("New from Topspin")
+
         # self.newAction.setIcon(QIcon(":file-new.svg"))
         # self.openAction = QAction(QIcon(":file-open.svg"), "&Open...", self)
         # self.saveAction = QAction(QIcon(":file-save.svg"), "&Save", self)
@@ -292,25 +311,38 @@ class MainWidget(QMainWindow):
         self.saveAction = QAction("&Save", self)
         self.exitAction = QAction("&Exit", self)
         # String-based key sequences
-        self.newAction.setShortcut("Ctrl+N")
+        # self.newAction.setShortcut("Ctrl+N")
         self.openAction.setShortcut("Ctrl+O")
         self.saveAction.setShortcut("Ctrl+S")
         # Help tips
-        newTip = "Create a new file"
-        self.newAction.setStatusTip(newTip)
-        self.newAction.setToolTip(newTip)
-        self.newAction.setWhatsThis("Create a new and empty text file")
+        # newTip = "Create a new file"
+        # self.newAction.setStatusTip(newTip)
+        # self.newAction.setToolTip(newTip)
+        # self.newAction.setWhatsThis("Create a new and empty text file")
+
+        newMNovaTip = "Create a new problem from MNova"
+        self.newFromMresNovaAction.setStatusTip(newMNovaTip)
+        self.newFromMresNovaAction.setToolTip(newMNovaTip)
+        self.newFromMresNovaAction.setWhatsThis("Create a new problem from MNova data")
+
+        # newTopspinTip = "Create a new problem from topSpin"
+        # self.newFromTopspinAction.setStatusTip(newTopspinTip)
+        # self.newFromTopspinAction.setToolTip(newTopspinTip)
+        # self.newFromTopspinAction.setWhatsThis("Create a new problem from Topspin data")
+
         # Edit actions
         # self.copyAction = QAction(QIcon(":edit-copy.svg"), "&Copy", self)
         # self.pasteAction = QAction(QIcon(":edit-paste.svg"), "&Paste", self)
         # self.cutAction = QAction(QIcon(":edit-cut.svg"), "C&ut", self)
-        self.copyAction = QAction("&Copy", self)
-        self.pasteAction = QAction("&Paste", self)
-        self.cutAction = QAction("C&ut", self)
+        # self.copyAction = QAction("&Copy", self)
+        # self.pasteAction = QAction("&Paste", self)
+        # self.cutAction = QAction("C&ut", self)
+
         # Standard key sequence
-        self.copyAction.setShortcut(QKeySequence.Copy)
-        self.pasteAction.setShortcut(QKeySequence.Paste)
-        self.cutAction.setShortcut(QKeySequence.Cut)
+        # self.copyAction.setShortcut(QKeySequence.Copy)
+        # self.pasteAction.setShortcut(QKeySequence.Paste)
+        # self.cutAction.setShortcut(QKeySequence.Cut)
+
         # Help actions
         self.helpContentAction = QAction("&Help Content...", self)
         self.aboutAction = QAction("&About...", self)
@@ -331,9 +363,12 @@ class MainWidget(QMainWindow):
         # Context menu
         menu = QMenu(self.centralWidget)
         # Populating the menu with actions
-        menu.addAction(self.newAction)
+        # menu.addAction(self.newAction)
+        menu.addAction(self.newFromMresNovaAction)
+        # menu.addAction(self.newFromTopspinAction)
         menu.addAction(self.openAction)
         menu.addAction(self.saveAction)
+
         # Separator
         separator = QAction(self)
         separator.setSeparator(True)
@@ -341,24 +376,31 @@ class MainWidget(QMainWindow):
         menu.addAction(self.copyAction)
         menu.addAction(self.pasteAction)
         menu.addAction(self.cutAction)
+
         # Launching the menu
         menu.exec(event.globalPos())
 
     def _connectActions(self):
         # Connect File actions
-        self.newAction.triggered.connect(self.newFile)
+        # self.newAction.triggered.connect(self.newFile)
+        self.newFromMresNovaAction.triggered.connect(self.newFromMresNova)
+        # self.newFromTopspinAction.triggered.connect(self.newFromTopspin)
+        # self.newAction.triggered.connect(self.newFile)
         self.openAction.triggered.connect(self.openFile)
         self.saveAction.triggered.connect(self.saveFile)
         self.exitAction.triggered.connect(self.close)
+
         # Connect Edit actions
-        self.copyAction.triggered.connect(self.copyContent)
-        self.pasteAction.triggered.connect(self.pasteContent)
-        self.cutAction.triggered.connect(self.cutContent)
+        # self.copyAction.triggered.connect(self.copyContent)
+        # self.pasteAction.triggered.connect(self.pasteContent)
+        # self.cutAction.triggered.connect(self.cutContent)
+
         # Connect Help actions
         self.helpContentAction.triggered.connect(self.helpContent)
         self.aboutAction.triggered.connect(self.about)
+
         # Connect Open Recent to dynamically populate it
-        self.openRecentMenu.aboutToShow.connect(self.populateOpenRecent)
+        # self.openRecentMenu.aboutToShow.connect(self.populateOpenRecent)
 
     # Slots
     def newFile(self):
@@ -366,13 +408,31 @@ class MainWidget(QMainWindow):
         # Logic for creating a new file goes here...
         # self.csideWidget.setText("<b>File > New</b> clicked")
 
-    def openFile(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)", options=options)
-        if fileName:
-            workingdir, fn = os.path.split(fileName)
-            data_info = nmrProblem.parse_argv(["simpleNMR.py", workingdir, fn])
+    def newFromMresNova(self):
+        print("New MresNova")
+        folderpath = QFileDialog.getExistingDirectory(self, 'Select/Create New Problem Folder')
+        _, excel_fn = os.path.split(folderpath)
+        excel_fn = excel_fn + ".xlsx"
+        print("folderpath", folderpath, excel_fn)
+
+        dlg = EditDataFrameDialog(self.nmrproblem)
+
+        if dlg.exec():
+            print("Success!")
+            writer = pd.ExcelWriter(os.path.join(folderpath, excel_fn), engine='xlsxwriter')
+            for sheetname, df in nmrProblem.new_dataframes.items():
+
+
+                print(sheetname)
+                print(df)
+
+                df.to_excel(writer, sheet_name=sheetname)
+            # print(type(dlg.table_widget))
+            writer.save()
+
+
+            workingdir, fn = os.path.split(folderpath)
+            data_info = nmrProblem.parse_argv([fn, workingdir, fn])
             nmrproblem = nmrProblem.NMRproblem(data_info)
 
             if nmrproblem.data_complete:
@@ -384,13 +444,60 @@ class MainWidget(QMainWindow):
                 nmrProblem.build_molecule_graph_network(nmrproblem)
                 nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
 
+                self.initiate_windows(nmrproblem)
+        else:
+            print("Cancel!")
+
+        # Logic for creating a new file goes here...
+        # self.csideWidget.setText("<b>File > New</b> clicked")
+
+    def newFromTopspin(self):
+        print("New Topspin")
+        
+        # Logic for creating a new file goes here...
+        # self.csideWidget.setText("<b>File > New</b> clicked")
+
+    def openFile(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)", options=options)
+        if fileName:
+            workingdir, fn = os.path.split(fileName)
+            data_info = nmrProblem.parse_argv([fn, workingdir, fn])
+            nmrproblem = nmrProblem.NMRproblem(data_info)
+
+            if nmrproblem.data_complete:
+
+                define_hsqc_f2integral(nmrproblem)
+                define_c13_attached_protons(nmrproblem)
+
+                nmrProblem.build_model(nmrproblem)
+                nmrProblem.build_molecule_graph_network(nmrproblem)
+                nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
 
                 self.initiate_windows(nmrproblem)
         # Logic for opening an existing file goes here...
         # self.centralWidget.setText("<b>File > Open...</b> clicked")
 
     def saveFile(self):
-        pass
+        for n in self.nmrproblem.molecule.nodes:
+            print(n, self.moleculePlot.hmbc_graph_plots[n]["hmbc_nodes"].get_offsets()[0])
+            self.nmrproblem.xy3[n] = self.moleculePlot.hmbc_graph_plots[n]["hmbc_nodes"].get_offsets()[0]
+
+        if hasattr(self.nmrproblem, 'xy'):
+            print( "xy\n", self.nmrproblem.xy)
+        if hasattr(self.nmrproblem, 'xy3'):
+            print( "xy3\n", self.nmrproblem.xy3)
+
+            for k,v in self.nmrproblem.xy3.items():
+                if isinstance(v, np.ndarray):
+                    self.nmrproblem.xy3[k] = v.tolist()
+
+            print(os.path.join(self.nmrproblem.problemDirectoryPath, "xy3.json"))
+            with open(os.path.join(self.nmrproblem.problemDirectoryPath, "xy3.json"), "w") as fp:
+                json.dump(self.nmrproblem.xy3, fp, indent=2)
+                print("saving xy3.json")
+
         # Logic for saving a file goes here...
         # self.centralWidget.setText("<b>File > Save</b> clicked")
 
@@ -662,12 +769,13 @@ class MainWidget(QMainWindow):
         QMessageBox.question(
             self, "Smiles", "Molecule: " + smilesText, QMessageBox.Ok, QMessageBox.Ok
         )
-        # self.mplplot.molecule_ax.clear()
-        # self.mplplot.molecule_ax.set_title(smilesText)
 
-        # print(type(self.mplplot.ax))
-        # ax = self.mplplot.pltlines.axes
-        # ax.text(1, 1, smilesText, ha='left', rotation=15, wrap=True)
+
+        with open(os.path.join(self.nmrproblem.problemDirectoryPath, self.nmrproblem.problemDirectory+".smi"), "w") as fp:
+            fp.write(smilesText)
+
+        # save smiles string to nmrproblem
+        self.nmrproblem.smiles = smilesText
 
         molecule = Chem.MolFromSmiles(smilesText)
         Draw.MolToFile(molecule, "molecule.png")
@@ -675,15 +783,16 @@ class MainWidget(QMainWindow):
             PIL.Image.FLIP_LEFT_RIGHT
         )
 
-        self.moleculePlot.bkgnd.set_data(self.nmrproblem.png)
-        # self.mplplot.ax.imshow(molecule_image, alpha=0.5)
+        if hasattr(self.moleculePlot, "bkgnd"):
+            self.moleculePlot.bkgnd.set_data(self.nmrproblem.png)
+        else:
+            self.moleculePlot.bkgnd = self.moleculePlot.ax.imshow(
+                np.fliplr(self.nmrproblem.png),
+                aspect="auto",
+                extent=[1.0*self.moleculePlot.xmax, 1.0*self.moleculePlot.xmin, 1.5*self.moleculePlot.ymin, 1.5*self.moleculePlot.ymax],
+                alpha=0.4,
+            )
 
-        # self.mplplot.ax.set_xlim(350,-50)
-        # self.mplplot.ax.set_ylim(350, -50)
-
-        # self.mplplot.draw()
-
-        # self.mplplot.update_molecule_plot()
 
     def highlight_hmbc_peaks(self, lbl, sel):
         print("lbl", lbl)
@@ -760,6 +869,7 @@ def define_hsqc_f2integral(nmrproblem):
 
     for i in h1.index:
         if i in hsqc.index:
+            print(i, np.round(h1.loc[hsqc.loc[i, "f2_i"], "integral"]))
             hsqc.loc[i, "f2_integral"] = int(
                 np.round(h1.loc[hsqc.loc[i, "f2_i"], "integral"])
             )
@@ -787,6 +897,7 @@ def main(nmrproblem):
 if __name__ == "__main__":
 
     data_info = nmrProblem.parse_argv()
+    print("data_info\n", data_info)
     nmrproblem = nmrProblem.NMRproblem(data_info)
 
 
@@ -797,6 +908,7 @@ if __name__ == "__main__":
         nmrProblem.build_model(nmrproblem)
         nmrProblem.build_molecule_graph_network(nmrproblem)
         nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
+        # nmrProblem.build_xy3_representation_of_molecule_from_smiles(nmrproblem)
 
 
     print(nmrproblem.c13)

@@ -279,6 +279,10 @@ class MatplotlibH1C13Plot(Figure):
         gid = ["h1ppm", "c13ppm"]
         spectra_id = list(nmrproblem.spectra1D.keys())
 
+        
+
+
+
         for i, ax in enumerate(ax0):
             ax.plot(
                 nmrproblem.spectra1D[spectra_id[i]]["xxx"],
@@ -287,7 +291,8 @@ class MatplotlibH1C13Plot(Figure):
                 lw=0.5,
             )
 
-            ax.set_xlim(ax.get_xlim()[::-1])
+            # ax.set_xlim(ax.get_xlim()[::-1])
+            ax.set_xlim(nmrproblem.min_max_1D_ppm[i])
 
             ax.spines["top"].set_visible(False)
             ax.spines["left"].set_visible(False)
@@ -382,7 +387,7 @@ class MatplotlibH1C13Plot(Figure):
 
             for atom_id in atoms[i]:
                 distlist = []
-
+                j=None
                 for j, d in nmrproblem.distribution_data[atom_id].items():
                     if isinstance(j, (int, float)):
                         (distr,) = ax.plot(
@@ -391,14 +396,14 @@ class MatplotlibH1C13Plot(Figure):
 
                         distr.set_visible(False)
                         distlist.append(distr)
+                if j:
+                    dline = ax.axvline(
+                        nmrproblem.distribution_data[atom_id][j].loc[0, "vline"], c="r"
+                    )
+                    dline.set_visible(False)
+                    distlist.append(dline)
 
-                dline = ax.axvline(
-                    nmrproblem.distribution_data[atom_id][j].loc[0, "vline"], c="r"
-                )
-                dline.set_visible(False)
-                distlist.append(dline)
-
-                distdict[i][atom_id] = distlist
+                    distdict[i][atom_id] = distlist
 
             ax.set_xlim(ax.get_xlim()[::-1])
 

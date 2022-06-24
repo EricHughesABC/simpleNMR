@@ -59,6 +59,11 @@ class MatplotlibMoleculePlot(Figure):
         self.ax.spines["left"].set_visible(False)
         self.ax.spines["right"].set_visible(False)
 
+        self.xmin = -1.5
+        self.ymin = -1.5
+        self.xmax = 1.5
+        self.ymax = 1.5
+
         if self.nmrproblem.data_complete:
             self.draw_molecule(self.nmrproblem, self.ax)
 
@@ -86,27 +91,42 @@ class MatplotlibMoleculePlot(Figure):
             self.ax, self.nmrproblem.hmbc_graphs
         )
 
-        self.xmin, self.xmax = self.ax.get_xlim()
-        self.ymin, self.ymax = self.ax.get_ylim()
+        # self.xmin, self.xmax = self.ax.get_xlim()
+        # self.ymin, self.ymax = self.ax.get_ylim()
 
-        self.xmin = self.xmin - 0.2 * np.abs(self.xmin)
-        self.xmax = self.xmax + 0.2 * self.xmax
+        # self.xmin = self.xmin - 0.2 * np.abs(self.xmin)
+        # self.xmax = self.xmax + 0.2 * self.xmax
 
-        self.ymin = self.ymin - 0.2 * np.abs(self.ymin)
-        self.ymax = self.ymax + 0.2 * self.ymax
+        # ydiff = self.ymax - self.ymin
+        # xdiff = self.xmax - self.xmin
+
+        # print("ydiff", ydiff)
+
+        # self.ymin = self.ymin - 5*ydiff
+        # self.ymax = self.ymax + 5*ydiff
+
+
 
         self.ax.set_xlim(self.xmin, self.xmax)
         self.ax.set_ylim(self.ymin, self.ymax)
 
-        self.ax.set_xlim(self.xmax, self.xmin)
-        self.ax.set_ylim(self.ymin, self.ymax)
+        # print("self.xmin, self.xmax, self.ymin, self.ymax")
+        # print(self.xmin, self.xmax, self.ymin, self.ymax)
 
-        self.bkgnd = self.ax.imshow(
-            nmrproblem.png,
-            aspect="auto",
-            extent=[self.xmax, self.xmin, 1.3 * self.ymin, 1.3 * self.ymax],
-            alpha=0.4,
-        )
+        print(nmrproblem.xy3)
+
+        # self.ax.set_xlim(self.xmax, self.xmin)
+        # self.ax.set_ylim(self.ymin, self.ymax)
+
+        print("nmrproblem.png", type(nmrproblem.png))
+
+        if not isinstance(nmrproblem.png, type(None)):
+            self.bkgnd = self.ax.imshow(
+                np.fliplr(nmrproblem.png),
+                aspect="auto",
+                extent=[1.0*self.xmax, 1.0*self.xmin, 1.5*self.ymin, 1.5*self.ymax],
+                alpha=0.4,
+            )
 
         self.canvas.mpl_connect("pick_event", self.onpick3)
         self.canvas.mpl_connect("motion_notify_event", self.motion_notify_callback)
@@ -339,6 +359,7 @@ class MatplotlibMoleculePlot(Figure):
             nmrproblem.xy3,
             ax=ax,
             edge_color="r",
+            width=2,
             label="mol_edges",
         )
 
