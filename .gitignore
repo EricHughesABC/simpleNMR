@@ -6,6 +6,16 @@ __pycache__/
 # C extensions
 *.so
 
+# python Notebooks
+*.ipynb
+
+# molecule png file
+molecule.png
+
+
+# Development files notebooks
+develop/
+
 # Distribution / packaging
 .Python
 build/
@@ -76,6 +86,7 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+*/.ipynb_checkpoints/*
 
 # IPython
 profile_default/

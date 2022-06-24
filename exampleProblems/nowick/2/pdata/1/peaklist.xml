@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PeakList>
+  <PeakList1D>
+    <PeakList1DHeader creator="dennison" date="2022-05-23T16:45:09.612-07:00" expNo="2" name="partII_A" owner="" procNo="1" source="/Volumes/PRDMacProHD/Users/dennison/NMRdata/pdenni">
+      <PeakPickDetails>F1=230.587906ppm, F2=-10.332218ppm, MI=0.50cm, MAXI=10000.00cm, PC=2.000
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="179.118301" intensity="2.146901e+00" type="0"/>
+    <Peak1D F1="100.089226" intensity="2.824846e+00" type="0"/>
+    <Peak1D F1="77.482285" intensity="7.915502e+00" type="0"/>
+    <Peak1D F1="77.228188" intensity="8.236349e+00" type="0"/>
+    <Peak1D F1="76.973976" intensity="8.195473e+00" type="0"/>
+    <Peak1D F1="71.141716" intensity="1.565000e+01" type="0"/>
+    <Peak1D F1="61.825726" intensity="1.216087e+01" type="0"/>
+    <Peak1D F1="34.155121" intensity="1.464743e+01" type="0"/>
+    <Peak1D F1="33.650669" intensity="1.347418e+01" type="0"/>
+    <Peak1D F1="33.183640" intensity="1.459682e+01" type="0"/>
+    <Peak1D F1="25.153006" intensity="1.487298e+01" type="0"/>
+    <Peak1D F1="20.709517" intensity="1.463676e+01" type="0"/>
+    <Peak1D F1="19.208025" intensity="1.453711e+01" type="0"/>
+  </PeakList1D>
+</PeakList>

@@ -1,0 +1,28 @@
+##TITLE= Parameter file, TopSpin 4.1.1
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 16	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= dennison
+$$ 2022-05-23 16:48:04.432 -0700  dennison@magnet.ps.uci.edu
+$$ /Volumes/PRDMacProHD/Users/dennison/NMRdata/pdenni/partII_A/6/pdata/1/clevels
+$$ process /opt/topspin4.1.1/prog/mod/dataserver
+##$LEVELS= (0..255)
+-29684345.3595648 -16491302.977536 -9161834.98752 -5089908.3264 -2827726.848
+-1570959.36 -872755.2 -484864 484864 872755.2 1570959.36 2827726.848 5089908.3264
+9161834.98752 16491302.977536 29684345.3595648 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+##$LEVSIGN= 3
+##$MAXLEV= 8
+##$METHOD= 0
+##$NEGBASE= -7576
+##$NEGINCR= 1.8
+##$POSBASE= 7576
+##$POSINCR= 1.8
+##END=

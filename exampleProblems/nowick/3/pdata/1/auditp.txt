@@ -1,0 +1,41 @@
+##TITLE= Audit trail, XWIN-NMR		Version 3.5
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr14t
+$$ /v/data/nmr14t/nmr/partII_A/3/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, WHAT)
+(   1,<2014-12-05 00:02:41.40 -0800>,<nmr14t>,<lowe.ps.uci.edu>,
+      <created by zg, POWCHK enabled, PULCHK disabled
+       configuration hash MD5:
+       30 00 E0 1B 21 4A 98 6A 64 58 3F 45 F4 A6 8F 83
+       data hash MD5: 64K
+       15 38 BA AD 56 EC 93 71 3E E7 B4 B1 83 C2 04 E3>)
+(   2,<2014-12-13 18:47:30.15 -0800>,<nmr14t>,<psqe.ps.uci.edu>,
+      <Start of raw data processing
+       efp BC_mod = 2 LB = 1 FT_mod = 6 PKNL = 1 PHC0 = 478.9673 PHC1 = -52.61886 SI = 64K 
+       data hash MD5: 64K
+       BD A1 3B C2 64 EC B0 19 69 14 F0 45 89 30 4F 74>)
+(   3,<2014-12-13 18:47:32.10 -0800>,<nmr14t>,<psqe.ps.uci.edu>,
+      <apks 
+       data hash MD5: 64K
+       51 4D F7 38 EB F6 97 7D 0D 0E DA 38 0E E7 21 10>)
+(   4,<2014-12-13 18:47:32.63 -0800>,<nmr14t>,<psqe.ps.uci.edu>,
+      <abs n ABSG = 5 
+       data hash MD5: 64K
+       BF 16 52 DF F2 C8 8D 77 EC 82 D9 FC 04 FF 92 06>)
+$$ /Volumes/PRDMacProHD/Users/dennison/NMRdata/pdenni/partII_A/3/pdata/1/auditp.txt
+(   5,<2022-05-23 16:45:19.309 -0700>,<dennison>,<magnet.ps.uci.edu>,<proc1d>,<TopSpin 4.1.1>,
+      <Start of raw data processing
+       efp BC_mod = 2 LB = 1 FT_mod = 6 PKNL = 1 PHC0 = 217.5308 PHC1 = 104.3878 SI = 64K 
+       data hash MD5: 64K
+       01 27 B2 3B 94 E3 AD 76 12 D2 94 76 5B E0 E1 5B>)
+(   6,<2022-05-23 16:45:21.558 -0700>,<dennison>,<magnet.ps.uci.edu>,<proc1d>,<TopSpin 4.1.1>,
+      <apk 
+       data hash MD5: 64K
+       8A 18 8E 75 93 D5 19 B5 7E CA 8D 1B BE 63 81 6B>)
+(   7,<2022-05-23 16:52:33.297 -0700>,<dennison>,<magnet.ps.uci.edu>,<disknew>,<TopSpin 4.1.1>,
+      <imaginary data deleted by deli>)
+##END=
+
+$$ hash MD5
+$$ BC 7E 31 B7 17 99 3E E3 06 08 BC 7E 2F 86 B9 C0

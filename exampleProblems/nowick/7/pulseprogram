@@ -1,0 +1,230 @@
+# 1 "/u/exp/stan/nmr/lists/pp/inv4gp.wu"
+;inv4gp.wu
+;avance-version
+;2D H-1/X correlation via heteronuclear zero and double quantum
+;   coherence
+;with decoupling during acquisition
+;using gradient pulses for selection
+;use pulseprogram 'inv4gpnd1d' for setup
+
+
+# 1 "/u/exp/stan/nmr/lists/pp/Avance.incl" 1
+;Avance.incl
+;
+;avance-version (03/02/17)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;$Id: Avance1.incl,v 1.7.2.3 2003/02/25 14:48:47 ber Exp $
+# 10 "/u/exp/stan/nmr/lists/pp/inv4gp.wu" 2
+
+# 1 "/u/exp/stan/nmr/lists/pp/Grad.incl" 1
+;Grad.incl  -  include file for Gradient Spectroscopy
+;
+;avance-version (02/05/31)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+define list<gradient> EA=<EA>
+
+
+
+;$Id: Grad1.incl,v 1.7 2002/06/12 09:04:22 ber Exp $
+# 11 "/u/exp/stan/nmr/lists/pp/inv4gp.wu" 2
+
+  
+
+"p2=p1*2"
+"d0=3u"
+"d2=1s/(cnst2*2)"
+"d12=20u"
+"d13=3u"
+
+"d20=d2-p16-d13-d12"
+
+
+1 ze 
+2 d1 do:f2
+3 p1 ph1
+  d2 pl2:f2 setnmr2|0 setnmr0|34|32|33
+  p3:f2 ph3
+  d0
+  p16:gp1
+  d16
+  p2 ph2
+  d13
+  p16:gp2
+  d16
+  d0
+  p3:f2 ph4
+  d13
+  p16:gp3
+  d20
+  d12 pl12:f2 setnmr2^0 setnmr0^34^32^33
+  go=2 ph31 cpd2:f2
+  d1 do:f2 wr #0 if #0 id0 zd
+  lo to 3 times td1
+exit 
+  
+
+ph1=0 
+ph2=0 
+ph3=0 2
+ph4=0 0 2 2
+ph31=0 2 2 0
+
+
+;pl1 : f1 channel - power level for pulse (default)
+;pl2 : f2 channel - power level for pulse (default)
+;pl12: f2 channel - power level for CPD/BB decoupling
+;p1 : f1 channel -  90 degree high power pulse
+;p2 : f1 channel - 180 degree high power pulse
+;p3 : f2 channel -  90 degree high power pulse
+;p16: homospoil/gradient pulse
+;d0 : incremented delay (2D)                  [3 usec]
+;d1 : relaxation delay; 1-5 * T1
+;d2 : 1/(2J)XH
+;d12: delay for power switching                      [20 usec]
+;d13: short delay                                    [3 usec]
+;d16: delay for homospoil/gradient recovery
+;d20: d2 - p16 - d13 - d12 , but >= d16
+;cnst2: = J(XH)
+;in0: 1/(2 * SW(X)) = DW(X)
+;nd0: 2
+;NS: 1 * n
+;DS: 16
+;td1: number of experiments
+;MC2: QF 
+;cpd2: decoupling according to sequence defined by cpdprg2
+;pcpd2: f2 channel - 90 degree pulse for decoupling sequence
+
+;use gradient ratio:	gp 1 : gp 2 : gp 3
+;			  50 :   30 :   40   for C-13
+;			  70 :   30 :   50   for N-15

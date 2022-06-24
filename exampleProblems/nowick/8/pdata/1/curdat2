@@ -1,0 +1,23 @@
+##TITLE= Parameter file, TopSpin 4.1.1
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 2	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr14t
+$$ 2022-05-23 13:36:35.022 -0700  dennison@magnet.ps.uci.edu
+$$ /Volumes/PRDMacProHD/Users/dennison/NMRdata/pdenni/partII_A/8/pdata/1/curdat2
+$$ process /opt/topspin4.1.1/prog/au/bin/user/getproj
+##$DATPATH2= </Volumes/PRDMacProHD/Users/dennison/NMRdata/pdenni>
+##$DATPATH3= </Volumes/PRDMacProHD/Users/dennison/NMRdata/pdenni>
+##$DU2= </v>
+##$DU3= </v>
+##$EXPNO2= 1
+##$EXPNO3= 2
+##$NAME2= <partII_A>
+##$NAME3= <partII_A>
+##$PROCNO2= 1
+##$PROCNO3= 1
+##$TYPE= <nmr>
+##$USER2= <nmr14t>
+##$USER3= <nmr14t>
+##END=

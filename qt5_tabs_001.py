@@ -1,94 +1,205 @@
 import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QWidget, QAction, QTabWidget,QVBoxLayout, QTableWidget, QHeaderView, QTableWidgetItem
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtWidgets import (QMainWindow, 
+                                QApplication, 
+                                QPushButton, 
+                                QWidget, 
+                                QAction, 
+                                QTabWidget,
+                                QVBoxLayout, 
+                                QTableWidget, 
+                                QHeaderView, 
+                                QTableWidgetItem,
+                                QTableView,
+                                QDialog,
+                                QDialogButtonBox,
+                                QLabel)
+
+from PyQt5.Qt import QApplication, QClipboard
+
+from PyQt5.QtGui import QIcon, QKeySequence
+from PyQt5.QtCore import pyqtSlot, QAbstractTableModel, Qt
 from PyQt5.QtWebEngineWidgets import QWebEngineView
+
+import pandas as pd
+import io
 
 import nmrProblem
 
+excel_orig_df_columns = {
+    "molecule": ["moleclule"],
+    "H1_1D": [
+        "Name",
+        "Shift",
+        "Range",
+        "H's",
+        "Integral",
+        "Class",
+        "J's",
+        "Method"
+    ],
+    "C13_1D": [
+        "ppm",
+        "Intensity",
+        "Width",
+        "Area",
+        "Type",
+        "Flags",
+        "Impurity/Compound",
+        "Annotation"
+    ],
+    "H1_pureshift": [
+        "ppm",
+        "Intensity",
+        "Width",
+        "Area",
+        "Type",
+        "Flags",
+        "Impurity/Compound",
+        "Annotation"
+    ],
+    "COSY": [
+        "f2 (ppm)",
+        "f1 (ppm)",
+        "Intensity",
+        "Width f2",
+        "Width f1",
+        "Volume",
+        "Type",
+        "Flags",
+        "Impurity/Compound",
+        "Annotation"
+    ],
+    "HSQC": [
+        "f2 (ppm)",
+        "f1 (ppm)",
+        "Intensity",
+        "Width f2",
+        "Width f1",
+        "Volume",
+        "Type",
+        "Flags",
+        "Impurity/Compound",
+        "Annotation"
+    ],
+    "HMBC": [        
+        "f2 (ppm)",
+        "f1 (ppm)",
+        "Intensity",
+        "Width f2",
+        "Width f1",
+        "Volume",
+        "Type",
+        "Flags",
+        "Impurity/Compound",
+        "Annotation"
+    ]
+}
 
 
-class App(QMainWindow):
+class TableModel(QAbstractTableModel):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, dataframe: pd.DataFrame):
+        super(TableModel, self).__init__()
+        self._df = dataframe
 
-        self.nmrproblem = nmrProblem.NMRproblem(nmrProblem.parse_argv())
-        self.title = 'PyQt5 tabs - pythonspot.com'
-        self.left = 100
-        self.top = 100
-        self.width = 900
-        self.height = 600
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
-        
-        self.table_widget = MyTabWidget(self, self.nmrproblem)
-        # self.setCentralWidget(self.table_widget)
+    def data(self, index, role):
+        if role == Qt.DisplayRole:
+            value = self._df.iloc[index.row(), index.column()]
+            return str(value)
 
-        layout = QVBoxLayout()
-        layout.addWidget(self.table_widget)
-        # layout.addWidget(sc)
+    def rowCount(self, index):
+        return self._df.shape[0]
 
-        # Create a placeholder widget to hold our toolbar and canvas.
-        widget = QWidget()
-        widget.setLayout(layout)
-        self.setCentralWidget(widget)
-        
-        self.show()
-    
+    def columnCount(self, index):
+        return self._df.shape[1]
 
-class tablePane(QTableWidget):
+    def headerData(self, section, orientation, role):
+        # section is the index of the column/row.
+        if role == Qt.DisplayRole:
+            if orientation == Qt.Horizontal:
+                return str(self._df.columns[section])
 
-    def __init__(self, parent, title, pd_df):
-        super(QTableWidget, self).__init__(parent)
+            if orientation == Qt.Vertical:
+                return str(self._df.index[section])
+
+    def data(self, index, role=Qt.DisplayRole):
+        if index.isValid():
+            if role == Qt.DisplayRole or role == Qt.EditRole:
+                return str(self._df.iloc[index.row(), index.column()])
+        return None
+
+    def setData(self, index, value, role):
+        if role == Qt.EditRole:
+            self._df.iloc[index.row(), index.column()] = value
+            print(self._df)
+            return True
+
+    def flags(self, index):
+        return Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsEditable
+
+   
+
+class tablePane(QTableView):
+
+    def __init__(self, parent, tab_title: str, pd_df: pd.DataFrame):
+        # super(QTableView, self).__init__(parent)
+        super().__init__(parent)
         self.df = pd_df
 
-        # set table dimension
-        nRows, nColumns = self.df.shape
-        self.setColumnCount(nColumns)
-        self.setRowCount(nRows)
+        self.model = TableModel(self.df)
+        self.setModel(self.model)
 
-        self.setHorizontalHeaderLabels(self.df.columns)
-        self.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.setAlternatingRowColors(True)
+        parent.addTab(self, tab_title)
 
-        # data insertion
-        for i in range(self.rowCount()):
-            for j in range(self.columnCount()):
-                self.setItem(i, j, QTableWidgetItem(str(self.df.iloc[i, j])))
 
-        parent.addTab(self, title)
+    def keyPressEvent(self, event):
+    #     # clipboard = QApplication.clipboard()
+    #     # if event.matches(QKeySequence.Copy):
+    #     #     print('Ctrl + C')
+    #     #     clipboard.setText("some text")
+        if event.matches(QKeySequence.Paste):
+            print(QApplication.clipboard().text())
+            print('Ctrl + V')
+
+            ctext = QApplication.clipboard().text()
+            if "\t" in ctext:
+                print("tabs in ctext")
+                if ctext.endswith("\t"):
+                    print("remove extra tab")
+                    ctext = ctext.rstrip("\t")
+                else:
+                    print("No extra tab at end")
+                print(ctext)
+                iotext = io.StringIO(ctext)
+                # self.b.insertPlainText(text + '\n')
+                print("\nPandas dataframe\n")
+
+                self.df = pd.read_csv(iotext, sep="\t", index_col=0, dtype=str)
+                print(self.df)
+
+                self.model = TableModel(self.df)
+                self.setModel(self.model)
+                self.setAlternatingRowColors(True)
+
+
+        QTableView.keyPressEvent(self, event)
+        
+
 
 class MyTabWidget(QTabWidget):
     
-    def __init__(self, parent, nmrproblem):
+    def __init__(self, parent, tabTitles_dataframes):
         super(QTabWidget, self).__init__(parent)
         self.layout = QVBoxLayout()
         self.resize(300,200)
+
+        self.tables = {}
         
-        # Initialize tab screen
-        tab1 = tablePane(self, "H1", nmrproblem.h1)
-        tab2 = tablePane(self, "C13", nmrproblem.c13)
-        tab3 = tablePane(self, "COSY", nmrproblem.cosy)
-        tab4 = tablePane(self, "HSQC", nmrproblem.hsqc)
-        tab5 = tablePane(self, "HMBC", nmrproblem.hmbc)
-        tab6 = tablePane(self, "Pureshift", nmrproblem.pureshift)
-        tab7 = tablePane(self, "Summary", nmrproblem.df)
-        
-        
-        # Add tabs
-        # self.addTab(tab1,"Tab 1")
-        # self.addTab(tab2,"Tab 2")
-        
-        # Create first tab
-        # tab1.layout = QVBoxLayout(self)
-        # pushButton1 = QPushButton("PyQt5 button")
-        # tab1.layout.addWidget(pushButton1)
-        # tab1.setLayout(tab1.layout)
-        
-        # Add tabs to widget
-        # self.layout.addWidget(self.tabs)
-        # self.setLayout(self.layout)
+        for title, table in tabTitles_dataframes.items():
+            self.tables[title] = tablePane(self, title, table)
+
+
         
     # @pyqtSlot()
     # def on_click(self):
@@ -96,7 +207,87 @@ class MyTabWidget(QTabWidget):
     #     for currentQTabWidgetItem in self.tableWidget.selectedItems():
     #         print(currentQTableWidgetItem.row(), currentQTableWidgetItem.column(), currentQTableWidgetItem.text())
 
+class EditDataFrameDialog(QDialog):
+    def __init__(self, nmrproblem):
+        super().__init__()
+
+        self.nmrproblem = nmrproblem
+
+
+
+        # tabtitles_dataframes = {"Molecule": nmrproblem.molecule_df,
+        #                         "H1": nmrproblem.h1_df,
+        #                         "C13": nmrproblem.c13_df}
+
+        tabtitles_dataframes = {}
+        for t, v in excel_orig_df_columns.items():
+            tabtitles_dataframes[t] = pd.DataFrame(columns=v) 
+
+        self.table_widget = MyTabWidget(self, tabtitles_dataframes)
+
+        self.setWindowTitle("HELLO!")
+        self.setGeometry(100, 100, 600, 400)
+
+        QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+
+        self.buttonBox = QDialogButtonBox(QBtn)
+        self.buttonBox.accepted.connect(self.on_accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.layout = QVBoxLayout()
+        message = QLabel("Something happened, is that OK?")
+        self.layout.addWidget(self.table_widget)
+        self.layout.addWidget(self.buttonBox)
+        self.setLayout(self.layout)
+
+    def on_accept(self):
+        print(list(self.table_widget.tables.keys()))
+
+        # copy pandas df tables to nmrproblem
+
+        for k in excel_orig_df_columns.keys():
+            print(k)
+
+            nmrProblem.new_dataframes[k] = self.table_widget.tables[k].df.copy()
+
+
+
+        self.accept()
+
 if __name__ == '__main__':
+
+    class MainWindow(QMainWindow):
+        def __init__(self):
+            super().__init__()
+
+            self.setWindowTitle("My App")
+
+            self.nmrproblem = nmrProblem.NMRproblem(nmrProblem.parse_argv())
+
+            button = QPushButton("Press me for a dialog!")
+            button.clicked.connect(self.button_clicked)
+            self.setCentralWidget(button)
+
+            
+
+        def button_clicked(self, s):
+            print("click", s)
+
+            dlg = EditDataFrameDialog(self.nmrproblem)
+
+            # dlg.setWindowTitle("HELLO!")
+
+            # table_widget = MyTabWidget(dlg, self.nmrproblem)
+            if dlg.exec():
+                print("Success!")
+                # print(type(dlg.table_widget))
+            else:
+                print("Cancel!")
+
+
     app = QApplication(sys.argv)
-    ex = App()
-    sys.exit(app.exec_())
+
+    window = MainWindow()
+    window.show()
+
+    app.exec()

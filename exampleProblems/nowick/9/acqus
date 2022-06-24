@@ -1,0 +1,375 @@
+##TITLE= Parameter file, XWIN-NMR		Version 3.5
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##ORIGIN= UXNMR, Bruker Analytische Messtechnik GmbH
+##OWNER= guest
+$$ Fri Dec  5 07:19:07 2014 PST (UT-8h)  nmr14t@lowe.ps.uci.edu
+$$ /v/data/nmr14t/nmr/partII_A/9/acqus
+##$AMP= (0..31)
+100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 
+100 100 100 100 100 100 100 100 100 100 100 100 100 100 
+##$AQSEQ= 0
+##$AQ_mod= 3
+##$AUNM= <au_zg>
+##$AUTOPOS= <>
+##$BF1= 500.22
+##$BF2= 500.22
+##$BF3= 500.22
+##$BF4= 500.22
+##$BF5= 500.22
+##$BF6= 500.22
+##$BF7= 500.22
+##$BF8= 500.22
+##$BYTORDA= 1
+##$CFDGTYP= 2
+##$CFRGTYP= 5
+##$CHEMSTR= <none>
+##$CNST= (0..31)
+1 1 145 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+##$CPDPRG= <>
+##$CPDPRG1= <>
+##$CPDPRG2= <>
+##$CPDPRG3= <>
+##$CPDPRG4= <mlev>
+##$CPDPRG5= <mlev>
+##$CPDPRG6= <mlev>
+##$CPDPRG7= <mlev>
+##$CPDPRG8= <mlev>
+##$CPDPRGB= <>
+##$CPDPRGT= <>
+##$D= (0..31)
+3e-06 2 0.005 0.003 0 0 0 0 0.8 0.06 0 0.03 2e-05 3e-06 0 0.005 0.0002 
+0 0 0 0.3988 0.00025 0 0 0 0 0 0.002 0 0 0 0 
+##$DATE= 1417786582
+##$DBL= (0..7)
+120 120 120 120 120 120 120 120 
+##$DBP= (0..7)
+150 150 150 150 150 150 150 150 
+##$DBP07= 0
+##$DBPNAM0= <>
+##$DBPNAM1= <>
+##$DBPNAM2= <>
+##$DBPNAM3= <>
+##$DBPNAM4= <>
+##$DBPNAM5= <>
+##$DBPNAM6= <>
+##$DBPNAM7= <>
+##$DBPOAL= (0..7)
+0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 
+##$DBPOFFS= (0..7)
+0 0 0 0 0 0 0 0 
+##$DE= 6
+##$DECBNUC= <off>
+##$DECIM= 32
+##$DECNUC= <off>
+##$DECSTAT= 4
+##$DIGMOD= 1
+##$DIGTYP= 8
+##$DL= (0..7)
+0 120 120 120 120 120 120 120 
+##$DP= (0..7)
+150 150 150 150 150 150 150 150 
+##$DP07= 0
+##$DPNAME0= <>
+##$DPNAME1= <>
+##$DPNAME2= <>
+##$DPNAME3= <>
+##$DPNAME4= <>
+##$DPNAME5= <>
+##$DPNAME6= <>
+##$DPNAME7= <>
+##$DPOAL= (0..7)
+0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 
+##$DPOFFS= (0..7)
+0 0 0 0 0 0 0 0 
+##$DQDMODE= 0
+##$DR= 18
+##$DS= 16
+##$DSLIST= <SSSSSSSSSSSSSSS>
+##$DSPFIRM= 0
+##$DSPFVS= 12
+##$DTYPA= 0
+##$EXP= <>
+##$F1LIST= <imge3d>
+##$F2LIST= <222222222222222>
+##$F3LIST= <333333333333333>
+##$FCUCHAN= (0..9)
+0 1 0 0 0 0 0 0 0 0 
+##$FL1= 90
+##$FL2= 90
+##$FL3= 90
+##$FL4= 90
+##$FOV= 13.8
+##$FQ1LIST= <freqlist>
+##$FQ2LIST= <freqlist>
+##$FQ3LIST= <freqlist>
+##$FQ4LIST= <freqlist>
+##$FQ5LIST= <freqlist>
+##$FQ6LIST= <freqlist>
+##$FQ7LIST= <freqlist>
+##$FQ8LIST= <freqlist>
+##$FS= (0..7)
+83 83 83 83 83 83 83 83 
+##$FTLPGN= 0
+##$FW= 125000
+##$FnMODE= 0
+##$GP031= 0
+##$GPNAM0= <gauss>
+##$GPNAM1= <sine.100>
+##$GPNAM10= <gauss>
+##$GPNAM11= <gauss>
+##$GPNAM12= <gauss>
+##$GPNAM13= <gauss>
+##$GPNAM14= <gauss>
+##$GPNAM15= <gauss>
+##$GPNAM16= <gauss>
+##$GPNAM17= <gauss>
+##$GPNAM18= <gauss>
+##$GPNAM19= <gauss>
+##$GPNAM2= <sine.100>
+##$GPNAM20= <gauss>
+##$GPNAM21= <gauss>
+##$GPNAM22= <gauss>
+##$GPNAM23= <gauss>
+##$GPNAM24= <gauss>
+##$GPNAM25= <gauss>
+##$GPNAM26= <gauss>
+##$GPNAM27= <gauss>
+##$GPNAM28= <gauss>
+##$GPNAM29= <gauss>
+##$GPNAM3= <gauss>
+##$GPNAM30= <gauss>
+##$GPNAM31= <gauss>
+##$GPNAM4= <gauss>
+##$GPNAM5= <gauss>
+##$GPNAM6= <gauss>
+##$GPNAM7= <gauss>
+##$GPNAM8= <gauss>
+##$GPNAM9= <gauss>
+##$GPX= (0..31)
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+##$GPY= (0..31)
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+##$GPZ= (0..31)
+0 40 -40 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+##$GRDPROG= <grad_out>
+##$HDDUTY= 20
+##$HDRATE= 20
+##$HGAIN= (0..3)
+0 0 0 0 
+##$HL1= 14
+##$HL2= 59
+##$HL3= 16
+##$HL4= 17
+##$HOLDER= 0
+##$HPMOD= (0..7)
+0 0 0 0 0 0 0 0 
+##$HPPRGN= 0
+##$IN= (0..31)
+0.0001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 
+0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 
+0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 
+##$INP= (0..31)
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+##$INSTRUM= <cryo500>
+##$L= (0..31)
+0 1 32 1 1 32 32 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+##$LFILTER= 100
+##$LGAIN= -15
+##$LOCKED= no
+##$LOCKFLD= -2107
+##$LOCKGN= 140.300003051758
+##$LOCKPOW= -25
+##$LOCKPPM= 7.26999950408936
+##$LOCNUC= <2H>
+##$LOCPHAS= 270
+##$LOCSHFT= no
+##$LTIME= 0.200000002980232
+##$MASR= 0
+##$MASRLST= <masrlst>
+##$NBL= 1
+##$NC= -2
+##$NS= 8
+##$NUC1= <1H>
+##$NUC2= <off>
+##$NUC3= <off>
+##$NUC4= <off>
+##$NUC5= <off>
+##$NUC6= <off>
+##$NUC7= <off>
+##$NUC8= <off>
+##$NUCLEI= 0
+##$NUCLEUS= <off>
+##$O1= 2500
+##$O2= 0
+##$O3= -110000.000000014
+##$O4= -110000.000000014
+##$O5= -110000.000000014
+##$O6= -110000.000000014
+##$O7= -110000.000000014
+##$O8= -110000.000000014
+##$OBSCHAN= (0..9)
+0 0 0 0 0 0 0 0 0 0 
+##$OVERFLW= 0
+##$P= (0..31)
+8 7.5 15 15 30 0 0 0 0 0 0 0 0 0 0 200000 1000 2500 0 600 26 0 0 0 0 0 
+0 8 1000 0 0 3 
+##$PAPS= 2
+##$PARMODE= 1
+##$PCPD= (0..9)
+100 100 65 100 100 100 100 100 100 100 
+##$PHCOR= (0..31)
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+##$PHP= 1
+##$PH_ref= 0
+##$PL= (0..31)
+120 1.6 -1 120 120 120 120 120 120 54 120 120 11.8 12 120 120 120 120 
+1.6 23.54 120 120 120 120 120 120 120 120 120 120 120 120 
+##$POWMOD= 0
+##$PR= 1
+##$PRECHAN= (0..15)
+-1 3 -1 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+##$PRGAIN= 0
+##$PROBHD= <5 mm CPTCI 1H-13C/15N/2H Z-GRD Z44881/0020
+>
+##$PROSOL= no
+##$PULPROG= <noesygptp>
+##$PW= 0
+##$QNP= 1
+##$QS= (0..7)83 83 83 83 83 83 83 22 
+##$QSB= (0..7)83 83 83 83 83 83 83 83 
+##$RD= 0
+##$RECCHAN= (0..15)
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+##$RECPH= 0
+##$RG= 5
+##$RO= 0
+##$ROUTWD1= (0..23)
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 
+##$ROUTWD2= (0..23)
+0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 1 0 0 
+##$RPUUSED= (0..8)
+0 0 0 0 0 0 0 0 0 
+##$RSEL= (0..9)
+0 2 0 0 0 0 0 0 0 0 
+##$S= (0..7)
+83 4 83 83 83 83 83 83 
+##$SEOUT= 0
+##$SFO1= 500.2225
+##$SFO2= 500.22
+##$SFO3= 500.11
+##$SFO4= 500.11
+##$SFO5= 500.11
+##$SFO6= 500.11
+##$SFO7= 500.11
+##$SFO8= 500.11
+##$SOLVENT= <CDCl3>
+##$SP= (0..31)
+1 120 120 120 0 0 120 120 0 0 0 0 0 0 0 0 150 150 150 150 150 150 150 
+150 150 150 150 150 150 150 150 150 
+##$SP07= 0
+##$SPECTR= 0
+##$SPNAM0= <gauss>
+##$SPNAM1= <Gaus1.1000>
+##$SPNAM10= <gauss>
+##$SPNAM11= <gauss>
+##$SPNAM12= <gauss>
+##$SPNAM13= <gauss>
+##$SPNAM14= <gauss>
+##$SPNAM15= <gauss>
+##$SPNAM16= <gauss>
+##$SPNAM17= <gauss>
+##$SPNAM18= <gauss>
+##$SPNAM19= <gauss>
+##$SPNAM2= <Gaus1.1000>
+##$SPNAM20= <gauss>
+##$SPNAM21= <gauss>
+##$SPNAM22= <gauss>
+##$SPNAM23= <gauss>
+##$SPNAM24= <gauss>
+##$SPNAM25= <gauss>
+##$SPNAM26= <gauss>
+##$SPNAM27= <gauss>
+##$SPNAM28= <gauss>
+##$SPNAM29= <gauss>
+##$SPNAM3= <Gaus1.1000>
+##$SPNAM30= <gauss>
+##$SPNAM31= <gauss>
+##$SPNAM4= <gauss>
+##$SPNAM5= <gauss>
+##$SPNAM6= <Gaus1.1000>
+##$SPNAM7= <Gaus1.1000>
+##$SPNAM8= <gauss>
+##$SPNAM9= <gauss>
+##$SPOAL= (0..31)
+0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 
+0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 
+##$SPOFFS= (0..31)
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+##$SUBNAM0= <"">
+##$SUBNAM1= <"">
+##$SUBNAM2= <"">
+##$SUBNAM3= <"">
+##$SUBNAM4= <"">
+##$SUBNAM5= <"">
+##$SUBNAM6= <"">
+##$SUBNAM7= <"">
+##$SUBNAM8= <"">
+##$SUBNAM9= <"">
+##$SW= 9.99555197936918
+##$SWIBOX= (0..15)
+0 0 3 3 0 0 0 0 0 0 0 0 0 0 0 0 
+##$SW_h= 5000
+##$TD= 2048
+##$TD0= 1
+##$TE= 298
+##$TE2= 300
+##$TE3= 300
+##$TEG= 300
+##$TL= (0..7)
+0 120 120 120 120 120 120 120 
+##$TP= (0..7)
+150 150 150 150 150 150 150 150 
+##$TP07= 0
+##$TPNAME0= <>
+##$TPNAME1= <>
+##$TPNAME2= <>
+##$TPNAME3= <>
+##$TPNAME4= <>
+##$TPNAME5= <>
+##$TPNAME6= <>
+##$TPNAME7= <>
+##$TPOAL= (0..7)
+0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 
+##$TPOFFS= (0..7)
+0 0 0 0 0 0 0 0 
+##$TUNHIN= 0
+##$TUNHOUT= 0
+##$TUNXOUT= 0
+##$USERA1= <user>
+##$USERA2= <user>
+##$USERA3= <user>
+##$USERA4= <user>
+##$USERA5= <user>
+##$V9= 5
+##$VALIST= <valist>
+##$VCLIST= <CCCCCCCCCCCCCCC>
+##$VD= 0
+##$VDLIST= <DDDDDDDDDDDDDDD>
+##$VPLIST= <PPPPPPPPPPPPPPP>
+##$VTLIST= <TTTTTTTTTTTTTTT>
+##$WBST= 1024
+##$WBSW= 4
+##$WS= (0..7)83 83 83 83 83 83 83 83 
+##$XGAIN= (0..3)
+0 0 0 0 
+##$XL= 0
+##$YL= 0
+##$YMAX_a= 78173
+##$YMIN_a= -69729
+##$ZGOPTNS= <>
+##$ZL1= 120
+##$ZL2= 120
+##$ZL3= 120
+##$ZL4= 120
+##END=
