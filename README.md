@@ -28,6 +28,20 @@ A problem directory can be opened directly for the command line by starting the 
 
 ```python simpleNMR.py exampleProblems\ethyleneDiamine```
 
+## Requirements
+
+ - matplotlib==3.5.1
+ - mplcursors==0.5.1
+ - networkx==2.4
+ - nmrglue==0.8
+ - numpy==1.21.5
+ - pandas==1.3.4
+ - Pillow==9.1.1
+ - PyQt5==5.15.6
+ - PyYAML==6.0
+ - rdkit==2009.Q1-1
+ - scipy==1.7.3
+
 ## Example problems
 
 There are a number of example problems in the **exampleProblems** folder and they are listed below. Some are from real data and others are taken from extracting the data from examples in the book:
