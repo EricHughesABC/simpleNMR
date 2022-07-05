@@ -886,15 +886,17 @@ def define_c13_attached_protons(nmrproblem):
         if dddf.shape[0]:
             c13.loc[i, "attached_protons"] = int(dddf.f2_integral.sum())
 
-def main(nmrproblem):
+# def main(nmrproblem):
 
-    app = QApplication(sys.argv)
-    ex = MainWidget(nmrproblem)
-    ex.show()
-    sys.exit(app.exec_())
+#     ex = MainWidget(nmrproblem)
+#     ex.show()
+#     sys.exit(app.exec_())
 
 
 if __name__ == "__main__":
+
+    app = QApplication(sys.argv)
+
 
     data_info = nmrProblem.parse_argv()
     print("data_info\n", data_info)
@@ -913,4 +915,8 @@ if __name__ == "__main__":
 
     print(nmrproblem.c13)
 
-    main(nmrproblem)
+    # main(nmrproblem)
+    ex = MainWidget(nmrproblem)
+
+    ex.show()
+    sys.exit(app.exec_())

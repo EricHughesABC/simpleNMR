@@ -25,75 +25,80 @@ import io
 
 import nmrProblem
 
-excel_orig_df_columns = {
-    "molecule": ["moleclule"],
-    "H1_1D": [
-        "Name",
-        "Shift",
-        "Range",
-        "H's",
-        "Integral",
-        "Class",
-        "J's",
-        "Method"
-    ],
-    "C13_1D": [
-        "ppm",
-        "Intensity",
-        "Width",
-        "Area",
-        "Type",
-        "Flags",
-        "Impurity/Compound",
-        "Annotation"
-    ],
-    "H1_pureshift": [
-        "ppm",
-        "Intensity",
-        "Width",
-        "Area",
-        "Type",
-        "Flags",
-        "Impurity/Compound",
-        "Annotation"
-    ],
-    "COSY": [
-        "f2 (ppm)",
-        "f1 (ppm)",
-        "Intensity",
-        "Width f2",
-        "Width f1",
-        "Volume",
-        "Type",
-        "Flags",
-        "Impurity/Compound",
-        "Annotation"
-    ],
-    "HSQC": [
-        "f2 (ppm)",
-        "f1 (ppm)",
-        "Intensity",
-        "Width f2",
-        "Width f1",
-        "Volume",
-        "Type",
-        "Flags",
-        "Impurity/Compound",
-        "Annotation"
-    ],
-    "HMBC": [        
-        "f2 (ppm)",
-        "f1 (ppm)",
-        "Intensity",
-        "Width f2",
-        "Width f1",
-        "Volume",
-        "Type",
-        "Flags",
-        "Impurity/Compound",
-        "Annotation"
-    ]
-}
+from excelheaders import excel_orig_df_columns
+
+# excel_orig_df_columns = {
+#     "molecule": [
+#         "moleclule", 
+#         "smile"
+#         ],
+#     "H1_1D": [
+#         "Name",
+#         "Shift",
+#         "Range",
+#         "H's",
+#         "Integral",
+#         "Class",
+#         "J's",
+#         "Method"
+#     ],
+#     "C13_1D": [
+#         "ppm",
+#         "Intensity",
+#         "Width",
+#         "Area",
+#         "Type",
+#         "Flags",
+#         "Impurity/Compound",
+#         "Annotation"
+#     ],
+#     "H1_pureshift": [
+#         "ppm",
+#         "Intensity",
+#         "Width",
+#         "Area",
+#         "Type",
+#         "Flags",
+#         "Impurity/Compound",
+#         "Annotation"
+#     ],
+#     "COSY": [
+#         "f2 (ppm)",
+#         "f1 (ppm)",
+#         "Intensity",
+#         "Width f2",
+#         "Width f1",
+#         "Volume",
+#         "Type",
+#         "Flags",
+#         "Impurity/Compound",
+#         "Annotation"
+#     ],
+#     "HSQC": [
+#         "f2 (ppm)",
+#         "f1 (ppm)",
+#         "Intensity",
+#         "Width f2",
+#         "Width f1",
+#         "Volume",
+#         "Type",
+#         "Flags",
+#         "Impurity/Compound",
+#         "Annotation"
+#     ],
+#     "HMBC": [        
+#         "f2 (ppm)",
+#         "f1 (ppm)",
+#         "Intensity",
+#         "Width f2",
+#         "Width f1",
+#         "Volume",
+#         "Type",
+#         "Flags",
+#         "Impurity/Compound",
+#         "Annotation"
+#     ]
+# }
 
 
 class TableModel(QAbstractTableModel):
@@ -221,11 +226,13 @@ class EditDataFrameDialog(QDialog):
 
         tabtitles_dataframes = {}
         for t, v in excel_orig_df_columns.items():
-            tabtitles_dataframes[t] = pd.DataFrame(columns=v) 
+            tabtitles_dataframes[t] = pd.DataFrame( columns=v)
+            if t == "molecule":
+                tabtitles_dataframes[t].loc[1] = [""] * len(v)
 
         self.table_widget = MyTabWidget(self, tabtitles_dataframes)
 
-        self.setWindowTitle("HELLO!")
+        self.setWindowTitle("MestreNova - Edit DataFrame")
         self.setGeometry(100, 100, 600, 400)
 
         QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel

@@ -4,6 +4,8 @@ Created on Tue Jan 19 09:55:03 2021.
 
 @author: ERIC
 """
+from PyQt5.QtWidgets import QMessageBox
+
 import pandas as pd
 import numpy as np
 from numpy import pi, sin, cos, exp
@@ -268,7 +270,16 @@ def parse_argv(my_argv=None):
         if len(excelfilenames) > 0:
             excel_fn = os.path.join(data_directory, excelfilenames[0])
         else:
-            print("No excel files found in directory", data_directory)
+            # qt message box No excel file found in data directory
+
+            msgBox = QMessageBox()
+            msgBox.setIcon(QMessageBox.Information)
+            msgBox.setText("No excel file found in data directory\n{}".format(data_directory))
+            msgBox.setWindowTitle("Excel File Not Found")
+            msgBox.setStandardButtons(QMessageBox.Ok)
+
+            returnValue = msgBox.exec()
+
             return {
                 "data_directory": os.getcwd(),
                 "excel_fn": None,
@@ -326,8 +337,15 @@ def parse_argv(my_argv=None):
     }
 
 
-def read_smiles_file(problemdata_info):
+def read_smiles_file(problemdata_info: dict)->str:
+    """Reads the smiles file and returns the smiles string
 
+    Args:
+        problemdata_info (dict): parsed arguments from command line
+
+    Returns:
+        str: smiles string or None
+    """
     smiles_str = None
     if isinstance(problemdata_info["smiles_fn"], str):
         with open(problemdata_info["smiles_fn"], "r") as fp:
@@ -336,7 +354,8 @@ def read_smiles_file(problemdata_info):
     return smiles_str
 
 
-def read_png_file(problemdata_info):
+def read_png_file(problemdata_info: dict)->PIL.Image.Image:
+    """Reads the png file and returns the image object"""
     png = None
     if isinstance(problemdata_info["png_fn"], str):
         png = Image.open(problemdata_info["png_fn"])
@@ -344,7 +363,8 @@ def read_png_file(problemdata_info):
     return png
 
 
-def create_png_from_smiles(smiles_str):
+def create_png_from_smiles(smiles_str: str)->PIL.Image.Image:
+    """Creates a png image from a smiles string via rdkit"""
     png = None
     molecule = Chem.MolFromSmiles(smiles_str)
     Draw.MolToFile(molecule, "molecule.png")
@@ -352,7 +372,8 @@ def create_png_from_smiles(smiles_str):
     return png
 
 
-def create_molecule_from_smiles(smiles_str):
+def create_molecule_from_smiles(smiles_str: str)->Chem.Mol:
+    """Creates a RDKIT molecule from a smiles string via rdkit"""
     molecule = Chem.MolFromSmiles(smiles_str)
     molecule.Compute2DCoords()
 
@@ -368,7 +389,8 @@ def create_molecule_from_smiles(smiles_str):
     return molecule
 
 
-def read_xy3_file(problemdata_info):
+def read_xy3_jsonfile(problemdata_info: dict)->dict:
+    """Reads the xy3 json file and returns the json object"""
     xy3 = None
     print("problemdata_info[xy3_fn]", problemdata_info["xy3_fn"])
     if isinstance(problemdata_info["xy3_fn"], str):
@@ -820,7 +842,7 @@ class NMRproblem:
             # print("self.expected_molecule")
             # print(self.expected_molecule)
 
-        self.xy3 = read_xy3_file(problemdata_info)
+        self.xy3 = read_xy3_jsonfile(problemdata_info)
 
 
         # set xlims of 13C and 1H 1D spectra to +/- 10% of biggest and smallest ppm
@@ -857,9 +879,35 @@ class NMRproblem:
 
         if isinstance(excel_fn, str):
             self.excelFiles = [excel_fn]
-            self.excelsheets = pd.read_excel(
-                self.excelFiles[0], sheet_name=None, index_col=0
-            )
+
+            # try to load excel file
+            # display qt message box  if excel file not found or not readable
+            # if excel file found, load it
+            try:
+                self.excelsheets = pd.read_excel(
+                    self.excelFiles[0], sheet_name=None, index_col=0
+                )
+            except FileNotFoundError:
+                # display qt message box  if excel file not found or not readable
+
+                msgBox = QMessageBox("Excel file not found", "Excel file not found", QMessageBox.Ok) 
+                msgBox = QMessageBox()
+                msgBox.setIcon(QMessageBox.Information)
+                msgBox.setText("Excel File not Found\n{}".format(self.excelFiles[0]))
+                msgBox.setWindowTitle("Excel File not Found")
+                msgBox.setStandardButtons(QMessageBox.Ok)
+                rtn = msgBox.exec_()  
+                return False
+            except PermissionError:
+                # display qt message box  if excel file not found or not readable
+
+                msgBox = QMessageBox()
+                msgBox.setIcon(QMessageBox.Information)
+                msgBox.setText("Cannot Open\n{}".format(self.excelFiles[0]))
+                msgBox.setWindowTitle("Excel File Access Error")
+                msgBox.setStandardButtons(QMessageBox.Ok)
+                rtn = msgBox.exec_()
+                return False
 
         else:
             # Look for excel file in directory and use first one found
@@ -905,9 +953,15 @@ class NMRproblem:
                 inplace=True,
             )  # If they exist in dataframe!
 
+        # replace any NaN values with 0
+        for k, df in self.excelsheets.items():
+            df.fillna(0, inplace=True)
+
+
         if "molecule" in self.excelsheets:
             self.molecule_defined = True
             self.moleculeAtomsStr = self.excelsheets["molecule"].molecule.values[0]
+            self.smiles = self.excelsheets["molecule"].smiles.values[0]
             self.calculate_dbe()
         else:
             print("molecule not in sheet")
@@ -940,7 +994,9 @@ class NMRproblem:
         # attempt to remove solvent peaks
         self.hsqc = self.hsqc_df[self.hsqc_df.Type == "Compound"][['f2_ppm', 'f1_ppm', 'intensity']].copy()
         self.c13 = self.c13_df[self.c13_df.Type == "Compound"][['ppm']].copy()
-        self.h1 = self.pureshift_df[self.pureshift_df.Type == "Compound"][['ppm']].copy()
+        # define h1 datafram from h1_df instead of pureshift_df
+        # self.h1 = self.pureshift_df[self.pureshift_df.Type == "Compound"][['ppm']].copy()
+        self.h1 = self.h1_df[['ppm']].copy()
 
         self.numCarbonGroups = self.c13.shape[0]
         self.numProtonGroups = self.h1.shape[0]

@@ -1,72 +1,3 @@
-excel_orig_df_columns = {
-    "h1": [
-        "Name",
-        "Shift",
-        "Range",
-        "H's",
-        "Integral",
-        "Class",
-        "J's",
-        "Method"
-    ],
-    "c13": [
-        "ppm",
-        "Intensity",
-        "Width",
-        "Area",
-        "Type",
-        "Flags",
-        "Impurity/Compound",
-        "Annotation"
-    ],
-    "pureshift": [
-        "ppm",
-        "Intensity",
-        "Width",
-        "Area",
-        "Type",
-        "Flags",
-        "Impurity/Compound",
-        "Annotation"
-    ],
-    "cosy": [
-        "f2 (ppm)",
-        "f1 (ppm)",
-        "Intensity",
-        "Width f2",
-        "Width f1",
-        "Volume",
-        "Type",
-        "Flags",
-        "Impurity/Compound",
-        "Annotation"
-    ],
-    "hsqc": [
-        "f2 (ppm)",
-        "f1 (ppm)",
-        "Intensity",
-        "Width f2",
-        "Width f1",
-        "Volume",
-        "Type",
-        "Flags",
-        "Impurity/Compound",
-        "Annotation"
-    ],
-    "hmbc": [        
-        "f2 (ppm)",
-        "f1 (ppm)",
-        "Intensity",
-        "Width f2",
-        "Width f1",
-        "Volume",
-        "Type",
-        "Flags",
-        "Impurity/Compound",
-        "Annotation"
-    ]
-}
-
 excel_df_columns = {
     "h1": [
         "ppm",
@@ -139,5 +70,78 @@ excel_df_columns = {
         "f1C_i",
         "f2H_i",
         "f2Cp_i"
+    ]
+}
+
+excel_orig_df_columns = {
+    "molecule": [
+        "molecule", 
+        "smiles"
+        ],
+    "H1_1D": [
+        "Name",
+        "Shift",
+        "Range",
+        "H's",
+        "Integral",
+        "Class",
+        "J's",
+        "Method"
+    ],
+    "C13_1D": [
+        "ppm",
+        "Intensity",
+        "Width",
+        "Area",
+        "Type",
+        "Flags",
+        "Impurity/Compound",
+        "Annotation"
+    ],
+    "H1_pureshift": [
+        "ppm",
+        "Intensity",
+        "Width",
+        "Area",
+        "Type",
+        "Flags",
+        "Impurity/Compound",
+        "Annotation"
+    ],
+    "COSY": [
+        "f2 (ppm)",
+        "f1 (ppm)",
+        "Intensity",
+        "Width f2",
+        "Width f1",
+        "Volume",
+        "Type",
+        "Flags",
+        "Impurity/Compound",
+        "Annotation"
+    ],
+    "HSQC": [
+        "f2 (ppm)",
+        "f1 (ppm)",
+        "Intensity",
+        "Width f2",
+        "Width f1",
+        "Volume",
+        "Type",
+        "Flags",
+        "Impurity/Compound",
+        "Annotation"
+    ],
+    "HMBC": [        
+        "f2 (ppm)",
+        "f1 (ppm)",
+        "Intensity",
+        "Width f2",
+        "Width f1",
+        "Volume",
+        "Type",
+        "Flags",
+        "Impurity/Compound",
+        "Annotation"
     ]
 }
