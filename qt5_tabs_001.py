@@ -1,18 +1,20 @@
 import sys
-from PyQt5.QtWidgets import (QMainWindow, 
-                                QApplication, 
-                                QPushButton, 
-                                QWidget, 
-                                QAction, 
-                                QTabWidget,
-                                QVBoxLayout, 
-                                QTableWidget, 
-                                QHeaderView, 
-                                QTableWidgetItem,
-                                QTableView,
-                                QDialog,
-                                QDialogButtonBox,
-                                QLabel)
+from PyQt5.QtWidgets import (
+    QMainWindow,
+    QApplication,
+    QPushButton,
+    QWidget,
+    QAction,
+    QTabWidget,
+    QVBoxLayout,
+    QTableWidget,
+    QHeaderView,
+    QTableWidgetItem,
+    QTableView,
+    QDialog,
+    QDialogButtonBox,
+    QLabel,
+)
 
 from PyQt5.Qt import QApplication, QClipboard
 
@@ -29,7 +31,7 @@ from excelheaders import excel_orig_df_columns
 
 # excel_orig_df_columns = {
 #     "molecule": [
-#         "moleclule", 
+#         "moleclule",
 #         "smile"
 #         ],
 #     "H1_1D": [
@@ -86,7 +88,7 @@ from excelheaders import excel_orig_df_columns
 #         "Impurity/Compound",
 #         "Annotation"
 #     ],
-#     "HMBC": [        
+#     "HMBC": [
 #         "f2 (ppm)",
 #         "f1 (ppm)",
 #         "Intensity",
@@ -102,7 +104,6 @@ from excelheaders import excel_orig_df_columns
 
 
 class TableModel(QAbstractTableModel):
-
     def __init__(self, dataframe: pd.DataFrame):
         super(TableModel, self).__init__()
         self._df = dataframe
@@ -142,10 +143,8 @@ class TableModel(QAbstractTableModel):
     def flags(self, index):
         return Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsEditable
 
-   
 
 class tablePane(QTableView):
-
     def __init__(self, parent, tab_title: str, pd_df: pd.DataFrame):
         # super(QTableView, self).__init__(parent)
         super().__init__(parent)
@@ -157,15 +156,14 @@ class tablePane(QTableView):
         self.setAlternatingRowColors(True)
         parent.addTab(self, tab_title)
 
-
     def keyPressEvent(self, event):
-    #     # clipboard = QApplication.clipboard()
-    #     # if event.matches(QKeySequence.Copy):
-    #     #     print('Ctrl + C')
-    #     #     clipboard.setText("some text")
+        #     # clipboard = QApplication.clipboard()
+        #     # if event.matches(QKeySequence.Copy):
+        #     #     print('Ctrl + C')
+        #     #     clipboard.setText("some text")
         if event.matches(QKeySequence.Paste):
             print(QApplication.clipboard().text())
-            print('Ctrl + V')
+            print("Ctrl + V")
 
             ctext = QApplication.clipboard().text()
             if "\t" in ctext:
@@ -187,30 +185,26 @@ class tablePane(QTableView):
                 self.setModel(self.model)
                 self.setAlternatingRowColors(True)
 
-
         QTableView.keyPressEvent(self, event)
-        
 
 
 class MyTabWidget(QTabWidget):
-    
     def __init__(self, parent, tabTitles_dataframes):
         super(QTabWidget, self).__init__(parent)
         self.layout = QVBoxLayout()
-        self.resize(300,200)
+        self.resize(300, 200)
 
         self.tables = {}
-        
+
         for title, table in tabTitles_dataframes.items():
             self.tables[title] = tablePane(self, title, table)
 
-
-        
     # @pyqtSlot()
     # def on_click(self):
     #     print("Button Clicked\n")
     #     for currentQTabWidgetItem in self.tableWidget.selectedItems():
     #         print(currentQTableWidgetItem.row(), currentQTableWidgetItem.column(), currentQTableWidgetItem.text())
+
 
 class EditDataFrameDialog(QDialog):
     def __init__(self, nmrproblem):
@@ -218,15 +212,13 @@ class EditDataFrameDialog(QDialog):
 
         self.nmrproblem = nmrproblem
 
-
-
         # tabtitles_dataframes = {"Molecule": nmrproblem.molecule_df,
         #                         "H1": nmrproblem.h1_df,
         #                         "C13": nmrproblem.c13_df}
 
         tabtitles_dataframes = {}
         for t, v in excel_orig_df_columns.items():
-            tabtitles_dataframes[t] = pd.DataFrame( columns=v)
+            tabtitles_dataframes[t] = pd.DataFrame(columns=v)
             if t == "molecule":
                 tabtitles_dataframes[t].loc[1] = [""] * len(v)
 
@@ -257,11 +249,10 @@ class EditDataFrameDialog(QDialog):
 
             nmrProblem.new_dataframes[k] = self.table_widget.tables[k].df.copy()
 
-
-
         self.accept()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
 
     class MainWindow(QMainWindow):
         def __init__(self):
@@ -274,8 +265,6 @@ if __name__ == '__main__':
             button = QPushButton("Press me for a dialog!")
             button.clicked.connect(self.button_clicked)
             self.setCentralWidget(button)
-
-            
 
         def button_clicked(self, s):
             print("click", s)
@@ -290,7 +279,6 @@ if __name__ == '__main__':
                 # print(type(dlg.table_widget))
             else:
                 print("Cancel!")
-
 
     app = QApplication(sys.argv)
 

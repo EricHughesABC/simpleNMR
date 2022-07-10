@@ -262,7 +262,7 @@ def parse_argv(my_argv=None):
                 "excel_fn": None,
                 "smiles_fn": None,
                 "png_fn": None,
-                "xy3_fn": None
+                "xy3_fn": None,
             }
 
     else:
@@ -274,7 +274,9 @@ def parse_argv(my_argv=None):
 
             msgBox = QMessageBox()
             msgBox.setIcon(QMessageBox.Information)
-            msgBox.setText("No excel file found in data directory\n{}".format(data_directory))
+            msgBox.setText(
+                "No excel file found in data directory\n{}".format(data_directory)
+            )
             msgBox.setWindowTitle("Excel File Not Found")
             msgBox.setStandardButtons(QMessageBox.Ok)
 
@@ -285,7 +287,7 @@ def parse_argv(my_argv=None):
                 "excel_fn": None,
                 "smiles_fn": None,
                 "png_fn": None,
-                "xy3_fn": None
+                "xy3_fn": None,
             }
             # print("Program stopping")
             # sys.exit()
@@ -316,11 +318,11 @@ def parse_argv(my_argv=None):
 
     if len(xy3jsonfilenames) > 0:
         if os.path.exists(os.path.join(data_directory, xy3jsonfilenames[0])):
-           xy3_fn = os.path.join(data_directory, xy3jsonfilenames[0])
+            xy3_fn = os.path.join(data_directory, xy3jsonfilenames[0])
         else:
             xy3_fn = None
     else:
-        xy3jsonfilenames = [s for s in os.listdir(data_directory) if s=="xy3.json"]
+        xy3jsonfilenames = [s for s in os.listdir(data_directory) if s == "xy3.json"]
         if len(xy3jsonfilenames) > 0:
             xy3_fn = os.path.join(data_directory, xy3jsonfilenames[0])
         else:
@@ -333,11 +335,11 @@ def parse_argv(my_argv=None):
         "excel_fn": excel_fn,
         "smiles_fn": smiles_fn,
         "png_fn": png_fn,
-        "xy3_fn": xy3_fn
+        "xy3_fn": xy3_fn,
     }
 
 
-def read_smiles_file(problemdata_info: dict)->str:
+def read_smiles_file(problemdata_info: dict) -> str:
     """Reads the smiles file and returns the smiles string
 
     Args:
@@ -354,7 +356,7 @@ def read_smiles_file(problemdata_info: dict)->str:
     return smiles_str
 
 
-def read_png_file(problemdata_info: dict)->PIL.Image.Image:
+def read_png_file(problemdata_info: dict) -> PIL.Image.Image:
     """Reads the png file and returns the image object"""
     png = None
     if isinstance(problemdata_info["png_fn"], str):
@@ -363,7 +365,7 @@ def read_png_file(problemdata_info: dict)->PIL.Image.Image:
     return png
 
 
-def create_png_from_smiles(smiles_str: str)->PIL.Image.Image:
+def create_png_from_smiles(smiles_str: str) -> PIL.Image.Image:
     """Creates a png image from a smiles string via rdkit"""
     png = None
     molecule = Chem.MolFromSmiles(smiles_str)
@@ -372,16 +374,16 @@ def create_png_from_smiles(smiles_str: str)->PIL.Image.Image:
     return png
 
 
-def create_molecule_from_smiles(smiles_str: str)->Chem.Mol:
+def create_molecule_from_smiles(smiles_str: str) -> Chem.Mol:
     """Creates a RDKIT molecule from a smiles string via rdkit"""
     molecule = Chem.MolFromSmiles(smiles_str)
     molecule.Compute2DCoords()
 
     xy = [[xyz[0], xyz[1]] for xyz in molecule.GetConformer().GetPositions()]
 
-    for a, (x,y) in zip(molecule.GetAtoms(), xy):
-        a.SetDoubleProp('x', x)
-        a.SetDoubleProp('y', y)
+    for a, (x, y) in zip(molecule.GetAtoms(), xy):
+        a.SetDoubleProp("x", x)
+        a.SetDoubleProp("y", y)
 
     # molecule.xy3 = {}
     # for i, n in enumerate(molecule.nodes()):
@@ -389,7 +391,7 @@ def create_molecule_from_smiles(smiles_str: str)->Chem.Mol:
     return molecule
 
 
-def read_xy3_jsonfile(problemdata_info: dict)->dict:
+def read_xy3_jsonfile(problemdata_info: dict) -> dict:
     """Reads the xy3 json file and returns the json object"""
     xy3 = None
     print("problemdata_info[xy3_fn]", problemdata_info["xy3_fn"])
@@ -397,12 +399,13 @@ def read_xy3_jsonfile(problemdata_info: dict)->dict:
         with open(problemdata_info["xy3_fn"], "r") as fp:
             xy3 = json.load(fp)
 
-        for k,v in xy3.items():
+        for k, v in xy3.items():
             xy3[k] = np.asarray(v)
 
         print(xy3)
 
     return xy3
+
 
 def center_molecule(nmrproblem, ax, pc_x, pc_y):
 
@@ -511,28 +514,34 @@ def build_molecule_graph_network(nmrproblem):
     # print(nmrproblem.h1)
     # print(nmrproblem.c13)
     # print(nmrproblem.hsqc)
-    for i,n in enumerate(catoms):
+    for i, n in enumerate(catoms):
         # print(n, i, c13.loc[i+1,"attached_protons"], nmrproblem.hmbc_edge_colors[c13.loc[i+1,"attached_protons"]])
-        molecule.nodes[n]["node_color"] = nmrproblem.hmbc_edge_colors[c13.loc[i+1,"attached_protons"]]
+        molecule.nodes[n]["node_color"] = nmrproblem.hmbc_edge_colors[
+            c13.loc[i + 1, "attached_protons"]
+        ]
 
 
 def build_xy3_representation_of_molecule_from_smiles(nmrproblem):
     expected_molecule = nmrproblem.expected_molecule
-    eigen_nodes = [a.GetSymbol() + str(a.GetIdx()) for a in expected_molecule.GetAtoms()]
-    eigen_carbons = [s for s in eigen_nodes if 'C' in s]
+    eigen_nodes = [
+        a.GetSymbol() + str(a.GetIdx()) for a in expected_molecule.GetAtoms()
+    ]
+    eigen_carbons = [s for s in eigen_nodes if "C" in s]
 
     e_xy3 = {}
     xy3 = {}
 
-    for n,(x,y,z) in zip(eigen_nodes, expected_molecule.GetConformer().GetPositions()):
+    for n, (x, y, z) in zip(
+        eigen_nodes, expected_molecule.GetConformer().GetPositions()
+    ):
 
-        if 'C' in n:
-            e_xy3[n]= np.array([x,y])
+        if "C" in n:
+            e_xy3[n] = np.array([x, y])
 
     for n1, n2 in zip(eigen_carbons, nmrproblem.carbonAtoms):
         # print("n1,n2", n1,n2)
         xy3[n2] = e_xy3[n1]
-    
+
     nmrproblem.xy3 = xy3
     # print("nmrproblem.xy3", nmrproblem.xy3)
 
@@ -567,15 +576,15 @@ def build_xy3_representation_of_molecule(nmrproblem):
     xy = xy.T
     xxx, yyy = xy
 
-    yyy = yyy/yyy.max()
+    yyy = yyy / yyy.max()
     yyy = yyy - yyy.mean()
-    yyy = (yyy/yyy.max())
+    yyy = yyy / yyy.max()
 
-    xxx = xxx/xxx.max()
+    xxx = xxx / xxx.max()
     xxx = xxx - xxx.mean()
-    xxx = (xxx/xxx.max())
+    xxx = xxx / xxx.max()
 
-    xy = np.array([xxx,yyy])
+    xy = np.array([xxx, yyy])
     xy = xy.T
 
     # nmrproblem.xmin = -1.2
@@ -626,7 +635,7 @@ def nx_to_mol(G: nx.Graph) -> rdkit.Chem.Mol:
         node_to_idx[node] = idx
 
     bond_types = nx.get_edge_attributes(G, "bond_type")
-    
+
     for edge in G.edges():
         first, second = edge
         ifirst = node_to_idx[first]
@@ -707,14 +716,32 @@ class NMRproblem:
             problemdata_info["data_directory"]
         )
 
-        self.hmbc_edge_colors = ('#1f77b4', '#ff7f0e', '#2ca02c',  '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
-                                  '#1f77b4', '#ff7f0e', '#2ca02c',  '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf')
+        self.hmbc_edge_colors = (
+            "#1f77b4",
+            "#ff7f0e",
+            "#2ca02c",
+            "#9467bd",
+            "#8c564b",
+            "#e377c2",
+            "#7f7f7f",
+            "#bcbd22",
+            "#17becf",
+            "#1f77b4",
+            "#ff7f0e",
+            "#2ca02c",
+            "#9467bd",
+            "#8c564b",
+            "#e377c2",
+            "#7f7f7f",
+            "#bcbd22",
+            "#17becf",
+        )
 
         self.xmin = -1.5
         self.ymin = -1.5
         self.xmax = 1.5
         self.ymax = 1.5
-        
+
         self.data_complete = False
 
         self.pngFiles = []
@@ -772,7 +799,7 @@ class NMRproblem:
                 "obs": obs,
                 "sw": 18 * obs,
                 "dw": 1.0 / (18 * obs),
-                "car": (((16.0-(-2.0))/2)-2.0) * obs,
+                "car": (((16.0 - (-2.0)) / 2) - 2.0) * obs,
                 "size": int(32 * 1024),
                 "label": "1H",
                 "complex": True,
@@ -844,18 +871,17 @@ class NMRproblem:
 
         self.xy3 = read_xy3_jsonfile(problemdata_info)
 
-
         # set xlims of 13C and 1H 1D spectra to +/- 10% of biggest and smallest ppm
 
         self.min_max_1D_ppm = []
 
-        ppm_min = self.h1.ppm.min() - (self.h1.ppm.max() - self.h1.ppm.min())/10.0
-        ppm_max = self.h1.ppm.max() + (self.h1.ppm.max() - self.h1.ppm.min())/10.0
+        ppm_min = self.h1.ppm.min() - (self.h1.ppm.max() - self.h1.ppm.min()) / 10.0
+        ppm_max = self.h1.ppm.max() + (self.h1.ppm.max() - self.h1.ppm.min()) / 10.0
 
         self.min_max_1D_ppm.append((ppm_max, ppm_min))
 
-        ppm_min = self.c13.ppm.min() - (self.c13.ppm.max() - self.c13.ppm.min())/10.0
-        ppm_max = self.c13.ppm.max() + (self.c13.ppm.max() - self.c13.ppm.min())/10.0
+        ppm_min = self.c13.ppm.min() - (self.c13.ppm.max() - self.c13.ppm.min()) / 10.0
+        ppm_max = self.c13.ppm.max() + (self.c13.ppm.max() - self.c13.ppm.min()) / 10.0
 
         self.min_max_1D_ppm.append((ppm_max, ppm_min))
 
@@ -890,13 +916,15 @@ class NMRproblem:
             except FileNotFoundError:
                 # display qt message box  if excel file not found or not readable
 
-                msgBox = QMessageBox("Excel file not found", "Excel file not found", QMessageBox.Ok) 
+                msgBox = QMessageBox(
+                    "Excel file not found", "Excel file not found", QMessageBox.Ok
+                )
                 msgBox = QMessageBox()
                 msgBox.setIcon(QMessageBox.Information)
                 msgBox.setText("Excel File not Found\n{}".format(self.excelFiles[0]))
                 msgBox.setWindowTitle("Excel File not Found")
                 msgBox.setStandardButtons(QMessageBox.Ok)
-                rtn = msgBox.exec_()  
+                rtn = msgBox.exec_()
                 return False
             except PermissionError:
                 # display qt message box  if excel file not found or not readable
@@ -957,7 +985,6 @@ class NMRproblem:
         for k, df in self.excelsheets.items():
             df.fillna(0, inplace=True)
 
-
         if "molecule" in self.excelsheets:
             self.molecule_defined = True
             self.moleculeAtomsStr = self.excelsheets["molecule"].molecule.values[0]
@@ -966,7 +993,7 @@ class NMRproblem:
         else:
             print("molecule not in sheet")
             self.dbe = 0
-            self.elements = {'H': 0, 'C':0}
+            self.elements = {"H": 0, "C": 0}
             self.molecule_defined = False
 
         # define short names for the dataframes
@@ -980,23 +1007,26 @@ class NMRproblem:
         # sort h1, c13 and pureshift just in case they are out of order
         # reindex startting from 1
 
-        self.h1_df = self.h1_df.sort_values('ppm', ascending=False, ignore_index=True)
+        self.h1_df = self.h1_df.sort_values("ppm", ascending=False, ignore_index=True)
         self.h1_df.index = self.h1_df.index + 1
 
-        self.c13_df = self.c13_df.sort_values('ppm', ascending=False, ignore_index=True)
+        self.c13_df = self.c13_df.sort_values("ppm", ascending=False, ignore_index=True)
         self.c13_df.index = self.c13_df.index + 1
 
-        self.pureshift_df = self.pureshift_df.sort_values('ppm', ascending=False, ignore_index=True)
+        self.pureshift_df = self.pureshift_df.sort_values(
+            "ppm", ascending=False, ignore_index=True
+        )
         self.pureshift_df.index = self.pureshift_df.index + 1
-
 
         # define short views of the dataframes and tidy up column names
         # attempt to remove solvent peaks
-        self.hsqc = self.hsqc_df[self.hsqc_df.Type == "Compound"][['f2_ppm', 'f1_ppm', 'intensity']].copy()
-        self.c13 = self.c13_df[self.c13_df.Type == "Compound"][['ppm']].copy()
+        self.hsqc = self.hsqc_df[self.hsqc_df.Type == "Compound"][
+            ["f2_ppm", "f1_ppm", "intensity"]
+        ].copy()
+        self.c13 = self.c13_df[self.c13_df.Type == "Compound"][["ppm"]].copy()
         # define h1 datafram from h1_df instead of pureshift_df
         # self.h1 = self.pureshift_df[self.pureshift_df.Type == "Compound"][['ppm']].copy()
-        self.h1 = self.h1_df[['ppm']].copy()
+        self.h1 = self.h1_df[["ppm"]].copy()
 
         self.numCarbonGroups = self.c13.shape[0]
         self.numProtonGroups = self.h1.shape[0]
@@ -1004,7 +1034,6 @@ class NMRproblem:
         self.symmetric_molecule = False
         if self.elements["C"] > 0 and self.elements["C"] > self.numCarbonGroups:
             self.symmetric_molecule = True
-
 
         self.c13["attached_protons"] = 0
         self.c13["ppmH1s"] = None
@@ -1189,10 +1218,16 @@ class NMRproblem:
             )
 
             self.hmbc.loc[i, "f2_i"] = self.H1ppmH1index.get(self.hmbc.loc[i, "f2_ppm"])
-            self.hmbc.loc[i, "f1_i"] = self.C13ppmC13index.get(self.hmbc.loc[i, "f1_ppm"])
+            self.hmbc.loc[i, "f1_i"] = self.C13ppmC13index.get(
+                self.hmbc.loc[i, "f1_ppm"]
+            )
 
-            self.hmbc.loc[i, "f1C_i"] = self.C13ppmC13label.get(self.hmbc.loc[i, "f1_ppm"])
-            self.hmbc.loc[i, "f2H_i"] = self.H1ppmH1label.get(self.hmbc.loc[i, "f2_ppm"])
+            self.hmbc.loc[i, "f1C_i"] = self.C13ppmC13label.get(
+                self.hmbc.loc[i, "f1_ppm"]
+            )
+            self.hmbc.loc[i, "f2H_i"] = self.H1ppmH1label.get(
+                self.hmbc.loc[i, "f2_ppm"]
+            )
             self.hmbc.loc[i, "f2Cp_i"] = self.hsqcH1ppmC13label.get(
                 self.hmbc.loc[i, "f2_ppm"]
             )
@@ -1237,7 +1272,7 @@ class NMRproblem:
         for ci in self.cosy.f1Cp_i.unique():
             lll = self.cosy[self.cosy.f1Cp_i == ci]["f2Cp_i"].tolist()
             # remove None from list
-            lll = [ l for l in lll if l]
+            lll = [l for l in lll if l]
             if ci in lll:
                 lll.remove(ci)
             # print("ci", ci, "lll", lll)

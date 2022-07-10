@@ -284,7 +284,7 @@ def draw_networkx(G, pos=None, arrows=None, with_labels=True, **kwds):
         "edgecolors",
         "label",
         "picker",
-        "pickradius"
+        "pickradius",
     )
 
     valid_edge_kwds = (
@@ -358,7 +358,7 @@ def draw_networkx_nodes(
     label=None,
     margins=None,
     picker=False,
-    pickradius=5
+    pickradius=5,
 ):
     """Draw the nodes of the graph G.
 

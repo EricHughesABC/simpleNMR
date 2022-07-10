@@ -9,7 +9,7 @@ excel_df_columns = {
         "f1H_i",
         "f2H_i",
         "f1_i",
-        "f2_i"
+        "f2_i",
     ],
     "c13": [
         "ppm",
@@ -20,7 +20,7 @@ excel_df_columns = {
         "f2C_i",
         "f1C_i",
         "f1_i",
-        "f2_i"
+        "f2_i",
     ],
     "pureshift": [
         "ppm",
@@ -30,7 +30,7 @@ excel_df_columns = {
         "Type",
         "Flags",
         "Impurity/Compound",
-        "Annotation"
+        "Annotation",
     ],
     "cosy": [
         "f1_ppm",
@@ -45,7 +45,7 @@ excel_df_columns = {
         "f1H_i",
         "f2H_i",
         "f1Cp_i",
-        "f2Cp_i"
+        "f2Cp_i",
     ],
     "hsqc": [
         "f1_ppm",
@@ -57,7 +57,7 @@ excel_df_columns = {
         "f1C_i",
         "f2H_i",
         "f2Cp_i",
-        "f2p_ppm"
+        "f2p_ppm",
     ],
     "hmbc": [
         "f1_ppm",
@@ -69,25 +69,13 @@ excel_df_columns = {
         "f2p_i",
         "f1C_i",
         "f2H_i",
-        "f2Cp_i"
-    ]
+        "f2Cp_i",
+    ],
 }
 
 excel_orig_df_columns = {
-    "molecule": [
-        "molecule", 
-        "smiles"
-        ],
-    "H1_1D": [
-        "Name",
-        "Shift",
-        "Range",
-        "H's",
-        "Integral",
-        "Class",
-        "J's",
-        "Method"
-    ],
+    "molecule": ["molecule", "smiles"],
+    "H1_1D": ["Name", "Shift", "Range", "H's", "Integral", "Class", "J's", "Method"],
     "C13_1D": [
         "ppm",
         "Intensity",
@@ -96,7 +84,7 @@ excel_orig_df_columns = {
         "Type",
         "Flags",
         "Impurity/Compound",
-        "Annotation"
+        "Annotation",
     ],
     "H1_pureshift": [
         "ppm",
@@ -106,7 +94,7 @@ excel_orig_df_columns = {
         "Type",
         "Flags",
         "Impurity/Compound",
-        "Annotation"
+        "Annotation",
     ],
     "COSY": [
         "f2 (ppm)",
@@ -118,7 +106,7 @@ excel_orig_df_columns = {
         "Type",
         "Flags",
         "Impurity/Compound",
-        "Annotation"
+        "Annotation",
     ],
     "HSQC": [
         "f2 (ppm)",
@@ -130,9 +118,9 @@ excel_orig_df_columns = {
         "Type",
         "Flags",
         "Impurity/Compound",
-        "Annotation"
+        "Annotation",
     ],
-    "HMBC": [        
+    "HMBC": [
         "f2 (ppm)",
         "f1 (ppm)",
         "Intensity",
@@ -142,6 +130,6 @@ excel_orig_df_columns = {
         "Type",
         "Flags",
         "Impurity/Compound",
-        "Annotation"
-    ]
+        "Annotation",
+    ],
 }
