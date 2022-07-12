@@ -269,6 +269,7 @@ class MainWidget(QMainWindow):
         in_plot_label = []
         in_plot_index = []
         pos = None
+        self.mol_nodes = molplot.mol_nodes
         for k, v in specplot.peak_overlays_dict.items():
             # in_c13plots, c13plots_index = v["highlight"].contains(event)
             in_c13plots, c13plots_index = v.contains(event)
@@ -276,65 +277,65 @@ class MainWidget(QMainWindow):
             in_plot_label.append(k)
             in_plot_index.append(c13plots_index)
 
+
         if any(in_plot):
             lbl = in_plot_label[in_plot.index(True)]
             
-            if lbl != self.highlighted_peak_lbl:
+            # if lbl != self.highlighted_peak_lbl:
                 # highlight new peak
-                specplot.peak_overlays_dict[lbl].set_visible(True)
-                specplot.peak_overlays_dict[lbl].set_color(RED)
-                specplot.peak_overlays_dict[lbl].set_linewidth(0.75)
+            specplot.peak_overlays_dict[lbl].set_visible(True)
+            specplot.peak_overlays_dict[lbl].set_color(RED)
+            specplot.peak_overlays_dict[lbl].set_linewidth(0.75)
 
-                # annotate new peak
-                if 'H' in lbl:
-                    # set the annotation to the peak
-                    atom_index = int(lbl[1:])
-                    ppm = self.nmrproblem.h1.loc[atom_index, "ppm"] 
-                    integral = self.nmrproblem.h1.loc[atom_index, "integral"]
-                    jcoupling = self.nmrproblem.h1.loc[atom_index, "jCouplingClass"]
-                    annot_text = f"{lbl}: {ppm:.2f} ppm\nInt:{integral}\nJ: {jcoupling}"
-                    specplot.annot_H1.xy = (event.xdata, event.ydata)
-                    specplot.annot_H1.set_text(annot_text)
-                    specplot.annot_H1.set_visible(True)
+            # annotate new peak
+            if 'H' in lbl:
+                # set the annotation to the peak
+                atom_index = int(lbl[1:])
+                ppm = self.nmrproblem.h1.loc[atom_index, "ppm"] 
+                integral = self.nmrproblem.h1.loc[atom_index, "integral"]
+                jcoupling = self.nmrproblem.h1.loc[atom_index, "jCouplingClass"]
+                annot_text = f"{lbl}: {ppm:.2f} ppm\nInt:{integral}\nJ: {jcoupling}"
+                specplot.annot_H1.xy = (event.xdata, event.ydata)
+                specplot.annot_H1.set_text(annot_text)
+                specplot.annot_H1.set_visible(True)
 
-                elif 'C' in lbl:
-                    # set the annotation to the peak
-                    atom_index = int(lbl[1:])
-                    ppm = self.nmrproblem.c13.loc[atom_index, "ppm"]
-                    annot_text = f"{lbl}: {ppm:.1f} ppm"
-                    x = event.xdata
-                    y = event.ydata
-                    specplot.annot_C13.set_text(annot_text)
-                    specplot.annot_C13.xy = (x, y)
-                    specplot.annot_C13.set_visible(True)
+            elif 'C' in lbl:
+                # set the annotation to the peak
+                atom_index = int(lbl[1:])
+                ppm = self.nmrproblem.c13.loc[atom_index, "ppm"]
+                annot_text = f"{lbl}: {ppm:.1f} ppm"
+                x = event.xdata
+                y = event.ydata
+                specplot.annot_C13.set_text(annot_text)
+                specplot.annot_C13.xy = (x, y)
+                specplot.annot_C13.set_visible(True)
 
-                self.highlighted_peak_lbl = lbl
+            self.highlighted_peak_lbl = lbl
 
-                if "H" in lbl:
-                    clbl = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f2H_i==lbl]["f1C_i"].values[0]
-                    print("clbl", clbl)
+            if "H" in lbl:
+                clbl = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f2H_i==lbl]["f1C_i"].values[0]
 
-                else:
-                    clbl = lbl
+            else:
+                clbl = lbl
 
-                if "C" not in clbl:
-                    specplot.canvas.draw_idle()
-                    return
-
-                self.node_hover_lbl = clbl
-
-                # update molplot highlights
-                self.update_molplot_highlights(molplot, specplot, clbl)
-
-                # uddate specplot canvas
+            if "C" not in clbl:
                 specplot.canvas.draw_idle()
+                return
 
-                #uddate title in molplot
-                c13_ind = int(clbl[1:])
-                ppm_val = self.nmrproblem.c13.loc[c13_ind]["ppm"]
-                attached_protons = self.nmrproblem.c13.loc[c13_ind]["attached_protons"]
-                title_str = f"{clbl}: {ppm_val:.1f} ppm, attached protons: {attached_protons}"
-                self.moleculePlot.ax.set_title(title_str)
+            self.node_hover_lbl = clbl
+
+            # update molplot highlights
+            self.update_molplot_highlights(molplot, specplot, clbl)
+
+            # uddate specplot canvas
+            specplot.canvas.draw_idle()
+
+            #uddate title in molplot
+            c13_ind = int(clbl[1:])
+            ppm_val = self.nmrproblem.c13.loc[c13_ind]["ppm"]
+            attached_protons = self.nmrproblem.c13.loc[c13_ind]["attached_protons"]
+            title_str = f"{clbl}: {ppm_val:.1f} ppm, attached protons: {attached_protons}"
+            self.moleculePlot.ax.set_title(title_str)
         else:
             # unhilight old peak
             if self.highlighted_peak_lbl is not None:
@@ -455,7 +456,6 @@ class MainWidget(QMainWindow):
 
 
     def button_release_molecule(self, event, **event_argv):
-        print("button_release_molecule", event_argv["event_name"])
         self.node_pick_ind = None
         self.node_hover_ind = None
         self.node_picked = False 
@@ -551,7 +551,6 @@ class MainWidget(QMainWindow):
 
 
     def hover_over_molecule(self, event, event_name, molplot, specplot):
-        # print("hover_over_molecule", event_argv["event_name"])
         self.mol_nodes = molplot.mol_nodes
         self.mol_labels = molplot.mol_labels
 
@@ -650,7 +649,6 @@ class MainWidget(QMainWindow):
 
         # hide all highlights before dragging node
         if self.mol_nodes.node_highlighted:
-            print("Clear all highlights")
 
             self.mol_nodes.set_fc(self.mol_nodes.scatter_facecolors_rgba)
             self.mol_nodes.set_ec(self.mol_nodes.scatter_edgecolors_rgba)
@@ -897,28 +895,20 @@ class MainWidget(QMainWindow):
         # self.csideWidget.setText("<b>File > New</b> clicked")
 
     def newFromMresNova(self):
-        print("New MresNova")
         folderpath = QFileDialog.getExistingDirectory(
             self, "Select/Create New Problem Folder"
         )
         _, excel_fn = os.path.split(folderpath)
         excel_fn = excel_fn + ".xlsx"
-        print("folderpath", folderpath, excel_fn)
 
         dlg = EditDataFrameDialog(self.nmrproblem)
 
         if dlg.exec():
-            print("Success!")
             writer = pd.ExcelWriter(
                 os.path.join(folderpath, excel_fn), engine="xlsxwriter"
             )
             for sheetname, df in nmrProblem.new_dataframes.items():
-
-                print(sheetname)
-                print(df)
-
                 df.to_excel(writer, sheet_name=sheetname)
-            # print(type(dlg.table_widget))
             writer.save()
 
             workingdir, fn = os.path.split(folderpath)
@@ -926,7 +916,6 @@ class MainWidget(QMainWindow):
             nmrproblem = nmrProblem.NMRproblem(data_info)
 
             if nmrproblem.data_complete:
-
                 define_hsqc_f2integral(nmrproblem)
                 define_c13_attached_protons(nmrproblem)
 
@@ -977,28 +966,18 @@ class MainWidget(QMainWindow):
 
     def saveFile(self):
         for n in self.nmrproblem.molecule.nodes:
-            print(
-                n, self.moleculePlot.hmbc_graph_plots[n]["hmbc_nodes"].get_offsets()[0]
-            )
             self.nmrproblem.xy3[n] = self.moleculePlot.hmbc_graph_plots[n][
                 "hmbc_nodes"
             ].get_offsets()[0]
-
-        if hasattr(self.nmrproblem, "xy"):
-            print("xy\n", self.nmrproblem.xy)
-        if hasattr(self.nmrproblem, "xy3"):
-            print("xy3\n", self.nmrproblem.xy3)
 
             for k, v in self.nmrproblem.xy3.items():
                 if isinstance(v, np.ndarray):
                     self.nmrproblem.xy3[k] = v.tolist()
 
-            print(os.path.join(self.nmrproblem.problemDirectoryPath, "xy3.json"))
             with open(
                 os.path.join(self.nmrproblem.problemDirectoryPath, "xy3.json"), "w"
             ) as fp:
                 json.dump(self.nmrproblem.xy3, fp, indent=2)
-                print("saving xy3.json")
 
         # Logic for saving a file goes here...
         # self.centralWidget.setText("<b>File > Save</b> clicked")
@@ -1079,191 +1058,6 @@ class MainWidget(QMainWindow):
         if url.isValid():
             self.webEngineView.load(url)
 
-    # def setup_mplcursors(self):
-    #     @self.cursor.connect("remove")
-    #     def on_remove(sel):
-    #         if "molecule" in sel.artist.axes.get_gid():
-    #             lbl = "C" + str(int(sel.index) + 1)
-    #         else:
-    #             lbl = sel.artist.get_label()
-
-    #         self.hide_hmbc_graph_networks(lbl)
-    #         self.redraw_axes()
-    #         self.selection = None
-
-    #     @self.cursor.connect("add")
-    #     def on_add(sel):
-    #         self.selection = sel
-
-    #         udic = self.nmrproblem.udic
-    #         catoms = self.nmrproblem.carbonAtoms
-    #         hatoms = self.nmrproblem.protonAtoms
-
-    #         lbl = "C" + str(int(sel.index) + 1)
-    #         # print(dir(sel))
-    #         # print("sel.artist.axes.get_label()", sel.artist.axes.get_label())
-    #         # print("sel.artist.axes.get_gid()", sel.artist.axes.get_gid())
-    #         # print("sel.target\n", sel.target)
-
-    #         if "molecule" in sel.artist.axes.get_gid():
-    #             lbl = "C" + str(int(sel.index) + 1)
-
-    #             sel.annotation.set_text(lbl)
-    #             sel.extras[0].set_edgecolor("r")
-    #             sel.extras[0].set_linewidth(1)
-    #             sel.extras[0].set_facecolor("w")
-
-    #             # set annotation text
-    #             c13pmm_text, _ = udic[1]["labels1_dict"][lbl][1].split("\n")
-    #             _, c13groups_text = udic[1]["labels1_dict"][lbl][0].split(":")
-    #             sel.annotation.set_text(c13pmm_text + "\n\n" + c13groups_text)
-
-    #             # cursor.add_highlight(self.spectraPlot.peak_overlays_dict[ci])
-    #             # sel.extras.append(cursor.add_highlight(pairs[sel.artist]))
-    #             sel.extras.append(
-    #                 self.cursor.add_highlight(self.spectraPlot.peak_overlays_dict[lbl])
-    #             )
-    #             sel.extras[-1].set_visible(True)
-    #             sel.extras[-1].set_linewidth(0.75)
-    #             sel.extras[-1].set_color("red")
-
-    #             highlighted_H1_pks = udic[1]["info"].loc[lbl, "hsqc"]
-
-    #             # highlight corresponding H1 HSQC peaks ins 1D proton Spectrum
-    #             for hpk in highlighted_H1_pks:
-    #                 sel.extras.append(
-    #                     self.cursor.add_highlight(
-    #                         self.spectraPlot.peak_overlays_dict[hpk]
-    #                     )
-    #                 )
-    #                 sel.extras[-1].set_linewidth(0.75)
-    #                 sel.extras[-1].set_color("red")
-
-    #             # highlight corresponding HMBC connected peaks in C13 spectrum
-    #             self.highlight_hmbc_peaks(lbl, sel)
-
-    #             if lbl in self.nmrproblem.hmbc_graphs.keys():
-    #                 self.hide_hmbc_graph_networks()
-    #                 self.draw_hmbc_graph_network(lbl)
-    #                 self.redraw_axes()
-
-    #         else:
-    #             lbl = sel.artist.get_label()
-    #             self.new_node = lbl
-    #             if str(lbl) in hatoms:
-    #                 ii = 0
-    #             else:
-    #                 ii = 1
-
-    #             x, y = sel.target
-
-    #             # use artist to labal to find out peak id, H1, H2, ... or C1, C2
-
-    #             selected_pk = [str(lbl)]
-    #             highlighted_pks = udic[ii]["info"].loc[selected_pk[0], "hsqc"]
-
-    #             if "H" in selected_pk[0]:
-    #                 H_pks = selected_pk
-    #                 C_pks = highlighted_pks
-    #             else:
-    #                 H_pks = highlighted_pks
-    #                 C_pks = selected_pk
-
-    #             # set selected peak to red with a linewidth of 0.75
-    #             sel.extras[0].set_linewidth(0.75)
-    #             sel.extras[0].set_color("red")
-
-    #             ii2 = 0
-    #             if ii == 0:
-    #                 ii2 = 1
-
-    #             # change selection text depending on what hight peak was picked
-    #             # top, middle, bottom
-    #             # pk_y is an index position from 0,1,2
-    #             pk_y = 2 - int(y * 100 / udic[ii]["info"].loc[lbl, "pk_y"]) // 35
-
-    #             # set annotation text
-    #             # sel.annotation.set_text(udic[ii]['labels1_dict'][selected_pk[0]][pk_y])
-    #             sel.annotation.set_text(udic[ii]["labels1_dict"][lbl][pk_y])
-
-    #             # highlight coresponding proton or carbon peaks
-    #             # from hsqc data find corresponding peaks
-    #             highlighted_pks = udic[ii]["info"].loc[selected_pk[0], "hsqc"]
-    #             for hpk in highlighted_pks:
-    #                 sel.extras.append(
-    #                     self.cursor.add_highlight(
-    #                         self.spectraPlot.peak_overlays_dict[hpk]
-    #                     )
-    #                 )
-    #                 sel.extras[-1].set_linewidth(0.75)
-    #                 sel.extras[-1].set_color("red")
-
-    #             # add highlighted distributions
-    #             colors = ["b", "g", "r", "c", "m", "y", "k"]
-
-    #             # used to dsplay legends of highlighted distributions
-    #             plinesH = []
-    #             plabelsH = []
-    #             plinesC = []
-    #             plabelsC = []
-    #             ppmH = []
-    #             ppmC = []
-
-    #             # set visible
-    #             # circle through colors
-    #             # create proton distribution legends
-    #             for pk in H_pks:
-    #                 numplots = len(self.spectraPlot.h1c13distlist[0][pk]) - 1
-    #                 for i, aa in enumerate(self.spectraPlot.h1c13distlist[0][pk]):
-    #                     ppmH.append(self.nmrproblem.udic[0]["info"].loc[pk, "ppm"])
-    #                     sel.extras.append(self.cursor.add_highlight(aa))
-    #                     sel.extras[-1].set_visible(True)
-    #                     sel.extras[-1].set_linewidth(0.75)
-    #                     sel.extras[-1].set_color(colors[i % 7])
-    #                     # do not add legend info if plot is just single line showing where peak pos is
-    #                     if i < numplots:
-    #                         plabelsH.append(aa.get_label())
-    #                         plinesH.append(sel.extras[-1])
-
-    #             # create carbon distribution legends
-    #             for pk in C_pks:
-    #                 numplots = len(self.spectraPlot.h1c13distlist[1][pk]) - 1
-    #                 for i, aa in enumerate(self.spectraPlot.h1c13distlist[1][pk]):
-    #                     ppmC.append(self.nmrproblem.udic[1]["info"].loc[pk, "ppm"])
-    #                     sel.extras.append(self.cursor.add_highlight(aa))
-    #                     sel.extras[-1].set_visible(True)
-    #                     sel.extras[-1].set_linewidth(0.75)
-    #                     sel.extras[-1].set_color(colors[i % 7])
-    #                     if i < numplots:
-    #                         plabelsC.append(aa.get_label())
-    #                         plinesC.append(sel.extras[-1])
-
-    #             # adjust x-axis width H1 and C13 of distribution plots
-    #             # and add legend information
-    #             if len(ppmH) > 0:
-    #                 # calculate average position of peaks which will be used to adjust the x axis ppm range
-    #                 ppmmmH = np.mean(ppmH)
-    #                 self.spectraPlot.h1dist_ax.set_xlim(ppmmmH + 2, ppmmmH - 2)
-    #                 self.spectraPlot.h1dist_ax.legend(plinesH, plabelsH)
-    #             if len(ppmC) > 0:
-    #                 ppmmmC = np.mean(ppmC)
-    #                 self.spectraPlot.c13dist_ax.set_xlim(ppmmmC + 50, ppmmmC - 50)
-    #                 self.spectraPlot.c13dist_ax.legend(plinesC, plabelsC)
-
-    #             # update molecule plot to highlight HMBC graph fragment
-
-    #             # highlight corresponding HMBC connected peaks in C13 spectrum
-    #             self.highlight_hmbc_peaks(lbl, sel)
-
-    #             # if peak selected from H1 spectrum obtained corresponding carbon label
-    #             if lbl not in catoms:
-    #                 if lbl in self.nmrproblem.hsqcH1labelC13label.keys():
-    #                     lbl = self.nmrproblem.hsqcH1labelC13label[lbl]
-
-    #             self.hide_hmbc_graph_networks()
-    #             self.draw_hmbc_graph_network(lbl)
-    #             self.redraw_axes()
-
     @pyqtSlot()
     def on_click(self):
         smilesText = self.smilesInput.text()
@@ -1305,14 +1099,12 @@ class MainWidget(QMainWindow):
             )
 
     def highlight_hmbc_peaks(self, lbl, sel):
-        print("lbl", lbl)
         if lbl[0] == "H":
             if lbl in self.nmrproblem.hsqcH1labelC13label.keys():
                 lbl = self.nmrproblem.hsqcH1labelC13label[lbl]
 
         if lbl in self.nmrproblem.hmbc_graph_edges.keys():
             for i, ci in enumerate(self.nmrproblem.hmbc_graph_edges[lbl]):
-                print("i, ci", i, ci, len(self.hmbc_edge_colors))
                 sel.extras.append(
                     self.cursor.add_highlight(self.spectraPlot.peak_overlays_dict[ci])
                 )
@@ -1379,7 +1171,6 @@ def define_hsqc_f2integral(nmrproblem):
 
     for i in h1.index:
         if i in hsqc.index:
-            print(i, np.round(h1.loc[hsqc.loc[i, "f2_i"], "integral"]))
             hsqc.loc[i, "f2_integral"] = int(
                 np.round(h1.loc[hsqc.loc[i, "f2_i"], "integral"])
             )
@@ -1398,11 +1189,7 @@ def define_c13_attached_protons(nmrproblem):
             c13.loc[i, "attached_protons"] = int(dddf.f2_integral.sum())
 
 
-# def main(nmrproblem):
 
-#     ex = MainWidget(nmrproblem)
-#     ex.show()
-#     sys.exit(app.exec_())
 
 
 if __name__ == "__main__":
@@ -1410,7 +1197,6 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     data_info = nmrProblem.parse_argv()
-    print("data_info\n", data_info)
     nmrproblem = nmrProblem.NMRproblem(data_info)
 
     if nmrproblem.data_complete:
@@ -1419,11 +1205,7 @@ if __name__ == "__main__":
         nmrProblem.build_model(nmrproblem)
         nmrProblem.build_molecule_graph_network(nmrproblem)
         nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
-        # nmrProblem.build_xy3_representation_of_molecule_from_smiles(nmrproblem)
 
-    print(nmrproblem.c13)
-
-    # main(nmrproblem)
     ex = MainWidget(nmrproblem)
 
     ex.show()

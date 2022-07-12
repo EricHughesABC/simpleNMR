@@ -32,7 +32,6 @@ def createH1C13interactivePlot(nmrproblem, h1c13distlist, ax0):
     for i in range(udic["ndim"]):
         peak_overlays1 = []
         for Hi in udic[i]["info"].index:
-            # print("Hi", Hi)
 
             il = int(udic[i]["info"].loc[Hi, "pk_left"])
             ir = int(udic[i]["info"].loc[Hi, "pk_right"])
@@ -187,21 +186,13 @@ class MatplotlibH1C13Plot(Figure):
         return spectra1D
 
     def highlight_C13_peak(self, lbl):
-        print("highlight_C13_peak", lbl)
 
         self.peak_overlays_dict[lbl].set_visible(True)
         self.peak_overlays_dict[lbl].set_linewidth(0.75)
         self.peak_overlays_dict[lbl].set_color("red")
 
-    # def unhighlight_C13_peak(self, lbl):
-    #     """"""
-    #     print("unhighlight_C13_peak", lbl)
-
-    #     self.peak_overlays_dict[lbl].set_visible(False)
-
     def reset_peak_overlays_eeh(self):
         """"""
-        print("reset_peak_overlays")
 
         for k, v in self.peak_overlays_dict.items():
             v.set_visible(False)
@@ -210,7 +201,6 @@ class MatplotlibH1C13Plot(Figure):
 
     def reset_distributions_eeh(self):
         """"""
-        print("reset_distributions")
         for atom in [0,1]:
             for k, lines in self.h1c13distlist[atom].items():
                 for line in lines:
@@ -223,7 +213,6 @@ class MatplotlibH1C13Plot(Figure):
 
     def reset_hmbc_overlays_eeh(self):
         """"""
-        print("reset_hmbc_overlays")
 
         for k, v in self.hmbc_overlays_dict.items():
             v.set_visible(False)
@@ -232,23 +221,12 @@ class MatplotlibH1C13Plot(Figure):
 
     # highlight hmbc peaks
     def highlight_hmbc_C13_peaks(self, lbl):
-        print("highlight_hmbc_peak", lbl)
 
         if lbl in self.nmrproblem.hmbc_graph_edges.keys():
             for i, ci in enumerate(self.nmrproblem.hmbc_graph_edges[lbl]):
                 self.peak_overlays_dict[ci].set_visible(True)
                 self.peak_overlays_dict[ci].set_linewidth(1.0)
                 self.peak_overlays_dict[ci].set_color(self.hmbc_edge_colors[i])
-
-
-    # unhighlight C13 hmbc peaks
-    # def unhighlight_hmbc_C13_peaks(self, lbl):
-    #     print("unhighlight_hmbc_peak", lbl)
-
-    #     if lbl in self.nmrproblem.hmbc_graph_edges.keys():
-    #         for i, ci in enumerate(self.nmrproblem.hmbc_graph_edges[lbl]):
-    #             self.peak_overlays_dict[ci].set_visible(False)
-
 
     # highlight H1 peaks when lbl is a carbon atom
     def highlight_H1_peaks_from_highlighted_carbon_atom(self, lbl):
@@ -263,19 +241,7 @@ class MatplotlibH1C13Plot(Figure):
             self.peak_overlays_dict[hlbl].set_color("red")
 
 
-    # unhighlight H1 peaks when lbl is a carbon atom
-    # def unhighlight_H1_peaks_from_highlighted_carbon_atom(self, lbl):
-    #     # label expected to be C13
-
-    #     highlighted_H1_lbls = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f2Cp_i==lbl]['f2H_i']
-
-    #     # unhighlight corresponding H1 HSQC peaks ins 1D proton Spectrum
-    #     for hlbl in highlighted_H1_lbls:
-    #         self.peak_overlays_dict[hlbl].set_visible(False)
-
-
     def highlight_H1_HMBC_peaks(self, lbl):
-        print("highlight_H1_HMBC_peaks", lbl)
 
         if lbl in self.nmrproblem.hmbc_graph_edges.keys():
             for i, ci in enumerate(self.nmrproblem.hmbc_graph_edges[lbl]):
@@ -286,46 +252,6 @@ class MatplotlibH1C13Plot(Figure):
                     self.peak_overlays_dict[hi].set_color(self.hmbc_edge_colors[i])
 
 
-    # def unhighlight_H1_HMBC_peaks(self, lbl):
-    #     print("unhighlight_H1_HMBC_peaks", lbl)
-
-    #     if lbl in self.nmrproblem.hmbc_graph_edges.keys():
-    #         for i, ci in enumerate(self.nmrproblem.hmbc_graph_edges[lbl]):
-    #             hmbc_h1s = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f1C_i == ci]["f2H_i"].tolist()
-    #             for j, hi in enumerate(hmbc_h1s):
-    #                 self.peak_overlays_dict[hi].set_visible(False)
-
-
-
-
-    # def highlight_hmbc_peaks(self, lbl, sel):
-    #     print("lbl", lbl)
-    #     if lbl[0] == "H":
-    #         if lbl in self.nmrproblem.hsqcH1labelC13label.keys():
-    #             lbl = self.nmrproblem.hsqcH1labelC13label[lbl]
-
-    #     if lbl in self.nmrproblem.hmbc_graph_edges.keys():
-    #         for i, ci in enumerate(self.nmrproblem.hmbc_graph_edges[lbl]):
-    #             print('i, ci', i, ci, len(self.hmbc_edge_colors))
-    #             sel.extras.append(
-    #                 self.cursor.add_highlight(self.spectraPlot.peak_overlays_dict[ci])
-    #             )
-    #             sel.extras[-1].set_linewidth(1)
-    #             sel.extras[-1].set_color(self.hmbc_edge_colors[i])
-
-    #         # highlight corresponding HMBC connected peaks in H1 spectrum
-    #         for i, ci in enumerate(self.nmrproblem.hmbc_graph_edges[lbl]):
-    #             hmbc_h1s = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f1C_i == ci][
-    #                 "f2H_i"
-    #             ].tolist()
-    #             for j, hi in enumerate(hmbc_h1s):
-    #                 sel.extras.append(
-    #                     self.cursor.add_highlight(
-    #                         self.spectraPlot.peak_overlays_dict[hi]
-    #                     )
-    #                 )
-    #                 sel.extras[-1].set_linewidth(1)
-    #                 sel.extras[-1].set_color(self.hmbc_edge_colors[i])
 
 
 
@@ -335,7 +261,6 @@ class MatplotlibH1C13Plot(Figure):
 
         udic = nmrproblem.udic
         if "info" not in udic[0]:
-            print("info not in udic[0]")
             return
         peak_overlays = []
         peak_overlays_data = {}
@@ -344,7 +269,6 @@ class MatplotlibH1C13Plot(Figure):
         for i in range(udic["ndim"]):
             peak_overlays1 = []
             for Hi in udic[i]["info"].index:
-                # print("Hi", Hi)
 
                 il = int(udic[i]["info"].loc[Hi, "pk_left"])
                 ir = int(udic[i]["info"].loc[Hi, "pk_right"])
@@ -373,7 +297,6 @@ class MatplotlibH1C13Plot(Figure):
         for i in range(udic["ndim"]):
             peak_overlays1 = []
             for Hi in udic[i]["info"].index:
-                # print("Hi", Hi)
 
                 il = int(udic[i]["info"].loc[Hi, "pk_left"])
                 ir = int(udic[i]["info"].loc[Hi, "pk_right"])
@@ -447,75 +370,6 @@ class MatplotlibH1C13Plot(Figure):
             ax.set_xlabel(xxx_labels[i], fontsize=10, gid=gid[i])
             ax.set_yticks([])
 
-    # def display1H13C1Dspectra(self, ax0, nmrproblem: nmrProblem.NMRproblem):
-    #     """_summary_
-
-    #     Args:
-    #         ax (matplotlib.axes.Axes]): _description_
-    #         nmrproblem (nmrProblem.NMRproblem): _description_
-    #     """
-
-    #     udic = nmrproblem.udic
-
-    #     if (1 in udic) and (0 in udic):
-    #         if (
-    #             ("axis" in udic[1])
-    #             and ("spec" in udic[1])
-    #             and ("axis" in udic[0])
-    #             and ("spec" in udic[0])
-    #         ):
-    #             xxx = udic[1]["axis"].ppm_scale()
-    #             yyy = udic[1]["spec"]
-
-    #             iii = ((np.roll(yyy, 1) - yyy) ** 2) > 1e-8
-    #             iii[0] = 1.0
-    #             iii[-1] = 1.0
-
-    #             df = pd.DataFrame(
-    #                 data=np.array([xxx, yyy, iii]).transpose(),
-    #                 columns=["ppm", "yyy", "iii"],
-    #             )
-
-    #             full_spectrum1 = ax0[0].plot(
-    #                 df[df["iii"] == 1.0]["ppm"],
-    #                 df[df["iii"] == 1.0]["yyy"],
-    #                 color="black",
-    #                 lw=0.5,
-    #             )
-    #             ax0[0].set_xlim(udic[1]["axis"].ppm_limits())
-
-    #             xxx = udic[0]["axis"].ppm_scale()
-    #             yyy = udic[0]["spec"]
-
-    #             iii = ((np.roll(yyy, 1) - yyy) ** 2) > 1e-8
-    #             iii[0] = 1.0
-    #             iii[-1] = 1.0
-
-    #             df = pd.DataFrame(
-    #                 data=np.array([xxx, yyy, iii]).transpose(),
-    #                 columns=["ppm", "yyy", "iii"],
-    #             )
-    #             full_spectrum2 = ax0[1].plot(
-    #                 df[df["iii"] == 1.0]["ppm"],
-    #                 df[df["iii"] == 1.0]["yyy"],
-    #                 color="black",
-    #                 lw=0.5,
-    #             )
-
-    #             ax0[1].set_xlim(udic[0]["axis"].ppm_limits())
-
-    #     # ax.set_xlim(10,-1)
-    #     ax0[0].spines["top"].set_visible(False)
-    #     ax0[0].spines["left"].set_visible(False)
-    #     ax0[0].spines["right"].set_visible(False)
-    #     ax0[0].set_xlabel("$^{13}$C [ppm]", fontsize=10, gid="c13ppm")
-    #     ax0[0].set_yticks([])
-
-    #     ax0[1].spines["top"].set_visible(False)
-    #     ax0[1].spines["left"].set_visible(False)
-    #     ax0[1].spines["right"].set_visible(False)
-    #     ax0[1].set_xlabel("$^{1}$H [ppm]", fontsize=10, gid="h1ppm")
-    #     ax0[1].set_yticks([])
 
     def plotDistributions(self, nmrproblem, ax0):
 
@@ -556,37 +410,6 @@ class MatplotlibH1C13Plot(Figure):
 
         return distdict[0], distdict[1]
 
-        # plot top three candidates for each carbon present
-
-        # C13_ppm_axis = np.linspace(-30, 250, 500)
-        # catoms = nmrproblem.carbonAtoms
-        # iprobs = nmrproblem.iprobs
-        # df = nmrproblem.df
-        # C13df = nmrproblem.udic[1]["df"]
-
-        # c13distdict = {}
-
-        # for k, ci in enumerate(catoms):
-        #     distlist = []
-        #     for i in iprobs[ci][:numCandidates]:
-        #         (c13distr,) = ax.plot(
-        #             C13_ppm_axis,
-        #             C13df.loc[i, "norm"].pdf(C13_ppm_axis),
-        #             label=C13df.loc[i, "sF_latex_matplotlib"],
-        #         )
-
-        #         c13distr.set_visible(False)
-        #         distlist.append(c13distr)
-
-        #     c13line = ax.axvline(float(df.loc["ppm", ci]))
-        #     c13line.set_visible(False)
-        #     distlist.append(c13line)
-
-        #     c13distdict[ci] = distlist
-
-        # ax.set_xlabel("$^{13}$C [ppm]")
-        # ax.set_xlim(260, -40)
-        # return c13distdict
 
     def plotC13Distributions(self, ax, numCandidates, nmrproblem):
 
@@ -692,7 +515,6 @@ class MatplotlibH1C13Plot(Figure):
     def display_annotation_H1_from_molplot(self, lbl, annot):
         highlighted_H1_lbls = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f2Cp_i==lbl]['f2H_i']
 
-        print("highlighted_H1_lbls", highlighted_H1_lbls)
         if not highlighted_H1_lbls.empty:
             highlighted_H1_lbl = highlighted_H1_lbls.iloc[0]
             atom_index = int(highlighted_H1_lbl[1:])
