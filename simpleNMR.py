@@ -201,7 +201,6 @@ class MainWidget(QMainWindow):
 
         moleculewidget.setLayout(molvbox)
 
-        # jsmevbox.addWidget(self.webEngineView)
         jsmevbox.addWidget(self.smilesInput)
         jsmevbox.addWidget(self.button)
 
@@ -210,24 +209,16 @@ class MainWidget(QMainWindow):
         splitter1.addWidget(moleculewidget)
         splitter1.addWidget(jsmewidget)
 
-        splitter2.addWidget(spectrawidget)
+        
         splitter2.addWidget(splitter1)
+        splitter2.addWidget(spectrawidget)
 
         hbox.addWidget(splitter2)
         # hbox.addLayout(molvbox)
         self.centralWidget.setLayout(hbox)
         splitter2.setSizes([700, 400])
 
-        # hover=mplcursors.HoverMode.Transient
-        # self.cursor = mplcursors.cursor(
-        #     [self.moleculePlot.mol_nodes]
-        #     + self.spectraPlot.peak_overlays[0]
-        #     + self.spectraPlot.peak_overlays[1],
-        #     hover=mplcursors.HoverMode.Transient,
-        #     highlight=True,
-        # )
 
-        # self.setup_mplcursors()
 
         self.centralWidget.show()
 
@@ -236,10 +227,12 @@ class MainWidget(QMainWindow):
         self.node_hover_ind = None
         self.node_picked = False 
         self.highlighted_peak_lbl = None
+        self.old_lbl = None
 
         self.moleculePlot.canvas.mpl_connect("button_release_event", 
             lambda event: self.button_release_molecule(event, 
-                                                    event_name="button_release_event"))
+                                                    specplot=self.spectraPlot, 
+                                                    molplot=self.moleculePlot))
 
         self.moleculePlot.canvas.mpl_connect("motion_notify_event", 
             lambda event: self.motion_notify_callback(event, 
@@ -455,22 +448,86 @@ class MainWidget(QMainWindow):
             specplot.c13dist_ax.legend(plinesC, plabelsC)
 
 
-    def button_release_molecule(self, event, **event_argv):
+    def button_release_molecule(self, event, molplot, specplot):
+
+        self.mol_nodes.set_fc(self.mol_nodes.scatter_facecolors_rgba)
+        self.mol_nodes.set_ec(self.mol_nodes.scatter_edgecolors_rgba)
+
+        self.moleculePlot.hide_hmbc_graph_networks()
+
+        specplot.reset_peak_overlays_eeh()
+
+        specplot.hide_annotation(specplot.annot_C13)
+        specplot.hide_annotation(specplot.annot_H1)
+
+        #unhighlight distributions
+        specplot.reset_distributions_eeh()
+
+        molplot.canvas.draw_idle()
+        specplot.canvas.draw_idle()
+
         self.node_pick_ind = None
         self.node_hover_ind = None
         self.node_picked = False 
+        self.node_moved = False
 
 
     def motion_notify_callback(self, event, specplot, molplot):
 
         self.hover_over_molecule(event, event_name="motion_notify_event", molplot=molplot, specplot=specplot)
 
-        if self.node_pick_ind is None:
-            return
-        if event.inaxes is None:
-            return
         if event.button != 1:
             return
+        in_node, node_index = self.mol_nodes.contains(event)
+        if (not in_node)  and (event.button != 1):
+
+            print("(not in_node)  and (event.button != 1)")
+
+            self.mol_nodes.node_highlighted = False
+
+            self.mol_nodes.set_fc(self.mol_nodes.scatter_facecolors_rgba)
+            self.mol_nodes.set_ec(self.mol_nodes.scatter_edgecolors_rgba)
+
+            self.moleculePlot.hide_hmbc_graph_networks()
+
+            specplot.reset_peak_overlays_eeh()
+
+            specplot.hide_annotation(specplot.annot_C13)
+            specplot.hide_annotation(specplot.annot_H1)
+
+            #unhighlight distributions
+            specplot.reset_distributions_eeh()
+
+            molplot.canvas.draw_idle()
+            specplot.canvas.draw_idle()
+            return
+        
+        # if self.node_pick_ind is None:
+        #     print("self.node_pick_ind is None")
+        #     self.mol_nodes.node_highlighted = False
+
+        #     self.mol_nodes.set_fc(self.mol_nodes.scatter_facecolors_rgba)
+        #     self.mol_nodes.set_ec(self.mol_nodes.scatter_edgecolors_rgba)
+
+        #     self.moleculePlot.hide_hmbc_graph_networks()
+
+        #     specplot.reset_peak_overlays_eeh()
+
+        #     specplot.hide_annotation(specplot.annot_C13)
+        #     specplot.hide_annotation(specplot.annot_H1)
+
+        #     #unhighlight distributions
+        #     specplot.reset_distributions_eeh()
+
+        #     molplot.canvas.draw_idle()
+        #     specplot.canvas.draw_idle()
+            
+        #     return
+        # if event.inaxes is None:
+        #     return
+
+
+
 
         self.node_moved = True
         x, y = event.xdata, event.ydata
@@ -551,15 +608,19 @@ class MainWidget(QMainWindow):
 
 
     def hover_over_molecule(self, event, event_name, molplot, specplot):
+        print("hover_over_molecule")
         self.mol_nodes = molplot.mol_nodes
         self.mol_labels = molplot.mol_labels
 
         in_node, node_index = self.mol_nodes.contains(event)
 
         if self.node_picked:
+            self.mol_nodes.node_highlighted = False
             return
 
         if in_node:
+            
+            print("in_node", in_node)
             self.mol_nodes.node_highlighted = True
 
             ind = node_index['ind'][0]
@@ -569,6 +630,27 @@ class MainWidget(QMainWindow):
             self.node_hover_lbl = lbl
             self.node_hover_x = x
             self.node_hover_y = y
+
+            if lbl != self.old_lbl:
+                self.old_lbl = lbl
+                self.mol_nodes.node_highlighted = False
+
+                self.mol_nodes.set_fc(self.mol_nodes.scatter_facecolors_rgba)
+                self.mol_nodes.set_ec(self.mol_nodes.scatter_edgecolors_rgba)
+
+                self.moleculePlot.hide_hmbc_graph_networks()
+
+                specplot.reset_peak_overlays_eeh()
+
+                specplot.hide_annotation(specplot.annot_C13)
+                specplot.hide_annotation(specplot.annot_H1)
+
+                #unhighlight distributions
+                specplot.reset_distributions_eeh()
+
+                molplot.canvas.draw_idle()
+                specplot.canvas.draw_idle()
+
             
             c13_ind = int(lbl[1:])
             ppm_val = self.nmrproblem.c13.loc[c13_ind]["ppm"]
@@ -613,24 +695,25 @@ class MainWidget(QMainWindow):
             molplot.canvas.draw_idle()
             specplot.canvas.draw_idle()
         else:
-            if self.mol_nodes.node_highlighted:
-                self.mol_nodes.node_highlighted = False
+            print("in_node", in_node)
+            # if self.mol_nodes.node_highlighted:
+            self.mol_nodes.node_highlighted = False
 
-                self.mol_nodes.set_fc(self.mol_nodes.scatter_facecolors_rgba)
-                self.mol_nodes.set_ec(self.mol_nodes.scatter_edgecolors_rgba)
+            self.mol_nodes.set_fc(self.mol_nodes.scatter_facecolors_rgba)
+            self.mol_nodes.set_ec(self.mol_nodes.scatter_edgecolors_rgba)
 
-                self.moleculePlot.hide_hmbc_graph_networks()
+            self.moleculePlot.hide_hmbc_graph_networks()
 
-                specplot.reset_peak_overlays_eeh()
+            specplot.reset_peak_overlays_eeh()
 
-                specplot.hide_annotation(specplot.annot_C13)
-                specplot.hide_annotation(specplot.annot_H1)
+            specplot.hide_annotation(specplot.annot_C13)
+            specplot.hide_annotation(specplot.annot_H1)
 
-                #unhighlight distributions
-                specplot.reset_distributions_eeh()
+            #unhighlight distributions
+            specplot.reset_distributions_eeh()
 
-                molplot.canvas.draw_idle()
-                specplot.canvas.draw_idle()
+            molplot.canvas.draw_idle()
+            specplot.canvas.draw_idle()
 
 
     def pick_molecule(self, event, event_name, specplot, molplot):
