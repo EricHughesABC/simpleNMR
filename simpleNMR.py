@@ -481,7 +481,7 @@ class MainWidget(QMainWindow):
         in_node, node_index = self.mol_nodes.contains(event)
         if (not in_node)  and (event.button != 1):
 
-            print("(not in_node)  and (event.button != 1)")
+            # print("(not in_node)  and (event.button != 1)")
 
             self.mol_nodes.node_highlighted = False
 
@@ -608,7 +608,7 @@ class MainWidget(QMainWindow):
 
 
     def hover_over_molecule(self, event, event_name, molplot, specplot):
-        print("hover_over_molecule")
+        # print("hover_over_molecule")
         self.mol_nodes = molplot.mol_nodes
         self.mol_labels = molplot.mol_labels
 
@@ -620,7 +620,7 @@ class MainWidget(QMainWindow):
 
         if in_node:
             
-            print("in_node", in_node)
+            # print("in_node", in_node)
             self.mol_nodes.node_highlighted = True
 
             ind = node_index['ind'][0]
@@ -695,7 +695,7 @@ class MainWidget(QMainWindow):
             molplot.canvas.draw_idle()
             specplot.canvas.draw_idle()
         else:
-            print("in_node", in_node)
+            # print("in_node", in_node)
             # if self.mol_nodes.node_highlighted:
             self.mol_nodes.node_highlighted = False
 
@@ -939,12 +939,12 @@ class MainWidget(QMainWindow):
         menu.addAction(self.saveAction)
 
         # Separator
-        separator = QAction(self)
-        separator.setSeparator(True)
-        menu.addAction(separator)
-        menu.addAction(self.copyAction)
-        menu.addAction(self.pasteAction)
-        menu.addAction(self.cutAction)
+        # separator = QAction(self)
+        # separator.setSeparator(True)
+        # menu.addAction(separator)
+        # menu.addAction(self.copyAction)
+        # menu.addAction(self.pasteAction)
+        # menu.addAction(self.cutAction)
 
         # Launching the menu
         menu.exec(event.globalPos())

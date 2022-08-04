@@ -7,6 +7,7 @@ Created on Tue Jan 19 09:55:03 2021.
 from PyQt5.QtWidgets import QMessageBox
 
 import pandas as pd
+import openpyxl
 import numpy as np
 from numpy import pi, sin, cos, exp
 from scipy import stats
@@ -82,7 +83,7 @@ def read_in_cs_tables(
     return H1df, C13df
 
 
-def parse_argv(my_argv=None):
+def parse_argv(my_argv=None,  qtstarted=True):
 
     if my_argv == None:
         my_argv = sys.argv
@@ -123,14 +124,16 @@ def parse_argv(my_argv=None):
             excel_fn = os.path.join(data_directory, excelfilenames[0])
         else:
             # qt message box No excel file found in data directory
+            if qtstarted:
+                msgBox = QMessageBox()
+                msgBox.setIcon(QMessageBox.Information)
+                msgBox.setText("No excel file found in data directory\n{}".format(data_directory))
+                msgBox.setWindowTitle("Excel File Not Found")
+                msgBox.setStandardButtons(QMessageBox.Ok)
+                returnValue = msgBox.exec()
+            else:
+                print("No excel file found in data directory\n{}".format(data_directory))
 
-            msgBox = QMessageBox()
-            msgBox.setIcon(QMessageBox.Information)
-            msgBox.setText("No excel file found in data directory\n{}".format(data_directory))
-            msgBox.setWindowTitle("Excel File Not Found")
-            msgBox.setStandardButtons(QMessageBox.Ok)
-
-            returnValue = msgBox.exec()
 
             return {
                 "data_directory": os.getcwd(),
@@ -538,7 +541,7 @@ def create_hmbc_graph_fragments(nmrproblem, hmbc_edges: dict)-> dict:
 
 
 class NMRproblem:
-    def __init__(self, problemdata_info: dict, loadfromwhere=None, H1LarmorFreq=None):
+    def __init__(self, problemdata_info: dict, loadfromwhere=None, H1LarmorFreq=None, qtstarted=True):
 
         self.problemDirectoryPath = problemdata_info["data_directory"]
         self.problemDirectory = problemdata_info["data_directory"]
@@ -725,23 +728,30 @@ class NMRproblem:
             except FileNotFoundError:
                 # display qt message box  if excel file not found or not readable
 
-                msgBox = QMessageBox("Excel file not found", "Excel file not found", QMessageBox.Ok) 
-                msgBox = QMessageBox()
-                msgBox.setIcon(QMessageBox.Information)
-                msgBox.setText("Excel File not Found\n{}".format(self.excelFiles[0]))
-                msgBox.setWindowTitle("Excel File not Found")
-                msgBox.setStandardButtons(QMessageBox.Ok)
-                rtn = msgBox.exec_()  
+                if qtstarted:
+
+                    msgBox = QMessageBox("Excel file not found", "Excel file not found", QMessageBox.Ok) 
+                    msgBox = QMessageBox()
+                    msgBox.setIcon(QMessageBox.Information)
+                    msgBox.setText("Excel File not Found\n{}".format(self.excelFiles[0]))
+                    msgBox.setWindowTitle("Excel File not Found")
+                    msgBox.setStandardButtons(QMessageBox.Ok)
+                    rtn = msgBox.exec_()
+                else:
+                    print("Excel File not Found\n{}".format(self.excelFiles[0]))  
                 return False
             except PermissionError:
                 # display qt message box  if excel file not found or not readable
 
-                msgBox = QMessageBox()
-                msgBox.setIcon(QMessageBox.Information)
-                msgBox.setText("Cannot Open\n{}".format(self.excelFiles[0]))
-                msgBox.setWindowTitle("Excel File Access Error")
-                msgBox.setStandardButtons(QMessageBox.Ok)
-                rtn = msgBox.exec_()
+                if qtstarted:
+                    msgBox = QMessageBox()
+                    msgBox.setIcon(QMessageBox.Information)
+                    msgBox.setText("Cannot Open\n{}".format(self.excelFiles[0]))
+                    msgBox.setWindowTitle("Excel File Access Error")
+                    msgBox.setStandardButtons(QMessageBox.Ok)
+                    rtn = msgBox.exec_()
+                else:
+                    print("Cannot Open\n{}".format(self.excelFiles[0]))
                 return False
 
         else:
