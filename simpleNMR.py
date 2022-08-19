@@ -51,11 +51,16 @@ import pandas as pd
 
 import PIL
 from PIL import Image
+# from sklearn.compose import make_column_selector
 
 import nmrProblem
 from qt5_tabs_001 import EditDataFrameDialog
 from moleculePlot import MatplotlibMoleculePlot
 from spectraPlot import MatplotlibH1C13Plot
+
+from xy3_dialog import XY3dialog
+
+import platform
 
 
 PLOTLINECOLORS = ('blue', 'orange', 'green', 'red', 'purple')
@@ -66,53 +71,43 @@ YELLOW = (1., 1., 0., 1.)
 RED    = (1., 0., 0., 1.)
 WHITE  = (1., 1., 1., 1.)
 
+# Test if we can run JAVA
+global JAVA_AVAILABLE
+global JAVA_COMMAND
+JAVA_AVAILABLE = False
+ret = os.system("java -version")
+# JAVA_COMMAND = "java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"
+if ret == 0:
+    JAVA_AVAILABLE = True
+    print("JAVA is available")
 
-# def create_hmbc_graph_fragments(nmrproblem, hmbc_edges):
-#     hmbc_graphs = {}
-#     ntwk_labels = []
 
-#     catoms = nmrproblem.carbonAtoms
-#     df = nmrproblem.df
-#     xy3 = nmrproblem.xy3
-#     molecule = nmrproblem.molecule
-#     udic = nmrproblem.udic
+# Test what system we are running on
+system = platform.system()
+global WINDOWS_OS
+global LINUX_OS
+global MAC_OS
 
-#     ret1 = None
-#     ret2 = None
+mac_os = False
+linux_os = False
+windows_os = False
 
-#     lineCollections = []
-#     hmbc_edge_colors = nmrproblem.hmbc_edge_colors
 
-#     for i, c in enumerate(catoms):
-
-#         if c not in hmbc_edges.keys():
-#             continue
-
-#         # create hmbc graph for node c and add  xy coodinates
-#         hmbc_graphs[c] = {}
-#         hmbc_graphs[c]["graph"] = nx.Graph()
-#         hmbc_graphs[c]["xy"] = dict((k, xy3[k]) for k in [c] + list(hmbc_edges[c]))
-#         hmbc_graphs[c]["colors"] = []
-
-#         # add nodes to hmbc graph
-#         hmbc_graphs[c]["graph"].add_nodes_from([c] + list(hmbc_edges[c]))
-
-#         # add edges
-#         for i, c1 in enumerate(hmbc_edges[c]):
-#             hmbc_graphs[c]["graph"].add_edge(c, c1)
-#             hmbc_graphs[c]["colors"].append(hmbc_edge_colors[i])
-
-#     return hmbc_graphs
+# set java command to predict C13 chemical shifts for correct os system
+if system == "Windows":
+    WINDOWS_OS = True
+    JAVA_COMMAND = "java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"
+elif system == "Linux":
+    LINUX_OS = True
+    JAVA_COMMAND = "java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
+elif system == "Darwin":
+   MAC_OS = True
+   JAVA_COMMAND = "java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
 
 
 class MoleculePlotCanvas(FigureCanvasQTAgg):
     def __init__(self, fig, parent=None):
-        # self.molecule_fig = Figure(figsize=(width, height), dpi=dpi)
         super(MoleculePlotCanvas, self).__init__(fig)
-        # gs = GridSpec(1, 1, figure=self.fig)
-        # self.ax = self.fig.add_subplot(gs[:, :])
-        # self.molecule_ax = self.molecule_fig.add_subplot()
-        # self.molecule_ax.plot([1,2,3], [1,2,3])
 
 
 class MainWidget(QMainWindow):
@@ -171,8 +166,9 @@ class MainWidget(QMainWindow):
         self.moleculeCanvas = MoleculePlotCanvas(self.moleculePlot)
         self.moleculeCanvas.setGeometry(0, 0, 300, 300)
 
-        moltoolbar = NavigationToolbar(self.moleculeCanvas, self)
-        spctoolbar = NavigationToolbar(self.spectraCanvas, self)
+        self.moltoolbar = NavigationToolbar(self.moleculeCanvas, self)
+        self.spctoolbar = NavigationToolbar(self.spectraCanvas, self)
+
 
         # self.webEngineView = QWebEngineView()
         # self.loadPage()
@@ -191,12 +187,12 @@ class MainWidget(QMainWindow):
         jsmevbox = QVBoxLayout()
         spcvbox = QVBoxLayout()
 
-        spcvbox.addWidget(spctoolbar)
+        spcvbox.addWidget(self.spctoolbar)
         spcvbox.addWidget(self.spectraCanvas)
 
         spectrawidget.setLayout(spcvbox)
 
-        molvbox.addWidget(moltoolbar)
+        molvbox.addWidget(self.moltoolbar)
         molvbox.addWidget(self.moleculeCanvas)
 
         moleculewidget.setLayout(molvbox)
@@ -216,7 +212,7 @@ class MainWidget(QMainWindow):
         hbox.addWidget(splitter2)
         # hbox.addLayout(molvbox)
         self.centralWidget.setLayout(hbox)
-        splitter2.setSizes([700, 400])
+        splitter2.setSizes([600, 600])
 
 
 
@@ -258,6 +254,13 @@ class MainWidget(QMainWindow):
         # self.centralWidget.show()
 
     def hover_over_specplot(self, event, specplot, molplot):
+
+        if (self.moltoolbar.mode != "") or (self.spctoolbar.mode != ""):
+            # print("hover_over_specplot: toolbar mode is not empty")
+            # print("self.moltoolbar.mode: ", self.moltoolbar.mode)
+            # print("self.spctoolbar.mode: ", self.spctoolbar.mode)   
+            return
+
         in_plot = []
         in_plot_label = []
         in_plot_index = []
@@ -450,6 +453,12 @@ class MainWidget(QMainWindow):
 
     def button_release_molecule(self, event, molplot, specplot):
 
+        if (self.moltoolbar.mode != "") or (self.spctoolbar.mode != ""):
+            # print("button release molecule")
+            # print("self.moltoolbar.mode: ", self.moltoolbar.mode)
+            # print("self.spctoolbar.mode: ", self.spctoolbar.mode)   
+            return
+
         self.mol_nodes.set_fc(self.mol_nodes.scatter_facecolors_rgba)
         self.mol_nodes.set_ec(self.mol_nodes.scatter_edgecolors_rgba)
 
@@ -474,9 +483,20 @@ class MainWidget(QMainWindow):
 
     def motion_notify_callback(self, event, specplot, molplot):
 
+        
+
+        if (self.moltoolbar.mode != "") or (self.spctoolbar.mode != ""):
+            # print("motion notify callback")
+            # print("self.moltoolbar.mode: ", self.moltoolbar.mode)
+            # print("self.spctoolbar.mode: ", self.spctoolbar.mode)
+            return
+
         self.hover_over_molecule(event, event_name="motion_notify_event", molplot=molplot, specplot=specplot)
 
         if event.button != 1:
+            return
+
+        if not hasattr(self, "label_id"):
             return
         in_node, node_index = self.mol_nodes.contains(event)
         if (not in_node)  and (event.button != 1):
@@ -531,6 +551,11 @@ class MainWidget(QMainWindow):
 
         self.node_moved = True
         x, y = event.xdata, event.ydata
+        # print("x, y: ", x, y)
+
+        # if x or y is None: return
+        if x is None: return
+        if y is None: return
 
         self.hmbc_graph_plots = self.moleculePlot.hmbc_graph_plots
         self.mol_nodes = self.moleculePlot.mol_nodes
@@ -717,6 +742,7 @@ class MainWidget(QMainWindow):
 
 
     def pick_molecule(self, event, event_name, specplot, molplot):
+        global JAVA_AVAILABLE
         in_node, node_index = self.moleculePlot.mol_nodes.contains(event.mouseevent)
 
         if in_node:
@@ -996,7 +1022,14 @@ class MainWidget(QMainWindow):
 
             workingdir, fn = os.path.split(folderpath)
             data_info = nmrProblem.parse_argv([fn, workingdir, fn])
-            nmrproblem = nmrProblem.NMRproblem(data_info)
+
+            # get method for caculating XY3 data
+            xy3_dlg = XY3dialog(java_available=JAVA_AVAILABLE)
+
+            if xy3_dlg.exec():
+                xy3_calc_method = xy3_dlg.get_method()
+            # Create new problem
+            nmrproblem = nmrProblem.NMRproblem(data_info,  java_available=JAVA_AVAILABLE, xy3_calc_method=xy3_calc_method, java_command = JAVA_COMMAND)
 
             if nmrproblem.data_complete:
                 define_hsqc_f2integral(nmrproblem)
@@ -1004,7 +1037,9 @@ class MainWidget(QMainWindow):
 
                 nmrProblem.build_model(nmrproblem)
                 nmrProblem.build_molecule_graph_network(nmrproblem)
-                nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
+                # nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
+                nmrproblem.build_xy3()
+                print("xy3:", nmrproblem.xy3)
 
                 self.initiate_windows(nmrproblem)
         else:
@@ -1032,7 +1067,10 @@ class MainWidget(QMainWindow):
         if fileName:
             workingdir, fn = os.path.split(fileName)
             data_info = nmrProblem.parse_argv([fn, workingdir, fn])
-            nmrproblem = nmrProblem.NMRproblem(data_info)
+            xy3_dlg = XY3dialog(java_available=JAVA_AVAILABLE)
+            if xy3_dlg.exec():
+                xy3_calc_method = xy3_dlg.get_method()
+            nmrproblem = nmrProblem.NMRproblem(data_info, java_available=JAVA_AVAILABLE, xy3_calc_method=xy3_calc_method, java_command = JAVA_COMMAND)
 
             if nmrproblem.data_complete:
 
@@ -1041,7 +1079,9 @@ class MainWidget(QMainWindow):
 
                 nmrProblem.build_model(nmrproblem)
                 nmrProblem.build_molecule_graph_network(nmrproblem)
-                nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
+                # nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
+                nmrproblem.build_xy3()
+                print("xy3:", nmrproblem.xy3)
 
                 self.initiate_windows(nmrproblem)
         # Logic for opening an existing file goes here...
@@ -1161,25 +1201,38 @@ class MainWidget(QMainWindow):
         self.nmrproblem.smiles = smilesText
 
         molecule = Chem.MolFromSmiles(smilesText)
-        Draw.MolToFile(molecule, "molecule.png")
-        self.nmrproblem.png = Image.open("molecule.png").transpose(
-            PIL.Image.FLIP_LEFT_RIGHT
-        )
+        Draw.MolToFile(molecule, "molecule.png", size=(800,800))
+        # self.nmrproblem.png = Image.open("molecule.png").transpose(
+        #     PIL.Image.FLIP_LEFT_RIGHT
+        # )
+        self.nmrproblem.png = Image.open("molecule.png")
 
         if hasattr(self.moleculePlot, "bkgnd"):
             self.moleculePlot.bkgnd.set_data(self.nmrproblem.png)
         else:
             self.moleculePlot.bkgnd = self.moleculePlot.ax.imshow(
-                np.fliplr(self.nmrproblem.png),
+                # np.fliplr(self.nmrproblem.png),
+                self.nmrproblem.png,
                 aspect="auto",
-                extent=[
-                    1.0 * self.moleculePlot.xmax,
-                    1.0 * self.moleculePlot.xmin,
-                    1.5 * self.moleculePlot.ymin,
-                    1.5 * self.moleculePlot.ymax,
-                ],
-                alpha=0.4,
+                extent=[0,1,1,0],
+                alpha=0.6,
             )
+
+
+
+
+#         if not isinstance(nmrproblem.png, type(None)):
+#             self.bkgnd = self.ax.imshow(
+#                 np.fliplr(nmrproblem.png),
+#                 aspect="auto",
+#                 extent=[0,1,1,0],
+#                 alpha=0.4,
+#             )
+
+# # ax.set_xlim(-0.1,1.1)
+# # ax.set_ylim(1.1, -0.1)
+#         self.ax.set_xlim(-0.1, 1.1)
+#         self.ax.set_ylim(1.1, -0.1)
 
     def highlight_hmbc_peaks(self, lbl, sel):
         if lbl[0] == "H":
@@ -1279,15 +1332,23 @@ if __name__ == "__main__":
 
     app = QApplication(sys.argv)
 
+    xy3_calc_method = "xy3"
+
+    xy3_dlg = XY3dialog(java_available=JAVA_AVAILABLE)
+    if xy3_dlg.exec_():
+        xy3_calc_method_str = xy3_dlg.get_method()
+
     data_info = nmrProblem.parse_argv()
-    nmrproblem = nmrProblem.NMRproblem(data_info)
+    nmrproblem = nmrProblem.NMRproblem(data_info, java_available=JAVA_AVAILABLE, xy3_calc_method=xy3_calc_method_str, java_command=JAVA_COMMAND)
 
     if nmrproblem.data_complete:
         define_hsqc_f2integral(nmrproblem)
         define_c13_attached_protons(nmrproblem)
         nmrProblem.build_model(nmrproblem)
         nmrProblem.build_molecule_graph_network(nmrproblem)
-        nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
+        # nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
+        nmrproblem.build_xy3()
+        print("xy3:", nmrproblem.xy3)
 
     ex = MainWidget(nmrproblem)
 

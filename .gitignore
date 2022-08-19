@@ -12,9 +12,18 @@ __pycache__/
 # molecule png file
 molecule.png
 
+# python test files
+test*.py
 
 # Development files notebooks
 develop/
+
+# png, mol, mdl, smi and csv files in toplevel directory
+*.png
+*.mol
+*.smi
+*.csv
+*.mdl
 
 # Distribution / packaging
 .Python
@@ -138,3 +147,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# java directory
+/java

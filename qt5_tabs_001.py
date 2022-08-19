@@ -3,13 +3,9 @@ from PyQt5.QtWidgets import (
     QMainWindow,
     QApplication,
     QPushButton,
-    QWidget,
-    QAction,
     QTabWidget,
     QVBoxLayout,
-    QTableWidget,
-    QHeaderView,
-    QTableWidgetItem,
+    
     QTableView,
     QDialog,
     QDialogButtonBox,
@@ -20,7 +16,6 @@ from PyQt5.Qt import QApplication, QClipboard
 
 from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtCore import pyqtSlot, QAbstractTableModel, Qt
-from PyQt5.QtWebEngineWidgets import QWebEngineView
 
 import pandas as pd
 import io
@@ -29,78 +24,6 @@ import nmrProblem
 
 from excelheaders import excel_orig_df_columns
 
-# excel_orig_df_columns = {
-#     "molecule": [
-#         "moleclule",
-#         "smile"
-#         ],
-#     "H1_1D": [
-#         "Name",
-#         "Shift",
-#         "Range",
-#         "H's",
-#         "Integral",
-#         "Class",
-#         "J's",
-#         "Method"
-#     ],
-#     "C13_1D": [
-#         "ppm",
-#         "Intensity",
-#         "Width",
-#         "Area",
-#         "Type",
-#         "Flags",
-#         "Impurity/Compound",
-#         "Annotation"
-#     ],
-#     "H1_pureshift": [
-#         "ppm",
-#         "Intensity",
-#         "Width",
-#         "Area",
-#         "Type",
-#         "Flags",
-#         "Impurity/Compound",
-#         "Annotation"
-#     ],
-#     "COSY": [
-#         "f2 (ppm)",
-#         "f1 (ppm)",
-#         "Intensity",
-#         "Width f2",
-#         "Width f1",
-#         "Volume",
-#         "Type",
-#         "Flags",
-#         "Impurity/Compound",
-#         "Annotation"
-#     ],
-#     "HSQC": [
-#         "f2 (ppm)",
-#         "f1 (ppm)",
-#         "Intensity",
-#         "Width f2",
-#         "Width f1",
-#         "Volume",
-#         "Type",
-#         "Flags",
-#         "Impurity/Compound",
-#         "Annotation"
-#     ],
-#     "HMBC": [
-#         "f2 (ppm)",
-#         "f1 (ppm)",
-#         "Intensity",
-#         "Width f2",
-#         "Width f1",
-#         "Volume",
-#         "Type",
-#         "Flags",
-#         "Impurity/Compound",
-#         "Annotation"
-#     ]
-# }
 
 
 class TableModel(QAbstractTableModel):

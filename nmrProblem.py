@@ -31,6 +31,11 @@ from rdkit.Chem import Draw
 import PIL
 from PIL import Image
 from excelheaders import excel_orig_df_columns, excel_df_columns
+# from .simpleNMR import JAVA_COMMAND
+# from simpleNMR import JAVA_AVAILABLE
+
+global JAVA_AVAILABLE
+global JAVA_COMMAND
 
 
 def read_in_cs_tables(
@@ -95,12 +100,23 @@ def parse_argv(my_argv=None,  qtstarted=True):
     smiles_fn = None
     png_fn = None
     excel_fn = None
+    xy3_fn = None
 
     datadirectories = [d for d in my_argv[1:] if os.path.isdir(d)]
     excelfilenames = [e for e in my_argv[1:] if e.endswith(".xlsx")]
     pngfilenames = [s for s in my_argv[1:] if s.endswith(".png")]
     smilefilenames = [s for s in my_argv[1:] if s.endswith(".smi")]
     xy3jsonfilenames = [s for s in my_argv[1:] if s == "xy3.json"]
+
+    # if len(sys.argv) == 1:
+    #     return {
+    #     "data_directory": os.getcwd(),
+    #     "excel_fn": None,
+    #     "smiles_fn": None,
+    #     "png_fn": None,
+    #     "xy3_fn": None
+    # }
+
 
     data_directory = "."
     if len(datadirectories) > 0:
@@ -220,26 +236,48 @@ def create_png_from_smiles(smiles_str: str)->PIL.Image.Image:
     """Creates a png image from a smiles string via rdkit"""
     png = None
     molecule = Chem.MolFromSmiles(smiles_str)
-    Draw.MolToFile(molecule, "molecule.png")
-    png = Image.open("molecule.png")
+    # Draw.MolToFile(molecule, "molecule.png")
+    # png = Image.open("molecule.png")
+    png = Draw.MolToImage(molecule, size=(800,800))
     return png
 
 
 def create_molecule_from_smiles(smiles_str: str)->Chem.Mol:
-    """Creates a RDKIT molecule from a smiles string via rdkit"""
+    """Creates a RDKIT molecule from a smiles string via rdkit
+       save the scaled coordinates of the atoms in the molecule
+       min x and y =0, max x and y = 1"""
+
     molecule = Chem.MolFromSmiles(smiles_str)
     molecule.Compute2DCoords()
 
-    xy = [[xyz[0], xyz[1]] for xyz in molecule.GetConformer().GetPositions()]
+    d2d = Draw.rdMolDraw2D.MolDraw2DSVG(800,800)
+    d2d.DrawMolecule(molecule)
+    d2d.FinishDrawing()
 
-    for a, (x,y) in zip(molecule.GetAtoms(), xy):
-        a.SetDoubleProp('x', x)
-        a.SetDoubleProp('y', y)
+    for atom in molecule.GetAtoms():
+        idx = atom.GetIdx()
+        pt = d2d.GetDrawCoords(idx)
+        print(idx, pt.x, pt.y)
 
-    # molecule.xy3 = {}
-    # for i, n in enumerate(molecule.nodes()):
-    #     molecule.xy3[n] = xy[i]
+        atom.SetDoubleProp('x', pt.x/800)
+        atom.SetDoubleProp('y', pt.y/800)
+
     return molecule
+
+
+def return_carbon_xy3_positions(molecule: Chem.Mol)->dict:
+    """Returns the xy3 positions of the carbon atoms in the molecule"""
+
+    d2d = Draw.rdMolDraw2D.MolDraw2DSVG(800,800)
+    d2d.DrawMolecule(molecule)
+    d2d.FinishDrawing()
+    xy3_positions = {}
+    for atom in molecule.GetAtoms():
+        if atom.GetSymbol() == "C":
+            idx = atom.GetIdx()
+            pt = d2d.GetDrawCoords(idx)
+            xy3_positions['C'+str(idx+1)] = np.asarray([pt.x/800., pt.y/800.])
+    return xy3_positions
 
 
 def read_xy3_jsonfile(problemdata_info: dict)->dict:
@@ -252,27 +290,9 @@ def read_xy3_jsonfile(problemdata_info: dict)->dict:
         for k,v in xy3.items():
             xy3[k] = np.asarray(v)
 
-    return xy3
-
-# def center_molecule(nmrproblem, ax, pc_x, pc_y):
-
-#     xy3 = nmrproblem.xy3
-
-#     xy_np = np.array(list(xy3.values())).T
-#     xxx = xy_np[0]
-#     yyy = xy_np[1]
-
-#     delta_x = xxx.max() - xxx.min()
-#     delta_y = yyy.max() - yyy.min()
-
-#     xmin = xxx.min() - delta_x * pc_x
-#     xmax = xxx.max() + delta_x * pc_x
-#     ymin = yyy.min() - delta_y * pc_y
-#     ymax = yyy.max() + delta_y * pc_y
-
-#     # ax.set_xlim(xmax, xmin)
-#     # ax.set_ylim(ymin, ymax)
-#     return np.array([xmin, xmax, ymin, ymax])
+        return xy3
+    else:
+        return None
 
 
 def create_hmbc_edges_dict(nmrproblem):
@@ -380,11 +400,97 @@ def build_xy3_representation_of_molecule_from_smiles(nmrproblem):
     nmrproblem.xy3 = xy3
 
 
+# def build_xy3_representation_of_molecule(nmrproblem):
+#     """"""
+#     molecule = nmrproblem.molecule
+#     # create coodinates that look more molecule like
+#     atomicNumberfromSymbol = {"H": 1, "Li": 3, "Be": 4, "B": 5, "C": 6,  "N": 7, "O": 8, "F": 9, "Na": 11, 
+#                               "Mg": 12, "Al": 13, "Si": 14, "P": 15, "S": 16, "Cl": 17, "K": 19, "Ca": 20,
+#                                 "Sc": 21, "Ti": 22, "V": 23, "Cr": 24, "Mn": 25, "Fe": 26, "Co": 27, "Ni": 28,
+#                                 "Cu": 29, "Zn": 30, "Ga": 31, "Ge": 32, "As": 33, "Se": 34, "Br": 35, "Kr": 36,
+#                                 "Rb": 37, "Sr": 38, "Y": 39, "Zr": 40, "Nb": 41, "Mo": 42, "Tc": 43, "Ru": 44,
+#                                 "Rh": 45, "Pd": 46, "Ag": 47, "Cd": 48, "In": 49, "Sn": 50, "Sb": 51, "Te": 52,
+#                                 "I": 53, "Xe": 54, "Cs": 55, "Ba": 56, "La": 57, "Ce": 58, "Pr": 59, "Nd": 60,
+#                                 "Pm": 61, "Sm": 62, "Eu": 63, "Gd": 64, "Tb": 65, "Dy": 66, "Ho": 67, "Er": 68,
+#                                 "Tm": 69, "Yb": 70, "Lu": 71, "Hf": 72, "Ta": 73, "W": 74, "Re": 75, "Os": 76,
+#                                 "Ir": 77, "Pt": 78, "Au": 79, "Hg": 80, "Tl": 81, "Pb": 82, "Bi": 83, "Po": 84,
+#                                 "At": 85, "Rn": 86, "Fr": 87, "Ra": 88, "Ac": 89, "Th": 90, "Pa": 91, "U": 92,
+#                                 "Np": 93, "Pu": 94, "Am": 95, "Cm": 96, "Bk": 97, "Cf": 98, "Es": 99, "Fm": 100,
+#                                 "Md": 101, "No": 102, "Lr": 103, "Rf": 104, "Db": 105, "Sg": 106, "Bh": 107,
+#                                 "Hs": 108, "Mt": 109, "Ds": 110, "Rg": 111, "Cn": 112, "Uut": 113, "Fl": 114,
+#                                 "Uup": 115, "Lv": 116, "Uus": 117, "Uuo": 118}
+               
+
+#     for node in molecule.nodes:
+#         molecule.nodes[node]["atomic_num"] = atomicNumberfromSymbol[
+#             "".join([c for c in node if c.isalpha()])
+#         ]
+#         molecule.nodes[node][
+#             "chiral_tag"
+#         ] = rdkit.Chem.rdchem.ChiralType.CHI_UNSPECIFIED
+#         molecule.nodes[node]["formal_charge"] = 0
+#         molecule.nodes[node]["is_aromatic"] = False
+#         molecule.nodes[node]["hybridization"] = rdkit.Chem.rdchem.HybridizationType.SP3
+#         molecule.nodes[node]["num_explicit_hs"] = 0
+
+#     for e in molecule.edges:
+#         molecule.edges[e]["bond_type"] = rdkit.Chem.rdchem.BondType.SINGLE
+
+#     mmm = nx_to_mol(molecule)
+
+#     mmm.Compute2DCoords()
+
+#     xy = np.array([[xyz[0], xyz[1]] for xyz in mmm.GetConformer().GetPositions()])
+
+#     xy = xy.T
+#     xxx, yyy = xy
+
+#     yyy = yyy/yyy.max()
+#     yyy = yyy - yyy.mean()
+#     yyy = (yyy/yyy.max())
+
+#     xxx = xxx/xxx.max()
+#     xxx = xxx - xxx.mean()
+#     xxx = (xxx/xxx.max())
+
+#     xy = np.array([xxx,yyy])
+#     xy = xy.T
+
+#     # nmrproblem.xmin = -1.2
+#     # nmrproblem.xmax = 1.2
+
+#     # nmrproblem.ymin = -1.2
+#     # nmrproblem.ymax = 1.2
+
+
+#     xy3 = {}
+#     for i, n in enumerate(molecule.nodes()):
+#         xy3[n] = xy[i]
+
+#     nmrproblem.xy3 = xy3
+
+
+
 def build_xy3_representation_of_molecule(nmrproblem):
     """"""
     molecule = nmrproblem.molecule
     # create coodinates that look more molecule like
-    atomicNumberfromSymbol = {"H": 1, "C": 6, "O": 8, "N": 7}
+    atomicNumberfromSymbol = {"H": 1, "Li": 3, "Be": 4, "B": 5, "C": 6,  "N": 7, "O": 8, "F": 9, "Na": 11, 
+                              "Mg": 12, "Al": 13, "Si": 14, "P": 15, "S": 16, "Cl": 17, "K": 19, "Ca": 20,
+                                "Sc": 21, "Ti": 22, "V": 23, "Cr": 24, "Mn": 25, "Fe": 26, "Co": 27, "Ni": 28,
+                                "Cu": 29, "Zn": 30, "Ga": 31, "Ge": 32, "As": 33, "Se": 34, "Br": 35, "Kr": 36,
+                                "Rb": 37, "Sr": 38, "Y": 39, "Zr": 40, "Nb": 41, "Mo": 42, "Tc": 43, "Ru": 44,
+                                "Rh": 45, "Pd": 46, "Ag": 47, "Cd": 48, "In": 49, "Sn": 50, "Sb": 51, "Te": 52,
+                                "I": 53, "Xe": 54, "Cs": 55, "Ba": 56, "La": 57, "Ce": 58, "Pr": 59, "Nd": 60,
+                                "Pm": 61, "Sm": 62, "Eu": 63, "Gd": 64, "Tb": 65, "Dy": 66, "Ho": 67, "Er": 68,
+                                "Tm": 69, "Yb": 70, "Lu": 71, "Hf": 72, "Ta": 73, "W": 74, "Re": 75, "Os": 76,
+                                "Ir": 77, "Pt": 78, "Au": 79, "Hg": 80, "Tl": 81, "Pb": 82, "Bi": 83, "Po": 84,
+                                "At": 85, "Rn": 86, "Fr": 87, "Ra": 88, "Ac": 89, "Th": 90, "Pa": 91, "U": 92,
+                                "Np": 93, "Pu": 94, "Am": 95, "Cm": 96, "Bk": 97, "Cf": 98, "Es": 99, "Fm": 100,
+                                "Md": 101, "No": 102, "Lr": 103, "Rf": 104, "Db": 105, "Sg": 106, "Bh": 107,
+                                "Hs": 108, "Mt": 109, "Ds": 110, "Rg": 111, "Cn": 112, "Uut": 113, "Fl": 114,
+                                "Uup": 115, "Lv": 116, "Uus": 117, "Uuo": 118}
+               
 
     for node in molecule.nodes:
         molecule.nodes[node]["atomic_num"] = atomicNumberfromSymbol[
@@ -405,21 +511,23 @@ def build_xy3_representation_of_molecule(nmrproblem):
 
     mmm.Compute2DCoords()
 
-    xy = np.array([[xyz[0], xyz[1]] for xyz in mmm.GetConformer().GetPositions()])
+    xy3 = return_carbon_xy3_positions(mmm)
 
-    xy = xy.T
-    xxx, yyy = xy
+    # xy = np.array([[xyz[0], xyz[1]] for xyz in mmm.GetConformer().GetPositions()])
 
-    yyy = yyy/yyy.max()
-    yyy = yyy - yyy.mean()
-    yyy = (yyy/yyy.max())
+    # xy = xy.T
+    # xxx, yyy = xy
 
-    xxx = xxx/xxx.max()
-    xxx = xxx - xxx.mean()
-    xxx = (xxx/xxx.max())
+    # yyy = yyy/yyy.max()
+    # yyy = yyy - yyy.mean()
+    # yyy = (yyy/yyy.max())
 
-    xy = np.array([xxx,yyy])
-    xy = xy.T
+    # xxx = xxx/xxx.max()
+    # xxx = xxx - xxx.mean()
+    # xxx = (xxx/xxx.max())
+
+    # xy = np.array([xxx,yyy])
+    # xy = xy.T
 
     # nmrproblem.xmin = -1.2
     # nmrproblem.xmax = 1.2
@@ -428,12 +536,14 @@ def build_xy3_representation_of_molecule(nmrproblem):
     # nmrproblem.ymax = 1.2
 
 
-    if isinstance(nmrproblem.xy3, type(None)):
-        xy3 = {}
-        for i, n in enumerate(molecule.nodes()):
-            xy3[n] = xy[i]
+    # xy3 = {}
+    # for i, n in enumerate(molecule.nodes()):
+    #     xy3[n] = xy[i]
 
-        nmrproblem.xy3 = xy3
+    print("xy3", xy3)
+
+    nmrproblem.xy3 = xy3
+
 
 
 def nx_to_mol(G: nx.Graph) -> rdkit.Chem.Mol:
@@ -541,7 +651,21 @@ def create_hmbc_graph_fragments(nmrproblem, hmbc_edges: dict)-> dict:
 
 
 class NMRproblem:
-    def __init__(self, problemdata_info: dict, loadfromwhere=None, H1LarmorFreq=None, qtstarted=True):
+    def __init__(self, problemdata_info: dict, loadfromwhere=None, H1LarmorFreq=None, qtstarted=True, java_available=False, xy3_calc_method="xy3", java_command=None):
+
+        self.java_available = java_available
+        self.java_command = java_command
+        self.xy3_calc_method = xy3_calc_method
+        self.qtstarted = qtstarted
+        self.H1LarmorFreq = H1LarmorFreq
+        self.problemdata_info = problemdata_info
+        self.loadfromwhere = loadfromwhere
+
+        print("java available: ", self.java_available)
+        print("xy3 calc method: ", self.xy3_calc_method)
+        print("qtstarted: ", self.qtstarted)
+        print("H1LarmorFreq: ", self.H1LarmorFreq)
+        print("problemdata_info: ", self.problemdata_info)
 
         self.problemDirectoryPath = problemdata_info["data_directory"]
         self.problemDirectory = problemdata_info["data_directory"]
@@ -552,10 +676,10 @@ class NMRproblem:
         self.hmbc_edge_colors = ('#1f77b4', '#ff7f0e', '#2ca02c',  '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
                                   '#1f77b4', '#ff7f0e', '#2ca02c',  '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf')
 
-        self.xmin = -1.5
-        self.ymin = -1.5
-        self.xmax = 1.5
-        self.ymax = 1.5
+        self.xmin = -0.1
+        self.ymin = -0.1
+        self.xmax = 1.1
+        self.ymax = 1.1
         
         self.data_complete = False
 
@@ -595,8 +719,10 @@ class NMRproblem:
         self.hmbc = pd.DataFrame(columns=excel_df_columns["hmbc"])
 
         # graph coodinates of carbon skeleton molecule
+        self.xy3_from_json = False
+        self.predict_c13ppm = True
         self.xy = None
-        self.yx3 = None
+        self.xy3 = None
 
         # png and smiles
 
@@ -682,7 +808,7 @@ class NMRproblem:
             self.png = create_png_from_smiles(self.smiles)
             self.expected_molecule = create_molecule_from_smiles(self.smiles)
 
-        self.xy3 = read_xy3_jsonfile(problemdata_info)
+
 
         # set xlims of 13C and 1H 1D spectra to +/- 10% of biggest and smallest ppm
         self.min_max_1D_ppm = []
@@ -696,6 +822,226 @@ class NMRproblem:
         ppm_max = self.c13.ppm.max() + (self.c13.ppm.max() - self.c13.ppm.min())/10.0
 
         self.min_max_1D_ppm.append((ppm_max, ppm_min))
+
+
+    def build_xy3(self):
+
+        if self.init_xy3_from_c13predictions():
+            print("xy3 from c13 predictions")
+            return True
+        elif self.init_xy3_from_json():
+            print("xy3 from json")
+            return True
+        else:
+            print("xy3 from random positions")
+            
+            return self.init_xy3_from_random()
+
+        print("xy3 not initiated")
+
+
+        return False
+
+
+
+    def init_xy3_from_random(self):
+        """
+        Initialise xy3 from random positions based on building a from cosy links
+        """
+
+        # if not self.xy3_calc_method == "random":
+        #     return False
+
+        build_xy3_representation_of_molecule(self)
+
+        return True
+
+
+    def init_xy3_from_json(self):
+        if not self.xy3_calc_method == "xy3":
+            return False
+
+        self.xy3_from_json = True
+        self.xy3 = read_xy3_jsonfile(self.problemdata_info)
+
+        if isinstance(self.xy3, dict):
+            return True
+        else:
+            return False
+
+
+    def init_xy3_from_c13predictions(self):
+
+        if  not isinstance(self.smiles, str):
+            return False
+
+        if not self.java_available:
+            return False
+
+        if not self.xy3_calc_method == "c13ppm":
+            return False
+
+
+
+        mol = create_molecule_from_smiles(self.smiles)
+
+        xy3 = return_carbon_xy3_positions(mol)
+        # AllChem.Compute2DCoords(mol)
+
+
+
+        # xy = np.array([[xyz[0], xyz[1]] for xyz in mol.GetConformer().GetPositions()])
+        # xxx, yyy = xy.T
+
+        # yyy = yyy/yyy.max()
+        # yyy = yyy - yyy.mean()
+        # yyy = (yyy/yyy.max())
+
+        # xxx = xxx/xxx.max()
+        # xxx = xxx - xxx.mean()
+        # xxx = (xxx/xxx.max())
+        # xy = np.array([xxx,yyy])
+        # print("xy",xy)
+        # xy = xy.T
+        # cxy = [ [c.GetIdx(), x, y] for c,  [x,y] in zip(mol.GetAtoms(), xy) if 'C' == c.GetSymbol()]
+        # cxy = np.array(cxy).T
+        # print("cxy", cxy)
+        # xxx,yyy = xy.T
+        # idx, cxxx, cyyy = cxy
+
+        # print("idx", idx)
+        # print("cxxx", cxxx)
+        # print("cyyy", cyyy)
+
+        print("xy3", list(xy3.values()))
+
+        xy = np.array(list(xy3.values()))
+        print("xy", xy)
+        cxxx, cyyy = xy.T
+
+        molprops = [ [atom.GetIdx(), 
+                      atom.GetNumImplicitHs(), 
+                      atom.GetTotalNumHs(), 
+                      atom.GetDegree(), 
+                      atom.GetHybridization(), 
+                      atom.GetIsAromatic()] for atom in mol.GetAtoms() if 'C' == atom.GetSymbol()]
+
+        mol_df = pd.DataFrame(data=molprops, columns=['idx', 'implicitHs', 'totalNumHs', 'degree', 'hybridization', 'aromatic'])
+        mol_df['x'] = cxxx
+        mol_df['y'] = cyyy
+        # mol_df['idx2'] = idx
+
+        
+        # mol_df['ppm'] = c13.sort_values(by=['C'], ignore_index=True)['predicted']
+
+        with open("mol.mol", "w") as fp:
+            fp.write(Chem.MolToMolBlock(mol))
+
+        ret = os.system(self.java_command)
+
+        if ret == 1:
+            return False
+
+        df = pd.read_csv("mol.csv")
+
+        mol_df['C'] = df['C'].to_list()
+        mol_df['predicted'] = df['mean'].to_list()
+
+        print("mol_df", mol_df)
+
+        mol_df = mol_df.sort_values(by=['predicted'], ignore_index=True, ascending=False)
+
+        print("mol_df", mol_df)        
+
+        self.c13['predicted'] = 0
+        self.c13['C'] = 0
+        self.c13['x'] = 0
+        self.c13['y'] = 0
+
+
+        # predict carbon chemical shiftts from java nmrshiftdb2 program
+        # xy = np.array([[xyz[0], xyz[1]] for xyz in mol.GetConformer().GetPositions()])
+
+        # xxx, yyy = xy.T
+
+        # yyy = yyy/yyy.max()
+        # yyy = yyy - yyy.mean()
+        # yyy = (yyy/yyy.max())
+
+        # xxx = xxx/xxx.max()
+        # xxx = xxx - xxx.mean()
+        # xxx = (xxx/xxx.max())
+        # xy = np.array([xxx,yyy])
+        # xy = xy.T
+
+        # cxy = [ [x, y] for c,[x,y] in zip(mol.GetAtoms(),xy) if 'C' == c.GetSymbol()]
+        # cxy = np.array(cxy).T
+
+        # df = pd.read_csv("mol.csv")
+        # df['xxx'] = cxy[0]
+        # df['yyy'] = cxy[1]
+        # df = df.sort_values(by=['mean'], ascending=False, ignore_index=True)
+                    
+        # check if dataframes have the same number of rows
+        # copy across mol information
+        if self.c13.shape[0] == mol_df.shape[0]:
+            self.c13['predicted'] = mol_df['predicted'].to_list()
+            self.c13['C'] = mol_df['idx'].to_list()
+            self.c13['x'] = mol_df['x'].to_list()
+            self.c13['y'] = mol_df['y'].to_list()
+        elif self.c13.shape[0] < df.shape[0]:
+            # keep only unique rows based on mean ppm
+            df_sym = mol_df.drop_duplicates(subset=['predicted'], ignore_index=True)
+            if self.c13.shape[0] == df_sym.shape[0]:
+                self.c13['predicted'] = df_sym['predicted'].to_list()
+                self.c13['C'] = df_sym['idx'].to_list()
+                self.c13['x'] = df_sym['x'].to_list()
+                self.c13['y'] = df_sym['y'].to_list()
+
+        for numprotons in range(4):
+            c13view = self.c13[self.c13.attached_protons==numprotons]
+            mol_dfview = mol_df[mol_df.totalNumHs==numprotons].sort_values(by=['predicted'], ignore_index=True, ascending=False)
+
+            print(numprotons, "c13view.shape[0]", c13view.shape[0], "mol_dfview.shape[0]", mol_dfview.shape[0])
+            if c13view.shape[0]  == mol_dfview.shape[0]:
+                for i1, i2 in zip(c13view.index, mol_dfview.index):
+                    print(i1,i2)
+                    self.c13.loc[i1, 'predicted'] = mol_dfview.loc[i2, 'predicted']
+                    self.c13.loc[i1, 'C'] = mol_dfview.loc[i2, 'idx']
+                    self.c13.loc[i1, 'x'] = mol_dfview.loc[i2, 'x']
+                    self.c13.loc[i1, 'y'] = mol_dfview.loc[i2, 'y']
+                    self.c13.loc[i1, 'attached_protons_predicted'] = mol_dfview.loc[i2,"totalNumHs"]
+            else:
+                print("shapes not equal")
+
+
+        # # Normaliz x and y values
+        # self.c13['x'] = self.c13['x']/self.c13['x'].max()
+        # self.c13['y'] = self.c13['y']/self.c13['y'].max()
+
+        # # subtract mean from x and y values
+        # self.c13['x'] = self.c13['x'] - self.c13['x'].mean()
+        # self.c13['y'] = self.c13['y'] - self.c13['y'].mean()
+
+        # # Normalize x and y values
+        # self.c13['x'] = self.c13['x']/self.c13['x'].max()
+        # self.c13['y'] = self.c13['y']/self.c13['y'].max()
+        
+        # initiate xy3
+
+        print("self.c13", self.c13)
+        self.xy3 = {}
+
+        for i in self.c13.index:
+            self.xy3[self.c13.loc[i,'label']] = [self.c13.loc[i,'x'], self.c13.loc[i,'y']]
+
+        print(self.c13[['ppm', 'predicted', 'C', 'x', 'y']])
+
+        return True
+
+
+
+
 
     def init_class_from_excel(self, excelFileNameDirName: str, excel_fn=None):
         """

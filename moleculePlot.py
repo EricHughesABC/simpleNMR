@@ -47,8 +47,16 @@ class MatplotlibMoleculePlot(Figure):
         # global mol_vertices_moved
         self.label_id = None
         self.nmrproblem = nmrproblem
-        super(MatplotlibMoleculePlot, self).__init__(figsize=(4, 4), dpi=100)
+        # super(MatplotlibMoleculePlot, self).__init__(constrained_layout=True, figsize=(4, 4), dpi=100)
+        super(MatplotlibMoleculePlot, self).__init__(constrained_layout=True)
         self.ax = self.add_subplot(label="molecule", gid="molecule_id")
+        
+
+        # set backfround of plot to light red
+        # self.ax.set_facecolor(YELLOW)
+        # self.tight_layout()
+
+        # self.ax.set_facecolor((0.9, 0.9, 0.9))
         self.ax.tick_params(
             axis="both",
             which="both",
@@ -63,10 +71,10 @@ class MatplotlibMoleculePlot(Figure):
         self.ax.spines["left"].set_visible(False)
         self.ax.spines["right"].set_visible(False)
 
-        self.xmin = -1.5
-        self.ymin = -1.5
-        self.xmax = 1.5
-        self.ymax = 1.5
+        self.xmin = -0.1
+        self.ymin = -0.1
+        self.xmax = 1.1
+        self.ymax = 1.1
 
         if self.nmrproblem.data_complete:
             self.draw_molecule(self.nmrproblem, self.ax)
@@ -95,21 +103,18 @@ class MatplotlibMoleculePlot(Figure):
             self.ax, self.nmrproblem.hmbc_graphs
         )
 
-        self.ax.set_xlim(self.xmin, self.xmax)
-        self.ax.set_ylim(self.ymin, self.ymax)
+
 
         if not isinstance(nmrproblem.png, type(None)):
             self.bkgnd = self.ax.imshow(
-                np.fliplr(nmrproblem.png),
+                nmrproblem.png,
                 aspect="auto",
-                extent=[
-                    1.0 * self.xmax,
-                    1.0 * self.xmin,
-                    1.5 * self.ymin,
-                    1.5 * self.ymax,
-                ],
-                alpha=0.4,
+                extent=[0,1,1,0],
+                alpha=0.6,
             )
+
+        self.ax.set_xlim(-0.1, 1.1)
+        self.ax.set_ylim(1.1, -0.1)
 
 
     def draw_hmbc_graph_network(self, lbl:str):
