@@ -7,7 +7,7 @@ Created on Tue Jan 19 09:55:03 2021.
 from PyQt5.QtWidgets import QMessageBox
 
 import pandas as pd
-import openpyxl
+# import openpyxl
 import numpy as np
 from numpy import pi, sin, cos, exp
 from scipy import stats
@@ -295,7 +295,7 @@ def read_xy3_jsonfile(problemdata_info: dict)->dict:
         return None
 
 
-def create_hmbc_edges_dict(nmrproblem):
+def create_hmbc_edges_dict(nmrproblem)->dict:
     hmbc_edges = {}
     hmbc = nmrproblem.hmbc
     for i in hmbc.index:
@@ -813,13 +813,13 @@ class NMRproblem:
         # set xlims of 13C and 1H 1D spectra to +/- 10% of biggest and smallest ppm
         self.min_max_1D_ppm = []
 
-        ppm_min = self.h1.ppm.min() - (self.h1.ppm.max() - self.h1.ppm.min())/10.0
-        ppm_max = self.h1.ppm.max() + (self.h1.ppm.max() - self.h1.ppm.min())/10.0
+        ppm_min = self.h1.ppm.min() - (self.h1.ppm.max() - self.h1.ppm.min()) * 0.3
+        ppm_max = self.h1.ppm.max() + (self.h1.ppm.max() - self.h1.ppm.min()) * 0.3
 
         self.min_max_1D_ppm.append((ppm_max, ppm_min))
 
-        ppm_min = self.c13.ppm.min() - (self.c13.ppm.max() - self.c13.ppm.min())/10.0
-        ppm_max = self.c13.ppm.max() + (self.c13.ppm.max() - self.c13.ppm.min())/10.0
+        ppm_min = self.c13.ppm.min() - (self.c13.ppm.max() - self.c13.ppm.min()) * 0.30
+        ppm_max = self.c13.ppm.max() + (self.c13.ppm.max() - self.c13.ppm.min()) * 0.30
 
         self.min_max_1D_ppm.append((ppm_max, ppm_min))
 
@@ -887,31 +887,6 @@ class NMRproblem:
 
         xy3 = return_carbon_xy3_positions(mol)
         # AllChem.Compute2DCoords(mol)
-
-
-
-        # xy = np.array([[xyz[0], xyz[1]] for xyz in mol.GetConformer().GetPositions()])
-        # xxx, yyy = xy.T
-
-        # yyy = yyy/yyy.max()
-        # yyy = yyy - yyy.mean()
-        # yyy = (yyy/yyy.max())
-
-        # xxx = xxx/xxx.max()
-        # xxx = xxx - xxx.mean()
-        # xxx = (xxx/xxx.max())
-        # xy = np.array([xxx,yyy])
-        # print("xy",xy)
-        # xy = xy.T
-        # cxy = [ [c.GetIdx(), x, y] for c,  [x,y] in zip(mol.GetAtoms(), xy) if 'C' == c.GetSymbol()]
-        # cxy = np.array(cxy).T
-        # print("cxy", cxy)
-        # xxx,yyy = xy.T
-        # idx, cxxx, cyyy = cxy
-
-        # print("idx", idx)
-        # print("cxxx", cxxx)
-        # print("cyyy", cyyy)
 
         print("xy3", list(xy3.values()))
 
@@ -1074,7 +1049,7 @@ class NMRproblem:
             except FileNotFoundError:
                 # display qt message box  if excel file not found or not readable
 
-                if qtstarted:
+                if self.qtstarted:
 
                     msgBox = QMessageBox("Excel file not found", "Excel file not found", QMessageBox.Ok) 
                     msgBox = QMessageBox()
@@ -1089,7 +1064,7 @@ class NMRproblem:
             except PermissionError:
                 # display qt message box  if excel file not found or not readable
 
-                if qtstarted:
+                if self.qtstarted:
                     msgBox = QMessageBox()
                     msgBox.setIcon(QMessageBox.Information)
                     msgBox.setText("Cannot Open\n{}".format(self.excelFiles[0]))

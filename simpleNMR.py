@@ -1,6 +1,7 @@
 import sys
 import os
 import json
+import webbrowser
 
 from PyQt5.QtWidgets import (
     QWidget,
@@ -59,6 +60,7 @@ from moleculePlot import MatplotlibMoleculePlot
 from spectraPlot import MatplotlibH1C13Plot
 
 from xy3_dialog import XY3dialog
+from about_dialog import Aboutdialog
 
 import platform
 
@@ -876,7 +878,7 @@ class MainWidget(QMainWindow):
         # Widgets
         self.fontSizeSpinBox = QSpinBox()
         self.fontSizeSpinBox.setFocusPolicy(Qt.NoFocus)
-        editToolBar.addWidget(self.fontSizeSpinBox)
+        # editToolBar.addWidget(self.fontSizeSpinBox)
 
     def _createStatusBar(self):
         self.statusbar = self.statusBar()
@@ -1121,12 +1123,14 @@ class MainWidget(QMainWindow):
         # self.centralWidget.setText("<b>Edit > Cut</b> clicked")
 
     def helpContent(self):
-        pass
+        webbrowser.open("https://github.com/EricHughesABC/simpleNMR")
+        # webbrowser.open("C:\\Users\\vsmw51\\OneDrive - Durham University\\projects\\programming\\2022\\brukerWebinars\\docs\\source\\brukerWebinars\\test_template_rendered.html")
         # Logic for launching help goes here...
         # self.centralWidget.setText("<b>Help > Help Content...</b> clicked")
 
     def about(self):
-        pass
+        dlg = Aboutdialog(self)
+        dlg.exec()
         # Logic for showing an about dialog content goes here...
         # self.centralWidget.setText("<b>Help > About...</b> clicked")
 
