@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import (
     QDialogButtonBox,
 )
 
+
 class Aboutdialog(QDialog):
     def __init__(self, parent=None):
         super(Aboutdialog, self).__init__(parent)
@@ -18,16 +19,16 @@ class Aboutdialog(QDialog):
         # self.create_layout()
         self.create_connections()
 
-
     def create_widgets(self):
         # QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
-        QBtn = QDialogButtonBox.Ok 
+        QBtn = QDialogButtonBox.Ok
 
         # add message about the program
-        self.message = QLabel("simpleNMR was written by Eric Hughes\n\nand is licensed under the MIT License.\n\nAlan Kenwright helped with the design and implementation.")
+        self.message = QLabel(
+            "simpleNMR was written by Eric Hughes\n\nand is licensed under the MIT License.\n\nAlan Kenwright helped with the design and implementation."
+        )
         self.message.setWordWrap(True)
 
-        
         self.buttonBox = QDialogButtonBox(QBtn)
 
         # create vertical layout box and add widgets
@@ -63,7 +64,6 @@ if __name__ == "__main__":
 
             # table_widget = MyTabWidget(dlg, self.nmrproblem)
             dlg.exec()
-
 
     app = QApplication(sys.argv)
 

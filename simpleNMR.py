@@ -3,42 +3,38 @@ import os
 import json
 import webbrowser
 
-from PyQt5.QtWidgets import (
-    QWidget,
-    QMainWindow,
-    QApplication,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLineEdit,
-    QPushButton,
-    QMessageBox,
-    QSplitter,
-    QMenu,
-    QSpinBox,
-    QLabel,
-    QAction,
-    QFileDialog,
-)
+import PyQt5
 
-from PyQt5.QtWidgets import QApplication
+from PyQt5 import QtCore
+from PyQt5 import QtWidgets
+
 from PyQt5.QtCore import QUrl
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import Qt
 
-from functools import partial
 
-# from PyQt5.Qt import Vertical
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QSplitter
+from PyQt5.QtWidgets import QMenu
+from PyQt5.QtWidgets import QSpinBox
+from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QAction
+
+from functools import partial
 
 from matplotlib.backends.backend_qt5agg import (
     FigureCanvasQTAgg,
     NavigationToolbar2QT as NavigationToolbar,
 )
 
-# from matplotlib.figure import Figure
-
-# import matplotlib.pyplot as plt
-
-# import rdkit
 from rdkit import Chem
 
 # from rdkit.Chem import AllChem
@@ -50,9 +46,7 @@ from rdkit.Chem import Draw
 import numpy as np
 import pandas as pd
 
-import PIL
 from PIL import Image
-# from sklearn.compose import make_column_selector
 
 import nmrProblem
 from qt5_tabs_001 import EditDataFrameDialog
@@ -65,46 +59,106 @@ from about_dialog import Aboutdialog
 import platform
 
 
-PLOTLINECOLORS = ('blue', 'orange', 'green', 'red', 'purple')
-SCATTERFACECOLORS = ('blue', 'orange', 'green', 'red', 'purple')
-SCATTEREDGECOLORS = ('blue', 'orange', 'green', 'red', 'purple')
+PLOTLINECOLORS = ("blue", "orange", "green", "red", "purple")
+SCATTERFACECOLORS = ("blue", "orange", "green", "red", "purple")
+SCATTEREDGECOLORS = ("blue", "orange", "green", "red", "purple")
 
-YELLOW = (1., 1., 0., 1.)
-RED    = (1., 0., 0., 1.)
-WHITE  = (1., 1., 1., 1.)
+YELLOW = (1.0, 1.0, 0.0, 1.0)
+RED = (1.0, 0.0, 0.0, 1.0)
+WHITE = (1.0, 1.0, 1.0, 1.0)
 
 # Test if we can run JAVA
 global JAVA_AVAILABLE
 global JAVA_COMMAND
 JAVA_AVAILABLE = False
-ret = os.system("java -version")
-# JAVA_COMMAND = "java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"
-if ret == 0:
-    JAVA_AVAILABLE = True
-    print("JAVA is available")
-
+JAVA_COMMAND = "Undefined"
 
 # Test what system we are running on
-system = platform.system()
 global WINDOWS_OS
 global LINUX_OS
 global MAC_OS
 
-mac_os = False
-linux_os = False
-windows_os = False
+WINDOWS_OS = False
+LINUX_OS = False
+MAC_OS = False
+
+print("platform.system", platform.system())
+
+# JAVA_COMMAND = "java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"
+if not os.system("java -version"):
+    JAVA_AVAILABLE = True
+    print("JAVA is available")
+
+    # set java command to predict C13 chemical shifts for correct os system
+    print("System:", platform.system())
+    print("**********************")
+
+    if platform.system() == "Windows":
+        WINDOWS_OS = True
+        JAVA_COMMAND = (
+            "java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"
+        )
+    elif platform.system() == "Linux":
+        LINUX_OS = True
+        JAVA_COMMAND = (
+            "java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
+        )
+    elif platform.system() == "Darwin":
+        MAC_OS = True
+        JAVA_COMMAND = (
+            "java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
+        )
+else:
+    # test if system is windows
+    if platform.system() == "Windows":
+        JAVA_AVAILABLE = True
+        # test if local windows ins installed
+        if not os.system('"jre\\javawindows\\bin\\java -version"'):
+
+            WINDOWS_OS = True
+            JAVA_COMMAND = '"jre\\javawindows\\bin\\java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"'
+            print("WINDOWS Local JAVA is available")
+        else:
+            JAVA_AVAILABLE = False
+            print("JAVA is not available")
+    elif platform.system() == "Linux":
+        LINUX_OS = True
+        if not os.system('"jre\\javalinux\\bin\\java -version"'):
+            JAVA_AVAILABLE = True
+            JAVA_COMMAND = '"javalinux\\bin\\java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"'
+            print("Linux Local JAVA is available")
+        else:
+            JAVA_AVAILABLE = False
+            print("JAVA is not available")
+    elif platform.system() == "Darwin":
+        MAC_OS = True
+        if not os.system("jre/amazon-corretto-17.jdk/Contents/Home/bin/java --version"):
+            JAVA_AVAILABLE = True
+            JAVA_COMMAND = "jre/amazon-corretto-17.jdk/Contents/Home/bin/java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
+            print("MAC Local JAVA is available")
+        else:
+            JAVA_AVAILABLE = False
+            print("JAVA is not available")
 
 
-# set java command to predict C13 chemical shifts for correct os system
-if system == "Windows":
-    WINDOWS_OS = True
-    JAVA_COMMAND = "java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"
-elif system == "Linux":
-    LINUX_OS = True
-    JAVA_COMMAND = "java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
-elif system == "Darwin":
-   MAC_OS = True
-   JAVA_COMMAND = "java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
+print("JAVA_COMMAND = ", JAVA_COMMAND)
+
+
+# mac_os = False
+# linux_os = False
+# windows_os = False
+
+
+# # set java command to predict C13 chemical shifts for correct os system
+# if system == "Windows":
+#     WINDOWS_OS = True
+#     JAVA_COMMAND = "java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"
+# elif system == "Linux":
+#     LINUX_OS = True
+#     JAVA_COMMAND = "java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
+# elif system == "Darwin":
+#     MAC_OS = True
+#     JAVA_COMMAND = "java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
 
 
 class MoleculePlotCanvas(FigureCanvasQTAgg):
@@ -123,7 +177,7 @@ class MainWidget(QMainWindow):
         super().__init__(parent)
 
         self.setGeometry(100, 100, 1200, 900)
-        self.setWindowTitle("SimpleNMR")
+        self.setWindowTitle(self.nmrproblem.problemDirectory)
 
         self._createActions()
         self._createMenuBar()
@@ -171,7 +225,6 @@ class MainWidget(QMainWindow):
         self.moltoolbar = NavigationToolbar(self.moleculeCanvas, self)
         self.spctoolbar = NavigationToolbar(self.spectraCanvas, self)
 
-
         # self.webEngineView = QWebEngineView()
         # self.loadPage()
 
@@ -207,7 +260,6 @@ class MainWidget(QMainWindow):
         splitter1.addWidget(moleculewidget)
         splitter1.addWidget(jsmewidget)
 
-        
         splitter2.addWidget(splitter1)
         splitter2.addWidget(spectrawidget)
 
@@ -216,38 +268,51 @@ class MainWidget(QMainWindow):
         self.centralWidget.setLayout(hbox)
         splitter2.setSizes([600, 600])
 
-
-
         self.centralWidget.show()
 
-# add callbacks to the moleculeCanvas
+        # add callbacks to the moleculeCanvas
         self.node_pick_ind = None
         self.node_hover_ind = None
-        self.node_picked = False 
+        self.node_picked = False
         self.highlighted_peak_lbl = None
         self.old_lbl = None
 
-        self.moleculePlot.canvas.mpl_connect("button_release_event", 
-            lambda event: self.button_release_molecule(event, 
-                                                    specplot=self.spectraPlot, 
-                                                    molplot=self.moleculePlot))
+        self.moleculePlot.canvas.mpl_connect(
+            "button_release_event",
+            lambda event: self.button_release_molecule(
+                event, specplot=self.spectraPlot, molplot=self.moleculePlot
+            ),
+        )
 
-        self.moleculePlot.canvas.mpl_connect("motion_notify_event", 
-            lambda event: self.motion_notify_callback(event, 
-                                                    specplot=self.spectraPlot, 
-                                                    molplot=self.moleculePlot))
+        self.moleculePlot.canvas.mpl_connect(
+            "motion_notify_event",
+            lambda event: self.motion_notify_callback(
+                event, specplot=self.spectraPlot, molplot=self.moleculePlot
+            ),
+        )
 
-        self.moleculePlot.canvas.mpl_connect("pick_event", 
-            lambda event: self.pick_molecule(event, 
-                                            event_name="pick_event", 
-                                            specplot=self.spectraPlot, 
-                                            molplot=self.moleculePlot))
+        self.moleculePlot.canvas.mpl_connect(
+            "pick_event",
+            lambda event: self.pick_molecule(
+                event,
+                event_name="pick_event",
+                specplot=self.spectraPlot,
+                molplot=self.moleculePlot,
+            ),
+        )
+
+        self.spectraPlot.canvas.mpl_connect(
+            "motion_notify_event",
+            lambda event: self.hover_over_specplot(
+                event, specplot=self.spectraPlot, molplot=self.moleculePlot
+            ),
+        )
+
+        self.setWindowTitle(self.nmrproblem.problemDirectory)
+        self.wcLabel.setText(
+            f"Molecule: {self.nmrproblem.moleculeAtomsStr} DBE: {int(self.nmrproblem.dbe)}"
+        )
         
-        self.spectraPlot.canvas.mpl_connect("motion_notify_event", 
-            lambda event: self.hover_over_specplot(event, 
-                                                specplot=self.spectraPlot, 
-                                                molplot=self.moleculePlot))
-
         # hbox = QHBoxLayout()
         # hbox.addWidget(self.moleculeCanvas)
         # hbox.addWidget(self.spectraCanvas)
@@ -260,7 +325,7 @@ class MainWidget(QMainWindow):
         if (self.moltoolbar.mode != "") or (self.spctoolbar.mode != ""):
             # print("hover_over_specplot: toolbar mode is not empty")
             # print("self.moltoolbar.mode: ", self.moltoolbar.mode)
-            # print("self.spctoolbar.mode: ", self.spctoolbar.mode)   
+            # print("self.spctoolbar.mode: ", self.spctoolbar.mode)
             return
 
         in_plot = []
@@ -275,21 +340,20 @@ class MainWidget(QMainWindow):
             in_plot_label.append(k)
             in_plot_index.append(c13plots_index)
 
-
         if any(in_plot):
             lbl = in_plot_label[in_plot.index(True)]
-            
+
             # if lbl != self.highlighted_peak_lbl:
-                # highlight new peak
+            # highlight new peak
             specplot.peak_overlays_dict[lbl].set_visible(True)
             specplot.peak_overlays_dict[lbl].set_color(RED)
             specplot.peak_overlays_dict[lbl].set_linewidth(0.75)
 
             # annotate new peak
-            if 'H' in lbl:
+            if "H" in lbl:
                 # set the annotation to the peak
                 atom_index = int(lbl[1:])
-                ppm = self.nmrproblem.h1.loc[atom_index, "ppm"] 
+                ppm = self.nmrproblem.h1.loc[atom_index, "ppm"]
                 integral = self.nmrproblem.h1.loc[atom_index, "integral"]
                 jcoupling = self.nmrproblem.h1.loc[atom_index, "jCouplingClass"]
                 annot_text = f"{lbl}: {ppm:.2f} ppm\nInt:{integral}\nJ: {jcoupling}"
@@ -297,7 +361,7 @@ class MainWidget(QMainWindow):
                 specplot.annot_H1.set_text(annot_text)
                 specplot.annot_H1.set_visible(True)
 
-            elif 'C' in lbl:
+            elif "C" in lbl:
                 # set the annotation to the peak
                 atom_index = int(lbl[1:])
                 ppm = self.nmrproblem.c13.loc[atom_index, "ppm"]
@@ -311,7 +375,13 @@ class MainWidget(QMainWindow):
             self.highlighted_peak_lbl = lbl
 
             if "H" in lbl:
-                clbl = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f2H_i==lbl]["f1C_i"].values[0]
+                try:
+                    clbl = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f2H_i == lbl][
+                        "f1C_i"
+                    ].values[0]
+                except IndexError:
+                    print(f"no HSQC peak found for this H1 peak {lbl}")
+                    clbl = ""
 
             else:
                 clbl = lbl
@@ -328,11 +398,13 @@ class MainWidget(QMainWindow):
             # uddate specplot canvas
             specplot.canvas.draw_idle()
 
-            #uddate title in molplot
+            # uddate title in molplot
             c13_ind = int(clbl[1:])
             ppm_val = self.nmrproblem.c13.loc[c13_ind]["ppm"]
             attached_protons = self.nmrproblem.c13.loc[c13_ind]["attached_protons"]
-            title_str = f"{clbl}: {ppm_val:.1f} ppm, attached protons: {attached_protons}"
+            title_str = (
+                f"{clbl}: {ppm_val:.1f} ppm, attached protons: {attached_protons}"
+            )
             self.moleculePlot.ax.set_title(title_str)
         else:
             # unhilight old peak
@@ -347,22 +419,21 @@ class MainWidget(QMainWindow):
                 specplot.hide_annotation(specplot.annot_C13)
                 specplot.hide_annotation(specplot.annot_H1)
 
-                #unhighlight distributions
+                # unhighlight distributions
                 specplot.reset_distributions_eeh()
 
                 # uddate specplot canvas
                 specplot.canvas.draw_idle()
                 molplot.canvas.draw_idle()
 
-
     def update_molplot_highlights(self, molplot, specplot, lbl):
 
         molplot.mol_nodes.node_highlighted = True
 
-        ind = int(lbl[1:])-1
+        ind = int(lbl[1:]) - 1
 
         scatter_facecolors_highlight = molplot.mol_nodes.get_facecolors()
-        scatter_edgecolors_highlight  = molplot.mol_nodes.get_edgecolors()
+        scatter_edgecolors_highlight = molplot.mol_nodes.get_edgecolors()
 
         scatter_facecolors_highlight[ind] = WHITE
         scatter_edgecolors_highlight[ind] = RED
@@ -376,7 +447,7 @@ class MainWidget(QMainWindow):
             # self.redraw_axes()
             # highlight H1 hmbc peaks
             specplot.highlight_H1_HMBC_peaks(lbl)
-        
+
         # highlight C13 peak in graph x1
         specplot.highlight_C13_peak(lbl)
 
@@ -391,13 +462,12 @@ class MainWidget(QMainWindow):
         specplot.display_annotation_H1_from_molplot(lbl, specplot.annot_H1)
 
         # annotate distributions
-        hpks = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f1C_i==lbl]["f2H_i"].values
+        hpks = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f1C_i == lbl]["f2H_i"].values
         cpks = [lbl]
         self.display_distributions(cpks, hpks, specplot)
 
         molplot.canvas.draw_idle()
         specplot.canvas.draw_idle()
-
 
     def display_distributions(self, C_pks, H_pks, specplot):
         # add highlighted distributions
@@ -452,13 +522,12 @@ class MainWidget(QMainWindow):
             specplot.c13dist_ax.set_xlim(ppmmmC + 50, ppmmmC - 50)
             specplot.c13dist_ax.legend(plinesC, plabelsC)
 
-
     def button_release_molecule(self, event, molplot, specplot):
 
         if (self.moltoolbar.mode != "") or (self.spctoolbar.mode != ""):
             # print("button release molecule")
             # print("self.moltoolbar.mode: ", self.moltoolbar.mode)
-            # print("self.spctoolbar.mode: ", self.spctoolbar.mode)   
+            # print("self.spctoolbar.mode: ", self.spctoolbar.mode)
             return
 
         self.mol_nodes.set_fc(self.mol_nodes.scatter_facecolors_rgba)
@@ -471,7 +540,7 @@ class MainWidget(QMainWindow):
         specplot.hide_annotation(specplot.annot_C13)
         specplot.hide_annotation(specplot.annot_H1)
 
-        #unhighlight distributions
+        # unhighlight distributions
         specplot.reset_distributions_eeh()
 
         molplot.canvas.draw_idle()
@@ -479,13 +548,10 @@ class MainWidget(QMainWindow):
 
         self.node_pick_ind = None
         self.node_hover_ind = None
-        self.node_picked = False 
+        self.node_picked = False
         self.node_moved = False
 
-
     def motion_notify_callback(self, event, specplot, molplot):
-
-        
 
         if (self.moltoolbar.mode != "") or (self.spctoolbar.mode != ""):
             # print("motion notify callback")
@@ -493,7 +559,9 @@ class MainWidget(QMainWindow):
             # print("self.spctoolbar.mode: ", self.spctoolbar.mode)
             return
 
-        self.hover_over_molecule(event, event_name="motion_notify_event", molplot=molplot, specplot=specplot)
+        self.hover_over_molecule(
+            event, event_name="motion_notify_event", molplot=molplot, specplot=specplot
+        )
 
         if event.button != 1:
             return
@@ -501,7 +569,7 @@ class MainWidget(QMainWindow):
         if not hasattr(self, "label_id"):
             return
         in_node, node_index = self.mol_nodes.contains(event)
-        if (not in_node)  and (event.button != 1):
+        if (not in_node) and (event.button != 1):
 
             # print("(not in_node)  and (event.button != 1)")
 
@@ -517,13 +585,13 @@ class MainWidget(QMainWindow):
             specplot.hide_annotation(specplot.annot_C13)
             specplot.hide_annotation(specplot.annot_H1)
 
-            #unhighlight distributions
+            # unhighlight distributions
             specplot.reset_distributions_eeh()
 
             molplot.canvas.draw_idle()
             specplot.canvas.draw_idle()
             return
-        
+
         # if self.node_pick_ind is None:
         #     print("self.node_pick_ind is None")
         #     self.mol_nodes.node_highlighted = False
@@ -543,21 +611,20 @@ class MainWidget(QMainWindow):
 
         #     molplot.canvas.draw_idle()
         #     specplot.canvas.draw_idle()
-            
+
         #     return
         # if event.inaxes is None:
         #     return
-
-
-
 
         self.node_moved = True
         x, y = event.xdata, event.ydata
         # print("x, y: ", x, y)
 
         # if x or y is None: return
-        if x is None: return
-        if y is None: return
+        if x is None:
+            return
+        if y is None:
+            return
 
         self.hmbc_graph_plots = self.moleculePlot.hmbc_graph_plots
         self.mol_nodes = self.moleculePlot.mol_nodes
@@ -565,7 +632,6 @@ class MainWidget(QMainWindow):
         self.mol_labels = self.moleculePlot.mol_labels
         self.mol_ind = self.node_pick_ind
 
-        
         # move nodes, edges and labels associated with hmbc network for each carbon atom
         for n in self.nmrproblem.molecule.nodes:
             if n in self.hmbc_graph_plots:
@@ -633,7 +699,6 @@ class MainWidget(QMainWindow):
         self.moved_x = x
         self.moved_y = y
 
-
     def hover_over_molecule(self, event, event_name, molplot, specplot):
         # print("hover_over_molecule")
         self.mol_nodes = molplot.mol_nodes
@@ -646,11 +711,11 @@ class MainWidget(QMainWindow):
             return
 
         if in_node:
-            
+
             # print("in_node", in_node)
             self.mol_nodes.node_highlighted = True
 
-            ind = node_index['ind'][0]
+            ind = node_index["ind"][0]
             lbl = f"{self.mol_nodes.my_labels[ind]}"
             x, y = self.mol_nodes.get_offsets()[ind]
             self.node_hover_ind = ind
@@ -672,22 +737,23 @@ class MainWidget(QMainWindow):
                 specplot.hide_annotation(specplot.annot_C13)
                 specplot.hide_annotation(specplot.annot_H1)
 
-                #unhighlight distributions
+                # unhighlight distributions
                 specplot.reset_distributions_eeh()
 
                 molplot.canvas.draw_idle()
                 specplot.canvas.draw_idle()
 
-            
             c13_ind = int(lbl[1:])
             ppm_val = self.nmrproblem.c13.loc[c13_ind]["ppm"]
             attached_protons = self.nmrproblem.c13.loc[c13_ind]["attached_protons"]
-            title_str = f"{lbl}: {ppm_val:.1f} ppm, attached protons: {attached_protons}"
+            title_str = (
+                f"{lbl}: {ppm_val:.1f} ppm, attached protons: {attached_protons}"
+            )
             self.moleculePlot.ax.set_title(title_str)
-        
+
             scatter_facecolors_highlight = self.mol_nodes.get_facecolors()
-            scatter_edgecolors_highlight  = self.mol_nodes.get_edgecolors()
-            
+            scatter_edgecolors_highlight = self.mol_nodes.get_edgecolors()
+
             scatter_facecolors_highlight[ind] = WHITE
             scatter_edgecolors_highlight[ind] = RED
             self.mol_nodes.set_fc(scatter_facecolors_highlight)
@@ -700,7 +766,7 @@ class MainWidget(QMainWindow):
                 # self.redraw_axes()
                 # highlight H1 hmbc peaks
                 specplot.highlight_H1_HMBC_peaks(lbl)
-            
+
             # highlight C13 peak in graph x1
             specplot.highlight_C13_peak(lbl)
 
@@ -715,7 +781,9 @@ class MainWidget(QMainWindow):
             specplot.display_annotation_H1_from_molplot(lbl, specplot.annot_H1)
 
             # annotate distributions
-            hpks = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f1C_i==lbl]["f2H_i"].values
+            hpks = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f1C_i == lbl][
+                "f2H_i"
+            ].values
             cpks = [lbl]
             self.display_distributions(cpks, hpks, specplot)
 
@@ -736,12 +804,11 @@ class MainWidget(QMainWindow):
             specplot.hide_annotation(specplot.annot_C13)
             specplot.hide_annotation(specplot.annot_H1)
 
-            #unhighlight distributions
+            # unhighlight distributions
             specplot.reset_distributions_eeh()
 
             molplot.canvas.draw_idle()
             specplot.canvas.draw_idle()
-
 
     def pick_molecule(self, event, event_name, specplot, molplot):
         global JAVA_AVAILABLE
@@ -752,8 +819,10 @@ class MainWidget(QMainWindow):
 
         # self.mol_ind = event.ind
         # self.node_pick_ind = event.ind
-        self.node_pick_ind = node_index['ind'][0]
-        ptcoords = np.ma.compressed(self.moleculePlot.mol_nodes.get_offsets()[self.node_pick_ind])
+        self.node_pick_ind = node_index["ind"][0]
+        ptcoords = np.ma.compressed(
+            self.moleculePlot.mol_nodes.get_offsets()[self.node_pick_ind]
+        )
 
         # find label id
         self.label_id = list(self.moleculePlot.mol_labels.keys())[self.node_pick_ind]
@@ -771,7 +840,7 @@ class MainWidget(QMainWindow):
             specplot.hide_annotation(specplot.annot_C13)
             specplot.hide_annotation(specplot.annot_H1)
 
-            #unhighlight distributions
+            # unhighlight distributions
             specplot.reset_distributions_eeh()
             specplot.canvas.draw_idle()
             molplot.canvas.draw_idle()
@@ -786,7 +855,9 @@ class MainWidget(QMainWindow):
             hmbc_nodes = self.moleculePlot.hmbc_graph_plots[n]["hmbc_nodes"]
             hmbc_edges = self.moleculePlot.hmbc_graph_plots[n]["hmbc_edges"]
             hmbc_labels = self.moleculePlot.hmbc_graph_plots[n]["hmbc_labels"]
-            hmbc_vertices_moved = self.moleculePlot.hmbc_graph_plots[n]["hmbc_vertices_moved"]
+            hmbc_vertices_moved = self.moleculePlot.hmbc_graph_plots[n][
+                "hmbc_vertices_moved"
+            ]
 
             # check if picked node is in hmbc network and then
             # if the picked coords match of the edges match set them to True
@@ -822,8 +893,6 @@ class MainWidget(QMainWindow):
             for i, e in enumerate(self.moleculePlot.mol_edges.get_paths()):
                 for j, c in enumerate(e.vertices):
                     self.moleculePlot.mol_vertices_moved[i][j] = False
-
-
 
     def _createMenuBar(self):
         menuBar = self.menuBar()
@@ -952,7 +1021,7 @@ class MainWidget(QMainWindow):
     #     self.centralWidget.addAction(self.newAction)
     #     self.centralWidget.addAction(self.openAction)
     #     self.centralWidget.addAction(self.saveAction)
-    #     self.centralWidget.addAction(self.copyAction)
+    #     self.centralWidget.addAction(selfnmrproblem.dbe.copyAction)
     #     self.centralWidget.addAction(self.pasteAction)
     #     self.centralWidget.addAction(self.cutAction)
 
@@ -1031,7 +1100,12 @@ class MainWidget(QMainWindow):
             if xy3_dlg.exec():
                 xy3_calc_method = xy3_dlg.get_method()
             # Create new problem
-            nmrproblem = nmrProblem.NMRproblem(data_info,  java_available=JAVA_AVAILABLE, xy3_calc_method=xy3_calc_method, java_command = JAVA_COMMAND)
+            nmrproblem = nmrProblem.NMRproblem(
+                data_info,
+                java_available=JAVA_AVAILABLE,
+                xy3_calc_method=xy3_calc_method,
+                java_command=JAVA_COMMAND,
+            )
 
             if nmrproblem.data_complete:
                 define_hsqc_f2integral(nmrproblem)
@@ -1072,7 +1146,12 @@ class MainWidget(QMainWindow):
             xy3_dlg = XY3dialog(java_available=JAVA_AVAILABLE)
             if xy3_dlg.exec():
                 xy3_calc_method = xy3_dlg.get_method()
-            nmrproblem = nmrProblem.NMRproblem(data_info, java_available=JAVA_AVAILABLE, xy3_calc_method=xy3_calc_method, java_command = JAVA_COMMAND)
+            nmrproblem = nmrProblem.NMRproblem(
+                data_info,
+                java_available=JAVA_AVAILABLE,
+                xy3_calc_method=xy3_calc_method,
+                java_command=JAVA_COMMAND,
+            )
 
             if nmrproblem.data_complete:
 
@@ -1205,7 +1284,7 @@ class MainWidget(QMainWindow):
         self.nmrproblem.smiles = smilesText
 
         molecule = Chem.MolFromSmiles(smilesText)
-        Draw.MolToFile(molecule, "molecule.png", size=(800,800))
+        Draw.MolToFile(molecule, "molecule.png", size=(800, 800))
         # self.nmrproblem.png = Image.open("molecule.png").transpose(
         #     PIL.Image.FLIP_LEFT_RIGHT
         # )
@@ -1218,25 +1297,22 @@ class MainWidget(QMainWindow):
                 # np.fliplr(self.nmrproblem.png),
                 self.nmrproblem.png,
                 aspect="auto",
-                extent=[0,1,1,0],
+                extent=[0, 1, 1, 0],
                 alpha=0.6,
             )
 
+    #         if not isinstance(nmrproblem.png, type(None)):
+    #             self.bkgnd = self.ax.imshow(
+    #                 np.fliplr(nmrproblem.png),
+    #                 aspect="auto",
+    #                 extent=[0,1,1,0],
+    #                 alpha=0.4,
+    #             )
 
-
-
-#         if not isinstance(nmrproblem.png, type(None)):
-#             self.bkgnd = self.ax.imshow(
-#                 np.fliplr(nmrproblem.png),
-#                 aspect="auto",
-#                 extent=[0,1,1,0],
-#                 alpha=0.4,
-#             )
-
-# # ax.set_xlim(-0.1,1.1)
-# # ax.set_ylim(1.1, -0.1)
-#         self.ax.set_xlim(-0.1, 1.1)
-#         self.ax.set_ylim(1.1, -0.1)
+    # # ax.set_xlim(-0.1,1.1)
+    # # ax.set_ylim(1.1, -0.1)
+    #         self.ax.set_xlim(-0.1, 1.1)
+    #         self.ax.set_ylim(1.1, -0.1)
 
     def highlight_hmbc_peaks(self, lbl, sel):
         if lbl[0] == "H":
@@ -1329,9 +1405,6 @@ def define_c13_attached_protons(nmrproblem):
             c13.loc[i, "attached_protons"] = int(dddf.f2_integral.sum())
 
 
-
-
-
 if __name__ == "__main__":
 
     app = QApplication(sys.argv)
@@ -1343,7 +1416,12 @@ if __name__ == "__main__":
         xy3_calc_method_str = xy3_dlg.get_method()
 
     data_info = nmrProblem.parse_argv()
-    nmrproblem = nmrProblem.NMRproblem(data_info, java_available=JAVA_AVAILABLE, xy3_calc_method=xy3_calc_method_str, java_command=JAVA_COMMAND)
+    nmrproblem = nmrProblem.NMRproblem(
+        data_info,
+        java_available=JAVA_AVAILABLE,
+        xy3_calc_method=xy3_calc_method_str,
+        java_command=JAVA_COMMAND,
+    )
 
     if nmrproblem.data_complete:
         define_hsqc_f2integral(nmrproblem)

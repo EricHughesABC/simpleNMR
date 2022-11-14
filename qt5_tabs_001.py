@@ -5,7 +5,6 @@ from PyQt5.QtWidgets import (
     QPushButton,
     QTabWidget,
     QVBoxLayout,
-    
     QTableView,
     QDialog,
     QDialogButtonBox,
@@ -23,7 +22,6 @@ import io
 import nmrProblem
 
 from excelheaders import excel_orig_df_columns
-
 
 
 class TableModel(QAbstractTableModel):

@@ -25,6 +25,9 @@ develop/
 *.csv
 *.mdl
 
+# java portable runtime environments
+jre/
+
 # Distribution / packaging
 .Python
 build/

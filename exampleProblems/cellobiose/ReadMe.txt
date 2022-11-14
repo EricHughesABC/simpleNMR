@@ -1,0 +1,1 @@
+The data used in this example is actually from a sample of cellobiose octa-acetate run in CDCl3, so each -OH group shown in the structure was actually an acetate group.  This simplifies the spectrum by effectively eliminating problems with mixtures of anomers.  The data from the acetate groups has been omitted from the analysis.

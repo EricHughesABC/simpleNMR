@@ -47,6 +47,21 @@ excel_df_columns = {
         "f1Cp_i",
         "f2Cp_i",
     ],
+    "noesy": [
+        "f1_ppm",
+        "f2_ppm",
+        "intensity",
+        "f1_i",
+        "f1p_i",
+        "f2_i",
+        "f2p_i",
+        "f1p_ppm",
+        "f2p_ppm",
+        "f1H_i",
+        "f2H_i",
+        "f1Cp_i",
+        "f2Cp_i",
+    ],
     "hsqc": [
         "f1_ppm",
         "f2_ppm",
@@ -132,4 +147,16 @@ excel_orig_df_columns = {
         "Impurity/Compound",
         "Annotation",
     ],
+    "NOESY": [
+        "f2 (ppm)",
+        "f1 (ppm)",
+        "Intensity",
+        "Width f2",
+        "Width f1",
+        "Volume",
+        "Type",
+        "Flags",
+        "Impurity/Compound",
+        "Annotation"
+    ]
 }

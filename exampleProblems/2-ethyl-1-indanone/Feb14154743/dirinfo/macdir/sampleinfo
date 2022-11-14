@@ -1,0 +1,10 @@
+SAMPLE#: 3
+USER: service
+MACRO: cpautoQ('loc3_003','day')
+SOLVENT: cdcl3
+TEXT: NMR:EH: 2-ethyl-1-indanone
+SampleDir: service
+USERDIR: /home/service/vnmrsys
+DATA: 
+STATUS: Queued
+---------------------------------------------

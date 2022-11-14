@@ -1,0 +1,20 @@
+##TITLE= Audit trail, TopSpin 4.0.8
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= vsmw51
+$$ C:\Users\vsmw51\OneDrive - Durham University\projects\NMRanalysis\d7\2-ethyl-1-indanone\Feb14154743\br_c13/CARBON_01.fid/10/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2020-03-02 14:21:07.139 -0000>,<MDS\vsmw51>,<DM-CHEM-201>,<vconv>,<TopSpin 4.0.8>,
+      <vconv created from
+       C:\Users\vsmw51\OneDrive - Durham University\projects\NMRanalysis\d7\2-ethyl-1-indanone\Feb14154743\CARBON_01.fid
+       data hash MD5: 83334
+       60 D2 1B 0F 43 18 D1 57 C9 E8 62 03 B6 E4 80 93>)
+(   2,<2020-03-02 14:24:36.058 -0000>,<MDS\vsmw51>,<DM-CHEM-201>,<proc1d>,<TopSpin 4.0.8>,
+      <Start of raw data processing
+       efp BC_mod = 2 LB = 0 FT_mod = 6 PKNL = 0 REVERSE PHC0 = -93.24562 PHC1 = 0 SI = 256K 
+       data hash MD5: 256K
+       A4 C7 C9 00 F0 0F 38 3D 18 7D 9E E4 3F 67 E2 AE>)
+##END=
+
+$$ hash MD5
+$$ D2 16 91 BC 15 0E E5 AE D1 61 21 FF E5 E2 6E BC

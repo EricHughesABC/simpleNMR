@@ -1,0 +1,10 @@
+type   LIB
+status   Completed
+lock   on
+title   gHSQCAD_01 
+exp   gHSQCAD
+time   
+macro   return
+data   /data/d72002/Feb14154743/gHSQCAD_01
+CPnode   gHSQCAD_001
+tooltext   gHSQCAD

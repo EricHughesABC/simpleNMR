@@ -9,28 +9,30 @@ from PyQt5.QtWidgets import (
     QDialogButtonBox,
 )
 
+
 class XY3dialog(QDialog):
     def __init__(self, parent=None, java_available=False):
         self.java_available = java_available
         super(XY3dialog, self).__init__(parent)
         self.setWindowTitle("Carbon Coordinates Methods")
-        self.setFixedSize(300, 200)
+        self.setFixedSize(400, 200)
         self.create_widgets()
         self.create_layout()
         self.create_connections()
 
     def create_widgets(self):
         # QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
-        QBtn = QDialogButtonBox.Ok 
+        QBtn = QDialogButtonBox.Ok
 
         self.buttonBox = QDialogButtonBox(QBtn)
-
 
         self.use_xy3 = QRadioButton("Use saved carbon coordinates")
         self.use_xy3.setChecked(True)
         self.use_xy3.method = "xy3"
-        
-        self.use_c13ppm_predictor = QRadioButton("Use NMRshiftDB2 C13 PPM Predictor for coordinates")
+
+        self.use_c13ppm_predictor = QRadioButton(
+            "Use NMRshiftDB2 C13 PPM Predictor for coordinates"
+        )
         if not self.java_available:
             self.use_c13ppm_predictor.setCheckable(False)
             font = self.use_c13ppm_predictor.font()
@@ -38,9 +40,10 @@ class XY3dialog(QDialog):
             font.setStrikeOut(True)
             self.use_c13ppm_predictor.setFont(font)
         self.use_c13ppm_predictor.method = "c13ppm"
-        self.use_random_positions = QRadioButton("Use Random Positions for initial carbon coordinates")
+        self.use_random_positions = QRadioButton(
+            "Use Random Positions for initial carbon coordinates"
+        )
         self.use_random_positions.method = "random"
-
 
     def create_layout(self):
         layout = QVBoxLayout()
@@ -61,6 +64,7 @@ class XY3dialog(QDialog):
             return self.use_xy3.method
         elif self.use_random_positions.isChecked():
             return self.use_random_positions.method
+
 
 if __name__ == "__main__":
 

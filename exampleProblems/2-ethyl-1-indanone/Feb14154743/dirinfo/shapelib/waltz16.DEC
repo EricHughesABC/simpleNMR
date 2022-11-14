@@ -1,0 +1,46 @@
+# waltz16.DEC Copyright (c) 1991-1996 Agilent Technologies All Rights Reserved
+# 
+# Copyright (c) 1991-1996 Agilent Technologies All Rights Reserved. 
+# This software contains proprietary and confidential 
+# information of Agilent Technologies and its contributors. 
+# Use, disclosure and reproduction is prohibited without 
+# prior consent. 
+#
+# WALTZ-16 Broadband Decoupling Sequence
+270.0	180.0
+360.0	  0.0
+180.0	180.0
+270.0	  0.0
+ 90.0	180.0
+180.0	  0.0
+360.0	180.0
+180.0	  0.0
+270.0	180.0
+270.0	  0.0
+360.0	180.0
+180.0	  0.0
+270.0	180.0
+ 90.0	  0.0
+180.0	180.0
+360.0	  0.0
+180.0	180.0
+270.0	  0.0
+#
+270.0	  0.0
+360.0	180.0
+180.0	  0.0
+270.0	180.0
+ 90.0	  0.0
+180.0	180.0
+360.0	  0.0
+180.0	180.0
+270.0	  0.0
+270.0	180.0
+360.0	  0.0
+180.0	180.0
+270.0	  0.0
+ 90.0	180.0
+180.0	  0.0
+360.0	180.0
+180.0	  0.0
+270.0	180.0
