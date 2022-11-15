@@ -14,7 +14,16 @@ The initial positions of the carbon atom nodes over the background molecule imag
 
 ## Installation
 
-The program comes with a requirements file. Due to the use of the module RDKIT, I believe the best way to install the software is to use a CONDA installation. RDKIT can be installed using pip, but requires a python version of 3.7
+The program comes with a requirements file. Due to the use of the module RDKIT, I believe the best way to install the software is to use a CONDA installation. RDKIT can be installed using pip, but requires a python version of 3.7, but I have not been able to get it to work so for now I would stick to a CONDA installation.
+
+### JAVA
+In the repo, there are JDK binaries for windows, macos and linux in the folder **jre**. The binaries were downloaded from amazon [amazon corretto](https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html). The program checks to see if java is installed by the user and if not, defaults to these binaries to run the java code.
+
+Sometimes the java code has been compiled for a later version and will not run. An error message will appear in the background terminal.  If this happens run the appropriate bat files to recompile the java code and restart the program simpleNMR.py
+
+ - ```CompileJavaMacLinux.bat```
+ - ```CompileJavaWindows10.bat```
+  
 
 ## Running the program
 
