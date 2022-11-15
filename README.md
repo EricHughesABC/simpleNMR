@@ -4,13 +4,13 @@ simpleNMR is a python/QT5/matplotlib program. It runs on windows and macos. The 
 
 The program displays the data  in an interactive manner. The idea behind the program was to position it as an analysis tool between the raw data and the use of pencil and paper to analyse NMR data and commercial, complete black box solutions that can provide an answer with very little manual intervention. The software takes a high level interactive approach to display the information from the NMR experiments in order quickly check if a proposed structure is consistent with the NMR data.
 
-The screenshot below shows the main user interface of the program. It consists of two panels: THe left-hand panel shows the proton and carbon 1-D spectra of the molecule. The right hand side panel shows an image of the proposed molecule provided by the user on top of which are placed the carbon atoms of the molecule. COSY data is shown as links between carbon atoms.  The carbon atoms/nodes can be moved over the background molecule so that they align with the corresponding atoms in the proposed molecule. HMBC corelations are displayed on the molecule when the cursor is positioned over a carbon atom. The corresponding proton and carbon peaks are highlighted in the spectra panel.
+The screenshot below shows the main user interface of the program. It consists of two panels: THe right-hand panel shows the proton and carbon 1-D spectra of the molecule. The left-hand side panel shows an image of the proposed molecule provided by the user on top of which are placed the carbon atoms of the molecule. COSY data is shown as red links between carbon atoms.  The carbon atoms/nodes can be moved over the background molecule so that they align with the corresponding atoms in the proposed molecule. HMBC corelations are displayed on the molecule when the cursor is positioned over a carbon atom. The corresponding proton and carbon peaks are highlighted in the spectra panel.
 
 Furthermore, when a peak is highlighted in the spectra panel, the peak is highlighted in red, if the peak has a corresponding carbon/proton peak it is  highlighted. HMBC correlations are shown by highlighting further peaks in different colours and showing the links in the molecule panel. Information on what the chemical shift might correspond to in terms of functional group is shown up in a pop-up.
 
 ![simpleNMR](Screenshot_simpleNMR.png)
 
-
+The initial positions of the carbon atom nodes over the background molecule image can be set randomly, from a previously saved session, or by using the JAVA HOSE code that can be found on [nmrshiftdb](https://nmrshiftdb.nmr.uni-koeln.de/) website which has been incorporated into the program.
 
 ## Installation
 
@@ -31,15 +31,14 @@ A problem directory can be opened directly from the command line by starting the
 ## Requirements
 
  - matplotlib==3.5.1
- - mplcursors==0.5.1
  - networkx==2.4
  - nmrglue==0.8
  - numpy==1.21.5
  - pandas==1.3.4
- - Pillow==9.1.1
+ - Pillow==9.2.0
  - PyQt5==5.15.6
  - PyYAML==6.0
- - rdkit==2009.Q1-1
+ - rdkit==2020.09.10
  - scipy==1.7.3
 
 ## Example problems

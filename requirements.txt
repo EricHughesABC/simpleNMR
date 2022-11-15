@@ -1,4 +1,15 @@
-mplcursors==0.5.1
-networkx==2.4
+<<<<<<< HEAD
 nmrglue==0.8
 XlsxWriter==3.0.2
+=======
+matplotlib==3.5.1
+networkx==2.4
+nmrglue==0.8
+numpy==1.21.5
+pandas==1.3.5
+Pillow==9.2.0
+PyQt5==5.15.6
+PyYAML==6.0
+rdkit==2020.09.1.0
+scipy==1.7.3
+>>>>>>> d906ba7aae9c4a535155f9bf20adf70041157f56
