@@ -322,6 +322,9 @@ class MainWidget(QMainWindow):
 
     def hover_over_specplot(self, event, specplot, molplot):
 
+
+        # just return if toolbar is active
+
         if (self.moltoolbar.mode != "") or (self.spctoolbar.mode != ""):
             # print("hover_over_specplot: toolbar mode is not empty")
             # print("self.moltoolbar.mode: ", self.moltoolbar.mode)
@@ -342,6 +345,7 @@ class MainWidget(QMainWindow):
 
         if any(in_plot):
             lbl = in_plot_label[in_plot.index(True)]
+            print("lbl: ", lbl)
 
             # if lbl != self.highlighted_peak_lbl:
             # highlight new peak
@@ -353,10 +357,12 @@ class MainWidget(QMainWindow):
             if "H" in lbl:
                 # set the annotation to the peak
                 atom_index = int(lbl[1:])
+                print("atom_index: ", atom_index, self.nmrproblem.h1.loc[atom_index, "ppm"])
                 ppm = self.nmrproblem.h1.loc[atom_index, "ppm"]
                 integral = self.nmrproblem.h1.loc[atom_index, "integral"]
                 jcoupling = self.nmrproblem.h1.loc[atom_index, "jCouplingClass"]
                 annot_text = f"{lbl}: {ppm:.2f} ppm\nInt:{integral}\nJ: {jcoupling}"
+                print("annot_text: ", annot_text)
                 specplot.annot_H1.xy = (event.xdata, event.ydata)
                 specplot.annot_H1.set_text(annot_text)
                 specplot.annot_H1.set_visible(True)
@@ -459,7 +465,7 @@ class MainWidget(QMainWindow):
         specplot.display_annotation_C13_from_molplot(lbl, specplot.annot_C13)
 
         # annotate H1 peaks in graph x1
-        specplot.display_annotation_H1_from_molplot(lbl, specplot.annot_H1)
+        # specplot.display_annotation_H1_from_molplot(lbl, specplot.annot_H1)
 
         # annotate distributions
         hpks = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f1C_i == lbl]["f2H_i"].values
