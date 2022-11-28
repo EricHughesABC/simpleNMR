@@ -1,1 +1,1 @@
-javac -cp cdk-2.7.1.jar:predictorc.jar:. NewTest.java
+jre\amazon-corretto-17.jdk\Contents\Home\bin\javac -cp cdk-2.7.1.jar:predictorc.jar:. NewTest.java

@@ -246,10 +246,7 @@ def create_rdkit_molecule_from_smiles(smiles_str: str)->Chem.Mol:
        save the scaled coordinates of the atoms in the molecule
        min x and y =0, max x and y = 1"""
 
-    print("smiles_str", smiles_str)
     molecule = Chem.MolFromSmiles(smiles_str)
-    print(type(molecule))
-    print(dir(molecule))
     # attempt to fix coordinates of png
     mol2 = Chem.AddHs(molecule)
     AllChem.EmbedMolecule(mol2, randomSeed=3)
@@ -303,7 +300,7 @@ def read_xy3_jsonfile(problemdata_info: dict)->dict:
 
 
 def create_hmbc_edges_dict(nmrproblem)->dict:
-    """Creates a dictionary with the edges of the HMBc problem"""
+    """Creates a dictionary with the edges of the HMBC problem"""
 
     hmbc_edges = {}
     hmbc = nmrproblem.hmbc
@@ -509,16 +506,16 @@ def create_hmbc_graph_fragments(nmrproblem, hmbc_edges: dict)-> dict:
     """create a graph of fragments from the hmbc_edges"""
     
     hmbc_graphs = {}
-    ntwk_labels = []
+    # ntwk_labels = []
 
     catoms = nmrproblem.carbonAtoms
-    df = nmrproblem.df
+    # df = nmrproblem.df
     xy3 = nmrproblem.xy3
-    molecule = nmrproblem.molecule
-    udic = nmrproblem.udic
+    # molecule = nmrproblem.molecule
+    # udic = nmrproblem.udic
 
-    ret1 = None
-    ret2 = None
+    # ret1 = None
+    # ret2 = None
 
     lineCollections = []
     for i, c in enumerate(catoms):
@@ -1091,6 +1088,13 @@ class NMRproblem:
         self.h1["jCouplingClass"] = self.h1_df["jCouplingClass"]
         self.h1["jCouplingVals"] = self.h1_df["jCouplingVals"]
         self.h1["range"] = self.h1_df["range"]
+
+        # replace any spaces in the column jCouplingVals with 0
+        self.h1["jCouplingVals"] = self.h1["jCouplingVals"].str.replace(" ", "0")
+
+        # set jCouplingVals to s if jCouplingVals is 0
+        self.h1["jCouplingVals"] = self.h1["jCouplingVals"].replace("0", "s")
+
 
         # tidy up chemical shift values by replacing cosy, hsqc and hmbc picked peaks with values from c13ppm and h1ppm dataframes
 
@@ -2059,7 +2063,7 @@ class NMRproblem:
 
     def calculate1H13CSpectra1D(self):
 
-        couplings = {"s": 0, "d": 1, "t": 2, "q": 3, "Q": 4, "S": 6}
+        # couplings = {"s": 0, "d": 1, "t": 2, "q": 3, "Q": 4, "S": 6}
 
         udic = self.udic
 
@@ -2087,7 +2091,7 @@ class NMRproblem:
                 if not isinstance(jHz, Iterable):
                     jHz = [jHz]
 
-                # calculate isotropic fid for indivudual resonances
+                # calculate isotropic fid for individual resonances
                 isofreq = (
                     iso_ppm * omega - centre_freq
                 )  # isotropic chemical shift in Hz

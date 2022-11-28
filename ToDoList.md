@@ -47,7 +47,13 @@
 
   - create c13 plot that looks like a dept with color coded for quarternary carbons
 
+#### 28-11-2022
 
+  - create a psuedo representation of 2D data that is interactive with molecule highlighting
+  - develop peak picking algorithms for self contained program
+  - improve input from excel sheets: cope with  missing bits like ranges on proton data
+  
+  
 
   
 
