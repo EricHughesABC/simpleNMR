@@ -112,6 +112,7 @@ class MatplotlibMoleculePlot(Figure):
         self.mol_edges, self.mol_nodes, self.mol_labels = self.init_moleculePlots(
             self.ax, self.nmrproblem
         )
+        print("mol_edges", type(self.mol_edges))
         self.mol_vertices_moved = self.init_mol_vertices_moved(self.mol_edges)
 
         self.hmbc_graph_plots = self.init_hmbc_graph_plots(
@@ -212,11 +213,12 @@ class MatplotlibMoleculePlot(Figure):
     def init_mol_vertices_moved(self, mol_edges):
         """initialize molecule vertices moved"""
         mol_vertices_moved = []
-        for e in mol_edges.get_paths():
-            vertices = []
-            for c in e.vertices:
-                vertices.append(False)
-            mol_vertices_moved.append(vertices)
+        if not isinstance(mol_edges, list):
+            for e in mol_edges.get_paths():
+                vertices = []
+                for c in e.vertices:
+                    vertices.append(False)
+                mol_vertices_moved.append(vertices)
 
         return mol_vertices_moved
 

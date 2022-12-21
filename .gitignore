@@ -18,6 +18,9 @@ test*.py
 # Development files notebooks
 develop/
 
+# test example problem files
+test_exampleproblems/
+
 # png, mol, mdl, smi and csv files in toplevel directory
 *.png
 *.mol

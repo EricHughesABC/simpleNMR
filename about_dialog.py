@@ -25,7 +25,7 @@ class Aboutdialog(QDialog):
 
         # add message about the program
         self.message = QLabel(
-            "simpleNMR was written by Eric Hughes\n\nand is licensed under the MIT License.\n\nAlan Kenwright helped with the design and implementation."
+            "simpleNMR version 0.0.1 was written by Eric Hughes and is licensed under the MIT License.\n\nAlan Kenwright has been instrumental in the design and implementation."
         )
         self.message.setWordWrap(True)
 

@@ -78,6 +78,18 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
         # set CH2 to True if carbon has 2 protons attached
         self.molprops_df.loc[self.molprops_df["totalNumHs"] == 2, "CH2"] = True
 
+        # define quaternary carbon atoms column for totalNumHs == 0
+        self.molprops_df["quaternary"] = False
+        self.molprops_df.loc[self.molprops_df["totalNumHs"] == 0, "quaternary"] = True
+
+        # define CH3 column for totalNumHs == 3
+        self.molprops_df["CH3"] = False
+        self.molprops_df.loc[self.molprops_df["totalNumHs"] == 3, "CH3"] = True
+
+        # define CH1 column for totalNumHs == 1
+        self.molprops_df["CH1"] = False
+        self.molprops_df.loc[self.molprops_df["totalNumHs"] == 1, "CH1"] = True
+
         # calculate number of carbons with protons attached
         self.num_carbon_atoms_with_protons = self.molprops_df[self.molprops_df.totalNumHs > 0].shape[0]
 
@@ -216,13 +228,13 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
 
 if __name__ == "__main__":
     mol = NMRmol.from_smiles("CCC2Cc1ccccc1C2=O")
-    print(mol.c13_nmr_shifts())
-    print(mol.num_carbon_atoms)
-    print(mol.num_carbon_atoms_with_protons)
-    print(mol.num_quartenary_carbons)
-    print(mol.num_ch_carbon_atoms)
-    print(mol.num_ch2_carbon_atoms)
-    print(mol.num_ch3_carbon_atoms)
+    print("mol.c13_nmr_shifts()\n", mol.c13_nmr_shifts())
+    print("mol.num_carbon_atoms", mol.num_carbon_atoms)
+    print("mol.num_carbon_atoms_with_protons", mol.num_carbon_atoms_with_protons)
+    print("mol.num_quartenary_carbons", mol.num_quartenary_carbons)
+    print("mol.num_ch_carbon_atoms", mol.num_ch_carbon_atoms)
+    print("mol.num_ch2_carbon_atoms", mol.num_ch2_carbon_atoms)
+    print("mol.num_ch3_carbon_atoms", mol.num_ch3_carbon_atoms)
 
 
 
