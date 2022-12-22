@@ -27,6 +27,7 @@ import rdkit
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem import Draw
+from rdkit.Chem.rdMolDescriptors import CalcMolFormula
 
 import PIL
 from PIL import Image
@@ -1238,9 +1239,7 @@ class NMRproblem:
                 self.dbe = self.expected_molecule.dbe
                 self.elements = self.expected_molecule.elements
                 # reconstruct moleculeAtomsStr from elements
-                self.moleculeAtomsStr = ''
-                for k, v in self.elements.items():
-                    self.moleculeAtomsStr += k + str(v)
+                self.moleculeAtomsStr = CalcMolFormula(self.expected_molecule)
                 print("self.moleculeAtomsStr", self.moleculeAtomsStr)
         else:
             print("molecule not in sheet")
@@ -1333,8 +1332,9 @@ class NMRproblem:
 
         if not self.pureshift_df.empty:
             self.h1 = self.pureshift_df[self.pureshift_df.Type == "Compound"][['ppm']].copy()
-        elif not self.H1_df.empty:
-            self.h1 = self.h1_df[self.h1_df.Type == "Compound"][['ppm']].copy()
+        elif not self.h1_df.empty:
+            print("self.h1_df", self.h1_df.columns)
+            self.h1 = self.h1_df[['ppm']].copy()
         else:
             print("No pureshift_df or h1_df")
             print("Program should not reach this point")
