@@ -83,86 +83,44 @@ WINDOWS_OS = False
 LINUX_OS = False
 MAC_OS = False
 
-print("platform.system", platform.system())
+# print("platform.system", platform.system())
 
-# set current working directory to the directory of this file
+# # set current working directory to the directory of this file
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
-# JAVA_COMMAND = "java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"
-# if not os.system("java -version"):
+# if platform.system() == "Windows":
 #     JAVA_AVAILABLE = True
-#     print("JAVA is available")
+#     # test if local windows ins installed
+#     if not os.system('"jre\\javawindows\\bin\\java -version"'):
 
-#     # set java command to predict C13 chemical shifts for correct os system
-#     print("System:", platform.system())
-#     print("**********************")
-
-#     if platform.system() == "Windows":
 #         WINDOWS_OS = True
-#         JAVA_COMMAND = (
-#             "java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"
-#         )
-#     elif platform.system() == "Linux":
-#         LINUX_OS = True
-#         JAVA_COMMAND = (
-#             "java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
-#         )
-#     elif platform.system() == "Darwin":
-#         MAC_OS = True
-#         JAVA_COMMAND = (
-#             "java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
-#         )
-# else:
-# test if system is windows
-if platform.system() == "Windows":
-    JAVA_AVAILABLE = True
-    # test if local windows ins installed
-    if not os.system('"jre\\javawindows\\bin\\java -version"'):
-
-        WINDOWS_OS = True
-        JAVA_COMMAND = '"jre\\javawindows\\bin\\java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"'
-        print("WINDOWS Local JAVA is available")
-    else:
-        JAVA_AVAILABLE = False
-        print("JAVA is not available")
-elif platform.system() == "Linux":
-    LINUX_OS = True
-    if not os.system('"jre\\javalinux\\bin\\java -version"'):
-        JAVA_AVAILABLE = True
-        JAVA_COMMAND = '"javalinux\\bin\\java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"'
-        print("Linux Local JAVA is available")
-    else:
-        JAVA_AVAILABLE = False
-        print("JAVA is not available")
-elif platform.system() == "Darwin":
-    MAC_OS = True
-    if not os.system("jre/amazon-corretto-17.jdk/Contents/Home/bin/java --version"):
-        JAVA_AVAILABLE = True
-        JAVA_COMMAND = "jre/amazon-corretto-17.jdk/Contents/Home/bin/java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
-        print("MAC Local JAVA is available")
-    else:
-        JAVA_AVAILABLE = False
-        print("JAVA is not available")
-
-
-print("JAVA_COMMAND = ", JAVA_COMMAND)
-
-
-# mac_os = False
-# linux_os = False
-# windows_os = False
-
-
-# # set java command to predict C13 chemical shifts for correct os system
-# if system == "Windows":
-#     WINDOWS_OS = True
-#     JAVA_COMMAND = "java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"
-# elif system == "Linux":
+#         JAVA_COMMAND = '"jre\\javawindows\\bin\\java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"'
+#         print("WINDOWS Local JAVA is available")
+#     else:
+#         JAVA_AVAILABLE = False
+#         print("JAVA is not available")
+# elif platform.system() == "Linux":
 #     LINUX_OS = True
-#     JAVA_COMMAND = "java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
-# elif system == "Darwin":
+#     if not os.system('"jre\\javalinux\\bin\\java -version"'):
+#         JAVA_AVAILABLE = True
+#         JAVA_COMMAND = '"javalinux\\bin\\java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"'
+#         print("Linux Local JAVA is available")
+#     else:
+#         JAVA_AVAILABLE = False
+#         print("JAVA is not available")
+# elif platform.system() == "Darwin":
 #     MAC_OS = True
-#     JAVA_COMMAND = "java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
+#     if not os.system("jre/amazon-corretto-17.jdk/Contents/Home/bin/java --version"):
+#         JAVA_AVAILABLE = True
+#         JAVA_COMMAND = "jre/amazon-corretto-17.jdk/Contents/Home/bin/java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
+#         print("MAC Local JAVA is available")
+#     else:
+#         JAVA_AVAILABLE = False
+#         print("JAVA is not available")
+
+
+# print("JAVA_COMMAND = ", JAVA_COMMAND)
+
 
 
 class MoleculePlotCanvas(FigureCanvasQTAgg):
@@ -201,6 +159,8 @@ class MainWidget(QMainWindow):
         self.setCentralWidget(self.centralWidget)
 
         if self.nmrproblem.data_complete:
+
+            nmrproblem.save_dataframes_in_nmrproblem_to_json()
 
             self.initiate_windows(self.nmrproblem)
 
@@ -1114,9 +1074,11 @@ class MainWidget(QMainWindow):
 
             if xy3_dlg.exec():
                 xy3_calc_method, expts_available = xy3_dlg.get_method()
-                print("xy3_calc_method_str", xy3_calc_method_str)
+                # add "molecule" to expts_available
+                expts_available.append("molecule")
             # Create new problem
             # nmrproblem = TestExcelSimpleNMR(
+            print("line 1080: nmrproblem")
             nmrproblem = nmrProblem.NMRproblem(
                 data_info,
                 java_available=JAVA_AVAILABLE,
@@ -1127,9 +1089,7 @@ class MainWidget(QMainWindow):
 
             if nmrproblem.data_complete:
                 define_hsqc_f2integral(nmrproblem)
-                if not nmrproblem.c13_from_hsqc:
-                    define_c13_attached_protons(nmrproblem)
-                else:
+                if (nmrproblem.c13_from_hsqc) or (nmrproblem.h1_df_integral_added):
                     # nmrproblem.df.loc["integral", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
                     nmrproblem.df.loc["attached protons", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
                     nmrproblem.df.loc["C13 hyb", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
@@ -1137,13 +1097,16 @@ class MainWidget(QMainWindow):
                     nmrproblem.df.loc["integral", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
                     nmrproblem.df.loc["attached protons", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
                     nmrproblem.df.loc["C13 hyb", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
-
+                else:
+                    define_c13_attached_protons(nmrproblem)
 
                 nmrProblem.build_model(nmrproblem)
                 nmrProblem.build_molecule_graph_network(nmrproblem)
                 # nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
+                print("newFromMresNova: build_xy3")
                 nmrproblem.build_xy3()
-                print("xy3:", nmrproblem.xy3)
+
+                nmrproblem.save_dataframes_in_nmrproblem_to_json()
 
                 self.initiate_windows(nmrproblem)
         else:
@@ -1152,6 +1115,7 @@ class MainWidget(QMainWindow):
         # Logic for creating a new file goes here...
         # self.csideWidget.setText("<b>File > New</b> clicked")
 
+ 
     def newFromTopspin(self):
         print("New Topspin")
 
@@ -1175,23 +1139,23 @@ class MainWidget(QMainWindow):
                                   sheets_missing=nmrProblem.get_missing_sheets(data_info["excel_fn"]))
             if xy3_dlg.exec():
                 xy3_calc_method, expts_available = xy3_dlg.get_method()
-                print("xy3_calc_method_str", xy3_calc_method_str)
+                # add "molecule" to expts_available
+                expts_available.append("molecule")
 
-            nmrproblem = nmrProblem.NMRproblem(
-            # nmrproblem = TestExcelSimpleNMR(
-                data_info,
-                java_available=JAVA_AVAILABLE,
-                xy3_calc_method=xy3_calc_method,
-                java_command=JAVA_COMMAND,
-                expts_available=expts_available
-            )
+                print("line 1143: nmrproblem")
+                nmrproblem = nmrProblem.NMRproblem(
+                # nmrproblem = TestExcelSimpleNMR(
+                    data_info,
+                    java_available=JAVA_AVAILABLE,
+                    xy3_calc_method=xy3_calc_method,
+                    java_command=JAVA_COMMAND,
+                    expts_available=expts_available
+                )
 
             if nmrproblem.data_complete:
 
                 define_hsqc_f2integral(nmrproblem)
-                if not nmrproblem.c13_from_hsqc:
-                    define_c13_attached_protons(nmrproblem)
-                else:
+                if (nmrproblem.c13_from_hsqc) or (nmrproblem.h1_df_integral_added):
                     # nmrproblem.df.loc["integral", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
                     nmrproblem.df.loc["attached protons", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
                     nmrproblem.df.loc["C13 hyb", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
@@ -1199,12 +1163,15 @@ class MainWidget(QMainWindow):
                     nmrproblem.df.loc["integral", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
                     nmrproblem.df.loc["attached protons", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
                     nmrproblem.df.loc["C13 hyb", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
-
+                else:
+                    define_c13_attached_protons(nmrproblem)
+                    
                 nmrProblem.build_model(nmrproblem)
                 nmrProblem.build_molecule_graph_network(nmrproblem)
                 # nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
+                print("openFile, build_xy3")
                 nmrproblem.build_xy3()
-                print("xy3:", nmrproblem.xy3)
+                nmrproblem.save_dataframes_in_nmrproblem_to_json()
 
                 self.initiate_windows(nmrproblem)
         # Logic for opening an existing file goes here...
@@ -1449,6 +1416,46 @@ def define_c13_attached_protons(nmrproblem):
 
 if __name__ == "__main__":
 
+    print("platform.system", platform.system())
+
+    # set current working directory to the directory of this file
+    # os.chdir(os.path.dirname(os.path.realpath(__file__)))
+    nnumtimes=1
+    if platform.system() == "Windows":
+        JAVA_AVAILABLE = True
+        # test if local windows ins installed
+        if not os.system('"jre\\javawindows\\bin\\java -version"'):
+
+            WINDOWS_OS = True
+            JAVA_COMMAND = '"jre\\javawindows\\bin\\java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"'
+            print("\nWINDOWS Local JAVA is available\n")
+            print("\nnumber of times", nnumtimes, "\n")
+            nnumtimes=nnumtimes+1
+        else:
+            JAVA_AVAILABLE = False
+            print("JAVA is not available")
+    elif platform.system() == "Linux":
+        LINUX_OS = True
+        if not os.system('"jre\\javalinux\\bin\\java -version"'):
+            JAVA_AVAILABLE = True
+            JAVA_COMMAND = '"javalinux\\bin\\java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"'
+            print("Linux Local JAVA is available")
+        else:
+            JAVA_AVAILABLE = False
+            print("JAVA is not available")
+    elif platform.system() == "Darwin":
+        MAC_OS = True
+        if not os.system("jre/amazon-corretto-17.jdk/Contents/Home/bin/java --version"):
+            JAVA_AVAILABLE = True
+            JAVA_COMMAND = "jre/amazon-corretto-17.jdk/Contents/Home/bin/java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
+            print("MAC Local JAVA is available")
+        else:
+            JAVA_AVAILABLE = False
+            print("JAVA is not available")
+
+
+    print("JAVA_COMMAND = ", JAVA_COMMAND)
+
     app = QApplication(sys.argv)
 
     xy3_calc_method_str = "xy3"
@@ -1462,18 +1469,11 @@ if __name__ == "__main__":
 
         if xy3_dlg.exec_():
             xy3_calc_method_str, expts_available = xy3_dlg.get_method()
-            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            print("xy3_calc_method_str", xy3_calc_method_str)
-            print("expts_available", expts_available, type(expts_available))
-            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-
+            # add "molecule" to the list of available experiments
+            expts_available.append("molecule")
 
         # data_info = nmrProblem.parse_argv()
-        
+            print("line 1430: nmrproblem")
             nmrproblem = nmrProblem.NMRproblem(
             # nmrproblem = TestExcelSimpleNMR(
                 data_info,
@@ -1482,8 +1482,23 @@ if __name__ == "__main__":
                 java_command=JAVA_COMMAND,
                 expts_available=expts_available
             )
+
+        else:
+            # start the GUI with empty data
+            data_info = nmrProblem.parse_argv(my_argv=[""])
+            print("line 1441: nmrproblem")
+            nmrproblem = nmrProblem.NMRproblem(
+            # nmrproblem = TestExcelSimpleNMR(
+                data_info,
+                java_available=JAVA_AVAILABLE,
+                xy3_calc_method=xy3_calc_method_str,
+                java_command=JAVA_COMMAND,
+                expts_available=[]
+            )
+
     else:
         data_info = nmrProblem.parse_argv()
+        print("line 1441: nmrproblem")
         nmrproblem = nmrProblem.NMRproblem(
         # nmrproblem = TestExcelSimpleNMR(
             data_info,
@@ -1495,13 +1510,7 @@ if __name__ == "__main__":
 
 
     if nmrproblem.data_complete:
-        print("nmrproblem.df[nmrproblem.protonAtoms]:\n", nmrproblem.df[nmrproblem.protonAtoms])
-        print("nmrproblem.df[nmrproblem.carbonAtoms]:\n", nmrproblem.df[nmrproblem.carbonAtoms])
-        print("nmrproblem.c13\n", nmrproblem.c13)
-        define_hsqc_f2integral(nmrproblem)
-        if not nmrproblem.c13_from_hsqc:
-            define_c13_attached_protons(nmrproblem)
-        else:
+        if (nmrproblem.c13_from_hsqc) or (nmrproblem.h1_df_integral_added):
             # nmrproblem.df.loc["integral", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
             nmrproblem.df.loc["attached protons", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
             nmrproblem.df.loc["C13 hyb", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
@@ -1509,16 +1518,18 @@ if __name__ == "__main__":
             nmrproblem.df.loc["integral", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
             nmrproblem.df.loc["attached protons", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
             nmrproblem.df.loc["C13 hyb", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
+        else:
+            define_c13_attached_protons(nmrproblem)
 
-            print("nmrproblem.df[nmrproblem.protonAtoms]:\n", nmrproblem.df[nmrproblem.protonAtoms])
-            print("nmrproblem.df[nmrproblem.carbonAtoms]:\n", nmrproblem.df[nmrproblem.carbonAtoms])
-
-        print("\nnmrproblem.c13.attached_protons:\n", nmrproblem.c13.attached_protons)
         nmrProblem.build_model(nmrproblem)
         nmrProblem.build_molecule_graph_network(nmrproblem)
         # nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
+        print("main: build xy3")
         nmrproblem.build_xy3()
         print("xy3:", nmrproblem.xy3)
+        # save dataframes to json
+        nmrproblem.save_dataframes_in_nmrproblem_to_json()
+
 
     ex = MainWidget(nmrproblem)
 

@@ -65,8 +65,9 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
         self.molprops_df = pd.DataFrame(data=molprops, columns=['idx', 'implicitHs', 'totalNumHs', 'degree', 'hybridization', 'aromatic'])
         self.molprops_df = self.molprops_df.set_index(['idx'])
         
-
+        print("\nstart calculating c13 chemical shifts\n")
         c13_chemical_shifts_df = self.calculated_c13_chemical_shifts()
+        print("\nfinished calculating c13 chemical shifts\n")
 
         # add c13 chemical shifts to molprops_df if available
         if isinstance(c13_chemical_shifts_df, pd.DataFrame):
@@ -94,7 +95,7 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
         self.num_carbon_atoms_with_protons = self.molprops_df[self.molprops_df.totalNumHs > 0].shape[0]
 
         # calculate number of carbons without protons attached
-        self.num_quartenary_carbons = self.molprops_df[self.molprops_df.totalNumHs == 0].shape[0]
+        self.num_quaternary_carbons = self.molprops_df[self.molprops_df.totalNumHs == 0].shape[0]
 
         # calculate number of carbon with two protons attached
         self.num_ch2_carbon_atoms = self.molprops_df[self.molprops_df.totalNumHs == 2].shape[0]
@@ -164,10 +165,6 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
         print("c13_nmr_shifts", c13_nmr_shifts)
 
         c13ppm_df = self.calc_c13_chemical_shifts_using_nmrshift2D()
-
-
-
-
         if isinstance(c13ppm_df, pd.DataFrame):
             # reset index to atom index
             print("c13ppm_df.index", c13ppm_df.index)
@@ -231,7 +228,7 @@ if __name__ == "__main__":
     print("mol.c13_nmr_shifts()\n", mol.c13_nmr_shifts())
     print("mol.num_carbon_atoms", mol.num_carbon_atoms)
     print("mol.num_carbon_atoms_with_protons", mol.num_carbon_atoms_with_protons)
-    print("mol.num_quartenary_carbons", mol.num_quartenary_carbons)
+    print("mol.num_quaternary_carbons", mol.num_quaternary_carbons)
     print("mol.num_ch_carbon_atoms", mol.num_ch_carbon_atoms)
     print("mol.num_ch2_carbon_atoms", mol.num_ch2_carbon_atoms)
     print("mol.num_ch3_carbon_atoms", mol.num_ch3_carbon_atoms)
