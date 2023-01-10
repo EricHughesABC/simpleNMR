@@ -17,14 +17,42 @@ The initial positions of the carbon atom nodes over the background molecule imag
 The program comes with a requirements file. Due to the use of the module RDKIT, I believe the best way to install the software is to use a CONDA installation. RDKIT can be installed using pip, but requires a python version of 3.7, but I have not been able to get it to work so for now I would stick to a CONDA installation.
 
 ### JAVA
+
 In the repo, there are JDK binaries for windows, macos and linux in the folder **jre**. The binaries were downloaded from amazon [amazon corretto](https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html). The program checks to see if java is installed by the user and if not, defaults to these binaries to run the java code.
 
 Sometimes the java code has been compiled for a later version and will not run. An error message will appear in the background terminal.  If this happens run the appropriate bat files to recompile the java code and restart the program simpleNMR.py
 
  - ```CompileJavaMacLinux.bat```
  - ```CompileJavaWindows10.bat```
+ 
+ ## PyInstaller
+ 
+ An executable of the program can be be created using pyinstaller for windows or macos.  A .spec file for creating a single executable has been created. The command to create an executable is 
+ 
+ ```pyinstaller simpleNMR.py simpleNMR_with_includes-F.spec```
+ 
+ Before running the command it is best practise to copy the following files over to a new directory and run the aboove command from there.
+ 
+ - ```about_dialog.py``` 
+ - ```excelheaders.py```
+ - ```moleculePlot.py```
+ - ```nmrProblem.py```
+ - ```nmrmol.py```
+ - ```nx_pylab.py```
+ - ```qt5_tabs_001.py```
+ - ```simpleNMR.py```
+ - ```spectraPlot.py```
+ - ```xy3_dialog.py```
+ - ```jre```
+ - ```csTables```
+ - ```cdk-2.7.1.jar```
+ - ```predictorc```
+ - ```NewTest.class```
+ 
+ In the ```jre``` folder keep only the java runtime environment that matches the operating system the pyinstaller command is run on.
+ 
+ Make sure that pyinstaller is ran from the correct python environment that simpleNMR.py works on.
   
-
 ## Running the program
 
 The program can be run from the command line by typing 
