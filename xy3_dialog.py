@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (
     QDialog,
     QDialogButtonBox,
     QLabel,
-    QCheckBox
+    QCheckBox,
 )
 
 
@@ -56,20 +56,17 @@ class XY3dialog(QDialog):
 
         self.checkboxes = {}
 
-        self.checkboxes['H1_1D'] = QCheckBox("H1 1D")
-        self.checkboxes['C13_1D'] = QCheckBox("C13 1D")
-        self.checkboxes['H1_pureshift'] = QCheckBox("H1 Pure Shift")
-        self.checkboxes['HSQC'] = QCheckBox("HSQC")
-        self.checkboxes['HMBC'] = QCheckBox("HMBC")
-        self.checkboxes['COSY'] = QCheckBox("COSY")
-        self.checkboxes['NOESY'] = QCheckBox("NOESY")
+        self.checkboxes["H1_1D"] = QCheckBox("H1 1D")
+        self.checkboxes["C13_1D"] = QCheckBox("C13 1D")
+        self.checkboxes["H1_pureshift"] = QCheckBox("H1 Pure Shift")
+        self.checkboxes["HSQC"] = QCheckBox("HSQC")
+        self.checkboxes["HMBC"] = QCheckBox("HMBC")
+        self.checkboxes["COSY"] = QCheckBox("COSY")
+        self.checkboxes["NOESY"] = QCheckBox("NOESY")
 
         # create an error  message text widget
         self.error_message = QLabel("OK")
         self.error_message.setStyleSheet("color: green")
-
-
-
 
         # set check all the boxes as default
         for key in self.checkboxes.keys():
@@ -81,20 +78,22 @@ class XY3dialog(QDialog):
             self.checkboxes[key].setChecked(False)
 
         # disable and uncheck NOESY by default
-        self.checkboxes['NOESY'].setChecked(False)
-        self.checkboxes['NOESY'].setEnabled(False)
+        self.checkboxes["NOESY"].setChecked(False)
+        self.checkboxes["NOESY"].setEnabled(False)
 
         # Display warning if HSQC is one of the missing sheets
-        if 'HSQC' in self.sheets_missing:
-            self.checkboxes['HSQC'].setText("WARNING: HSQC is missing! Program requires HSQC.")
+        if "HSQC" in self.sheets_missing:
+            self.checkboxes["HSQC"].setText(
+                "WARNING: HSQC is missing! Program requires HSQC."
+            )
 
         # do not allow editing of HSQC, COSY and HMBC by default
-        self.checkboxes['HSQC'].setEnabled(False)
+        self.checkboxes["HSQC"].setEnabled(False)
 
         # add radio buttons for calculating xy3 coordinates of the molecule
 
         self.use_xy3 = QRadioButton("Use saved carbon coordinates")
-        
+
         self.use_xy3.method = "xy3"
 
         self.use_c13ppm_predictor = QRadioButton(
@@ -126,27 +125,25 @@ class XY3dialog(QDialog):
     #     self.setLayout(layout)
 
     def create_layout(self):
-        
+
         vlayout = QVBoxLayout()
         layout_H1 = QHBoxLayout()
         layout_H2 = QHBoxLayout()
         layout_H3 = QHBoxLayout()
-        for key in ['H1_1D', 'C13_1D', 'H1_pureshift']:
+        for key in ["H1_1D", "C13_1D", "H1_pureshift"]:
             layout_H1.addWidget(self.checkboxes[key])
-        for key in [ 'COSY', 'HMBC', 'NOESY']:
+        for key in ["COSY", "HMBC", "NOESY"]:
             layout_H2.addWidget(self.checkboxes[key])
-        for key in [ 'HSQC']:
+        for key in ["HSQC"]:
             layout_H3.addWidget(self.checkboxes[key])
 
         # add an explanatory text for the checkboxes
         vlayout.addWidget(QLabel("Select NMR spectra to use for solving the problem:"))
-        
 
         # add horizontal layouts to vertical layout
         vlayout.addLayout(layout_H1)
         vlayout.addLayout(layout_H2)
         vlayout.addLayout(layout_H3)
-
 
         # add radio buttons to vertical layout
         # add a surrounding line around the radio buttons
@@ -167,8 +164,8 @@ class XY3dialog(QDialog):
     def create_connections(self):
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
-    # def get_method(self):
 
+    # def get_method(self):
 
     #     if self.use_c13ppm_predictor.isChecked():
     #         return self.use_c13ppm_predictor.method
@@ -189,9 +186,10 @@ class XY3dialog(QDialog):
         elif self.use_xy3.isChecked():
             method = self.use_xy3.method
         elif self.use_random_positions.isChecked():
-            method =  self.use_random_positions.method
+            method = self.use_random_positions.method
 
         return method, kys
+
 
 if __name__ == "__main__":
 

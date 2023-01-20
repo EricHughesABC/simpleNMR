@@ -52,6 +52,7 @@ def createH1C13interactivePlot(nmrprblm, h1c13distlist, ax0):
 
 class MatplotlibH1C13Plot(Figure):
     """H1 C13 1D spectra window based on matplotlib"""
+
     def __init__(self, nmrprblm):
         """init"""
 
@@ -528,25 +529,25 @@ class MatplotlibH1C13Plot(Figure):
         annot.set_visible(True)
 
     # def display_annotation_H1_from_molplot(self, lbl, annot):
-        # """display annotation for H1 from molplot"""
-        # highlighted_H1_lbls = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f2Cp_i == lbl][
-        #     "f2H_i"
-        # ]
+    # """display annotation for H1 from molplot"""
+    # highlighted_H1_lbls = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f2Cp_i == lbl][
+    #     "f2H_i"
+    # ]
 
-        # if not highlighted_H1_lbls.empty:
-        #     highlighted_H1_lbl = highlighted_H1_lbls.iloc[0]
-        #     atom_index = int(highlighted_H1_lbl[1:])
-        #     x = self.nmrproblem.h1.loc[atom_index, "ppm"]
-        #     y = 0.3
-        #     ppm = self.nmrproblem.h1.loc[atom_index, "ppm"]
-        #     integral = self.nmrproblem.h1.loc[atom_index, "integral"]
-        #     jcoupling = self.nmrproblem.h1.loc[atom_index, "jCouplingClass"]
-        #     annot_text = (
-        #         f"{highlighted_H1_lbl}: {ppm:.2f} ppm\nInt: {integral}\nJ: {jcoupling}"
-        #     )
-        #     annot.set_text(annot_text)
-        #     annot.xy = (x, y)
-        #     annot.set_visible(True)
+    # if not highlighted_H1_lbls.empty:
+    #     highlighted_H1_lbl = highlighted_H1_lbls.iloc[0]
+    #     atom_index = int(highlighted_H1_lbl[1:])
+    #     x = self.nmrproblem.h1.loc[atom_index, "ppm"]
+    #     y = 0.3
+    #     ppm = self.nmrproblem.h1.loc[atom_index, "ppm"]
+    #     integral = self.nmrproblem.h1.loc[atom_index, "integral"]
+    #     jcoupling = self.nmrproblem.h1.loc[atom_index, "jCouplingClass"]
+    #     annot_text = (
+    #         f"{highlighted_H1_lbl}: {ppm:.2f} ppm\nInt: {integral}\nJ: {jcoupling}"
+    #     )
+    #     annot.set_text(annot_text)
+    #     annot.xy = (x, y)
+    #     annot.set_visible(True)
 
     def display_annotation_H1_from_molplot(self, lbl, annot):
         """display annotation for H1 from molplot"""
@@ -556,7 +557,7 @@ class MatplotlibH1C13Plot(Figure):
 
         if not highlighted_H1_lbls.empty:
             if len(highlighted_H1_lbls) == 1:
-                
+
                 highlighted_H1_lbl = highlighted_H1_lbls.iloc[0]
                 atom_index = int(highlighted_H1_lbl[1:])
                 x = self.nmrproblem.h1.loc[atom_index, "ppm"]
@@ -564,9 +565,7 @@ class MatplotlibH1C13Plot(Figure):
                 ppm = self.nmrproblem.h1.loc[atom_index, "ppm"]
                 integral = self.nmrproblem.h1.loc[atom_index, "integral"]
                 jcoupling = self.nmrproblem.h1.loc[atom_index, "jCouplingClass"]
-                annot_text = (
-                    f"{highlighted_H1_lbl}: {ppm:.2f} ppm\nInt: {integral}\nJ: {jcoupling}"
-                )
+                annot_text = f"{highlighted_H1_lbl}: {ppm:.2f} ppm\nInt: {integral}\nJ: {jcoupling}"
                 annot.set_text(annot_text)
                 annot.xy = (x, y)
                 annot.set_visible(True)
@@ -589,9 +588,9 @@ class MatplotlibH1C13Plot(Figure):
                 integral2 = self.nmrproblem.h1.loc[atom_index2, "integral"]
                 jcoupling1 = self.nmrproblem.h1.loc[atom_index1, "jCouplingClass"]
                 jcoupling2 = self.nmrproblem.h1.loc[atom_index2, "jCouplingClass"]
-                annot_text = ( 
-                    f"{highlighted_H1_lbl1}: {ppm1:.2f} ppm\nInt: {integral1}\nJ: {jcoupling1}\n" +
-                    f"{highlighted_H1_lbl2}: {ppm2:.2f} ppm\nInt: {integral2}\nJ: {jcoupling2}"
+                annot_text = (
+                    f"{highlighted_H1_lbl1}: {ppm1:.2f} ppm\nInt: {integral1}\nJ: {jcoupling1}\n"
+                    + f"{highlighted_H1_lbl2}: {ppm2:.2f} ppm\nInt: {integral2}\nJ: {jcoupling2}"
                 )
 
                 annot.set_text(annot_text)

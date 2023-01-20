@@ -12,6 +12,7 @@ import re
 import json
 
 import pandas as pd
+
 # import openpyxl
 import numpy as np
 from numpy import pi, sin, cos, exp
@@ -32,6 +33,7 @@ from rdkit.Chem.rdMolDescriptors import CalcMolFormula
 import PIL
 from PIL import Image
 from excelheaders import excel_orig_df_columns, excel_df_columns
+
 # from .simpleNMR import JAVA_COMMAND
 # from simpleNMR import JAVA_AVAILABLE
 
@@ -41,17 +43,14 @@ import nmrmol
 global JAVA_AVAILABLE
 global JAVA_COMMAND
 
-new_dataframes = {}
-
+# new_dataframes = {}
 
 # return missing excelsheets names
-def get_missing_sheets(excel_fname: str)->set:
+def get_missing_sheets(excel_fname: str) -> set:
 
     # read in the excel file into a pandas dataframe
 
-    excelsheets = pd.read_excel(
-        excel_fname, sheet_name=None, index_col=0
-    )
+    excelsheets = pd.read_excel(excel_fname, sheet_name=None, index_col=0)
     # create a set of sheets keys that  are missing
     missing_sheets = set(excel_orig_df_columns.keys()) - set(excelsheets.keys())
 
@@ -62,7 +61,9 @@ def get_missing_sheets(excel_fname: str)->set:
     missing_sheets = missing_sheets.union(empty_sheets)
 
     # remove the sheets that start with the name sheet
-    missing_sheets = {sheet for sheet in missing_sheets if not sheet.lower().startswith("sheet")}
+    missing_sheets = {
+        sheet for sheet in missing_sheets if not sheet.lower().startswith("sheet")
+    }
 
     return missing_sheets
 
@@ -117,7 +118,7 @@ def read_in_cs_tables(
     return h1_df, c13_df
 
 
-def parse_argv(my_argv=None,  qtstarted=True):
+def parse_argv(my_argv=None, qtstarted=True):
     """parse command line returnsa dictionary of arguments"""
 
     if my_argv is None:
@@ -135,7 +136,9 @@ def parse_argv(my_argv=None,  qtstarted=True):
     datadirectories = [d for d in my_argv[1:] if os.path.isdir(d)]
     excelfilenames = [e for e in my_argv[1:] if e.endswith(".xlsx")]
     pngfilenames = [s for s in my_argv[1:] if s.endswith(".png")]
-    smilefilenames = [s for s in my_argv[1:] if (s.endswith(".smi") or s.endswith(".smiles"))]
+    smilefilenames = [
+        s for s in my_argv[1:] if (s.endswith(".smi") or s.endswith(".smiles"))
+    ]
     xy3jsonfilenames = [s for s in my_argv[1:] if s == "xy3.json"]
 
     data_directory = "."
@@ -151,7 +154,7 @@ def parse_argv(my_argv=None,  qtstarted=True):
                 "excel_fn": None,
                 "smiles_fn": None,
                 "png_fn": None,
-                "xy3_fn": None
+                "xy3_fn": None,
             }
 
     else:
@@ -165,7 +168,9 @@ def parse_argv(my_argv=None,  qtstarted=True):
 
                     msg_box = QMessageBox()
                     msg_box.setIcon(QMessageBox.Information)
-                    msg_box.setText(f"No excel file found in data directory\n{data_directory}")
+                    msg_box.setText(
+                        f"No excel file found in data directory\n{data_directory}"
+                    )
                     msg_box.setStandardButtons(QMessageBox.Ok)
                     msg_box.exec()
                     msg_box.setWindowTitle("Excel File Not Found")
@@ -178,7 +183,7 @@ def parse_argv(my_argv=None,  qtstarted=True):
                 "excel_fn": None,
                 "smiles_fn": None,
                 "png_fn": None,
-                "xy3_fn": None
+                "xy3_fn": None,
             }
 
     if len(smilefilenames) > 0:
@@ -187,7 +192,11 @@ def parse_argv(my_argv=None,  qtstarted=True):
         else:
             smiles_fn = None
     else:
-        smilefilenames = [s for s in os.listdir(data_directory) if (s.endswith(".smi") or s.endswith(".smiles"))]
+        smilefilenames = [
+            s
+            for s in os.listdir(data_directory)
+            if (s.endswith(".smi") or s.endswith(".smiles"))
+        ]
         if len(smilefilenames) > 0:
             smiles_fn = os.path.join(data_directory, smilefilenames[0])
         else:
@@ -211,7 +220,7 @@ def parse_argv(my_argv=None,  qtstarted=True):
         else:
             xy3_fn = None
     else:
-        xy3jsonfilenames = [s for s in os.listdir(data_directory) if s=="xy3.json"]
+        xy3jsonfilenames = [s for s in os.listdir(data_directory) if s == "xy3.json"]
         if len(xy3jsonfilenames) > 0:
             xy3_fn = os.path.join(data_directory, xy3jsonfilenames[0])
         else:
@@ -222,10 +231,11 @@ def parse_argv(my_argv=None,  qtstarted=True):
         "excel_fn": excel_fn,
         "smiles_fn": smiles_fn,
         "png_fn": png_fn,
-        "xy3_fn": xy3_fn
+        "xy3_fn": xy3_fn,
     }
-     
-def read_smiles_file(problemdata_info: dict)->str:
+
+
+def read_smiles_file(problemdata_info: dict) -> str:
     """Reads the smiles file and returns the smiles string
 
     Args:
@@ -236,13 +246,15 @@ def read_smiles_file(problemdata_info: dict)->str:
     """
     smiles_str = None
     if isinstance(problemdata_info["smiles_fn"], str):
-        with open(problemdata_info["smiles_fn"], "r", encoding="latin-1") as filepointer:
+        with open(
+            problemdata_info["smiles_fn"], "r", encoding="latin-1"
+        ) as filepointer:
             smiles_str = filepointer.readline()
 
     return smiles_str
 
 
-def read_png_file(problemdata_info: dict)->PIL.Image.Image:
+def read_png_file(problemdata_info: dict) -> PIL.Image.Image:
     """Reads the png file and returns the image object"""
     png = None
     if isinstance(problemdata_info["png_fn"], str):
@@ -251,74 +263,75 @@ def read_png_file(problemdata_info: dict)->PIL.Image.Image:
     return png
 
 
-def create_png_from_smiles(smiles_str: str)->PIL.Image.Image:
+def create_png_from_smiles(smiles_str: str) -> PIL.Image.Image:
     """Creates a png image from a smiles string via rdkit"""
     png = None
-    molecule = Chem.MolFromSmiles(smiles_str)
+    rdkit_molecule = Chem.MolFromSmiles(smiles_str)
 
-    mol2 = Chem.AddHs(molecule)
+    mol2 = Chem.AddHs(rdkit_molecule)
     AllChem.EmbedMolecule(mol2, randomSeed=3)
-    molecule = Chem.RemoveHs(mol2)
+    rdkit_molecule = Chem.RemoveHs(mol2)
 
-    molecule.Compute2DCoords()
-    
+    rdkit_molecule.Compute2DCoords()
+
     # Draw.MolToFile(molecule, "molecule.png")
     # png = Image.open("molecule.png")
-    png = Draw.MolToImage(molecule, size=(800,800))
+    png = Draw.MolToImage(rdkit_molecule, size=(800, 800))
     return png
 
 
-def create_rdkit_molecule_from_smiles(smiles_str: str)->nmrmol.NMRmol:
+def create_rdkit_molecule_from_smiles(smiles_str: str) -> nmrmol.NMRmol:
     """Creates a RDKIT molecule from a smiles string via rdkit
-       save the scaled coordinates of the atoms in the molecule
-       min x and y =0, max x and y = 1"""
+    save the scaled coordinates of the atoms in the molecule
+    min x and y =0, max x and y = 1"""
 
-    
-    molecule = Chem.MolFromSmiles(smiles_str)
-    
+    rdkit_molecule = Chem.MolFromSmiles(smiles_str)
+
     # molecule = nmrmol.NMRmol.from_smiles(smiles_str)
 
     # attempt to fix coordinates of png
-    mol2 = Chem.AddHs(molecule)
+    mol2 = Chem.AddHs(rdkit_molecule)
     AllChem.EmbedMolecule(mol2, randomSeed=3)
-    molecule = Chem.RemoveHs(mol2)
+    rdkit_molecule = Chem.RemoveHs(mol2)
 
-    molecule.Compute2DCoords()
+    rdkit_molecule.Compute2DCoords()
 
-    d2d = Draw.rdMolDraw2D.MolDraw2DSVG(800,800)
-    d2d.DrawMolecule(molecule)
+    d2d = Draw.rdMolDraw2D.MolDraw2DSVG(800, 800)
+    d2d.DrawMolecule(rdkit_molecule)
     d2d.FinishDrawing()
 
-    for atom in molecule.GetAtoms():
+    for atom in rdkit_molecule.GetAtoms():
         idx = atom.GetIdx()
         pt = d2d.GetDrawCoords(idx)
 
-        atom.SetDoubleProp('x', pt.x/800)
-        atom.SetDoubleProp('y', pt.y/800)
+        atom.SetDoubleProp("x", pt.x / 800)
+        atom.SetDoubleProp("y", pt.y / 800)
 
-    print("nmrmol.NMRmol(molecule)")
-    ret = nmrmol.NMRmol(molecule)
-    print("nmrmol.NMRmol(molecule)")
+    print("nmrmol.NMRmol(rdkit_molecule)")
+    ret = nmrmol.NMRmol(rdkit_molecule)
+    print("nmrmol.NMRmol(rdkit_molecule)")
 
     return ret
 
 
-def return_carbon_xy3_positions(molecule: Chem.Mol)->dict:
+def return_carbon_xy3_positions(rdkit_molecule: Chem.Mol) -> dict:
     """Returns the xy3 positions of the carbon atoms in the molecule"""
 
-    d2d = Draw.rdMolDraw2D.MolDraw2DSVG(800,800)
-    d2d.DrawMolecule(molecule)
+    d2d = Draw.rdMolDraw2D.MolDraw2DSVG(800, 800)
+    d2d.DrawMolecule(rdkit_molecule)
     d2d.FinishDrawing()
     xy3_positions = {}
-    for atom in molecule.GetAtoms():
+    for atom in rdkit_molecule.GetAtoms():
         if atom.GetSymbol() == "C":
             idx = atom.GetIdx()
             point = d2d.GetDrawCoords(idx)
-            xy3_positions['C'+str(idx+1)] = np.asarray([point.x/800., point.y/800.])
+            xy3_positions["C" + str(idx + 1)] = np.asarray(
+                [point.x / 800.0, point.y / 800.0]
+            )
     return xy3_positions
 
 
-def read_xy3_jsonfile(problemdata_info: dict)->dict:
+def read_xy3_jsonfile(problemdata_info: dict) -> dict:
     """Reads the xy3 json file and returns the json object"""
     xy3 = None
     if isinstance(problemdata_info["xy3_fn"], str):
@@ -333,7 +346,7 @@ def read_xy3_jsonfile(problemdata_info: dict)->dict:
         return None
 
 
-def create_hmbc_edges_dict(nmrproblem)->dict:
+def create_hmbc_edges_dict(nmrproblem) -> dict:
     """Creates a dictionary with the edges of the HMBC problem"""
 
     hmbc_edges = {}
@@ -390,104 +403,207 @@ def build_molecule_graph_network(nmrproblem):
     c13 = nmrproblem.c13
 
     # create graph of molecule
-    nmrproblem.molecule = nx.Graph()
-    nmrproblem.molecule.add_nodes_from(catoms)
+    nmrproblem.nx_graph_molecule = nx.Graph()
+    nmrproblem.nx_graph_molecule.add_nodes_from(catoms)
 
-    molecule = nmrproblem.molecule
+    nx_graph_molecule = nmrproblem.nx_graph_molecule
 
     # add some node information
     for n in catoms:
-        molecule.nodes[n]["c13ppm"] = str(df.loc[n, "ppm"])
-        molecule.nodes[n]["label"] = n
+        nx_graph_molecule.nodes[n]["c13ppm"] = str(df.loc[n, "ppm"])
+        nx_graph_molecule.nodes[n]["label"] = n
 
     # attach H1 chemical shifts to graph
-    for n in molecule.nodes:
+    for n in nx_graph_molecule.nodes:
         # get list of labels of protons attached to carbon
         h1list = df.loc["hsqc", n]
         # convert to proton ppm
-        molecule.nodes[n]["h1ppm"] = ",".join(
+        nx_graph_molecule.nodes[n]["h1ppm"] = ",".join(
             [str(nmrproblem.H1labelH1ppm[hi]) for hi in h1list]
         )
 
     # add links to graph from cosy data
     for c in catoms:
         for l in df.loc["cosy", c]:
-            if (not molecule.has_edge(c, l)) and (c != l):
-                molecule.add_edge(c, l)
+            if (not nx_graph_molecule.has_edge(c, l)) and (c != l):
+                nx_graph_molecule.add_edge(c, l)
 
     # add node color to graph
-    for i,n in enumerate(catoms):
-        molecule.nodes[n]["node_color"] = nmrproblem.hmbc_edge_colors[c13.loc[i+1,"attached_protons"]]
+    for i, n in enumerate(catoms):
+        nx_graph_molecule.nodes[n]["node_color"] = nmrproblem.hmbc_edge_colors[
+            c13.loc[i + 1, "attached_protons"]
+        ]
 
 
 def build_xy3_representation_of_molecule_from_smiles(nmrproblem):
     """Builds the xy3 representation of the molecule from the smiles string"""
 
     expected_molecule = nmrproblem.expected_molecule
-    eigen_nodes = [a.GetSymbol() + str(a.GetIdx()) for a in expected_molecule.GetAtoms()]
-    eigen_carbons = [s for s in eigen_nodes if 'C' in s]
+    eigen_nodes = [
+        a.GetSymbol() + str(a.GetIdx()) for a in expected_molecule.GetAtoms()
+    ]
+    eigen_carbons = [s for s in eigen_nodes if "C" in s]
 
     e_xy3 = {}
     xy3 = {}
 
-    for n, (x,y,z) in zip(eigen_nodes, expected_molecule.GetConformer().GetPositions()):
+    for n, (x, y, z) in zip(
+        eigen_nodes, expected_molecule.GetConformer().GetPositions()
+    ):
 
-        if 'C' in n:
-            e_xy3[n]= np.array([x,y])
+        if "C" in n:
+            e_xy3[n] = np.array([x, y])
 
     for n1, n2 in zip(eigen_carbons, nmrproblem.carbonAtoms):
         xy3[n2] = e_xy3[n1]
-    
+
     nmrproblem.xy3 = xy3
-
-
-
 
 
 def build_xy3_representation_of_molecule(nmrproblem):
     """Builds the xy3 representation of the molecule"""
-    molecule = nmrproblem.molecule
+    nx_graph_molecule = nmrproblem.nx_graph_molecule
     # create coodinates that look more molecule like
-    atomicNumberfromSymbol = {"H": 1, "Li": 3, "Be": 4, "B": 5, "C": 6,  "N": 7, "O": 8, "F": 9, "Na": 11, 
-                              "Mg": 12, "Al": 13, "Si": 14, "P": 15, "S": 16, "Cl": 17, "K": 19, "Ca": 20,
-                                "Sc": 21, "Ti": 22, "V": 23, "Cr": 24, "Mn": 25, "Fe": 26, "Co": 27, "Ni": 28,
-                                "Cu": 29, "Zn": 30, "Ga": 31, "Ge": 32, "As": 33, "Se": 34, "Br": 35, "Kr": 36,
-                                "Rb": 37, "Sr": 38, "Y": 39, "Zr": 40, "Nb": 41, "Mo": 42, "Tc": 43, "Ru": 44,
-                                "Rh": 45, "Pd": 46, "Ag": 47, "Cd": 48, "In": 49, "Sn": 50, "Sb": 51, "Te": 52,
-                                "I": 53, "Xe": 54, "Cs": 55, "Ba": 56, "La": 57, "Ce": 58, "Pr": 59, "Nd": 60,
-                                "Pm": 61, "Sm": 62, "Eu": 63, "Gd": 64, "Tb": 65, "Dy": 66, "Ho": 67, "Er": 68,
-                                "Tm": 69, "Yb": 70, "Lu": 71, "Hf": 72, "Ta": 73, "W": 74, "Re": 75, "Os": 76,
-                                "Ir": 77, "Pt": 78, "Au": 79, "Hg": 80, "Tl": 81, "Pb": 82, "Bi": 83, "Po": 84,
-                                "At": 85, "Rn": 86, "Fr": 87, "Ra": 88, "Ac": 89, "Th": 90, "Pa": 91, "U": 92,
-                                "Np": 93, "Pu": 94, "Am": 95, "Cm": 96, "Bk": 97, "Cf": 98, "Es": 99, "Fm": 100,
-                                "Md": 101, "No": 102, "Lr": 103, "Rf": 104, "Db": 105, "Sg": 106, "Bh": 107,
-                                "Hs": 108, "Mt": 109, "Ds": 110, "Rg": 111, "Cn": 112, "Uut": 113, "Fl": 114,
-                                "Uup": 115, "Lv": 116, "Uus": 117, "Uuo": 118}
-               
+    atomicNumberfromSymbol = {
+        "H": 1,
+        "Li": 3,
+        "Be": 4,
+        "B": 5,
+        "C": 6,
+        "N": 7,
+        "O": 8,
+        "F": 9,
+        "Na": 11,
+        "Mg": 12,
+        "Al": 13,
+        "Si": 14,
+        "P": 15,
+        "S": 16,
+        "Cl": 17,
+        "K": 19,
+        "Ca": 20,
+        "Sc": 21,
+        "Ti": 22,
+        "V": 23,
+        "Cr": 24,
+        "Mn": 25,
+        "Fe": 26,
+        "Co": 27,
+        "Ni": 28,
+        "Cu": 29,
+        "Zn": 30,
+        "Ga": 31,
+        "Ge": 32,
+        "As": 33,
+        "Se": 34,
+        "Br": 35,
+        "Kr": 36,
+        "Rb": 37,
+        "Sr": 38,
+        "Y": 39,
+        "Zr": 40,
+        "Nb": 41,
+        "Mo": 42,
+        "Tc": 43,
+        "Ru": 44,
+        "Rh": 45,
+        "Pd": 46,
+        "Ag": 47,
+        "Cd": 48,
+        "In": 49,
+        "Sn": 50,
+        "Sb": 51,
+        "Te": 52,
+        "I": 53,
+        "Xe": 54,
+        "Cs": 55,
+        "Ba": 56,
+        "La": 57,
+        "Ce": 58,
+        "Pr": 59,
+        "Nd": 60,
+        "Pm": 61,
+        "Sm": 62,
+        "Eu": 63,
+        "Gd": 64,
+        "Tb": 65,
+        "Dy": 66,
+        "Ho": 67,
+        "Er": 68,
+        "Tm": 69,
+        "Yb": 70,
+        "Lu": 71,
+        "Hf": 72,
+        "Ta": 73,
+        "W": 74,
+        "Re": 75,
+        "Os": 76,
+        "Ir": 77,
+        "Pt": 78,
+        "Au": 79,
+        "Hg": 80,
+        "Tl": 81,
+        "Pb": 82,
+        "Bi": 83,
+        "Po": 84,
+        "At": 85,
+        "Rn": 86,
+        "Fr": 87,
+        "Ra": 88,
+        "Ac": 89,
+        "Th": 90,
+        "Pa": 91,
+        "U": 92,
+        "Np": 93,
+        "Pu": 94,
+        "Am": 95,
+        "Cm": 96,
+        "Bk": 97,
+        "Cf": 98,
+        "Es": 99,
+        "Fm": 100,
+        "Md": 101,
+        "No": 102,
+        "Lr": 103,
+        "Rf": 104,
+        "Db": 105,
+        "Sg": 106,
+        "Bh": 107,
+        "Hs": 108,
+        "Mt": 109,
+        "Ds": 110,
+        "Rg": 111,
+        "Cn": 112,
+        "Uut": 113,
+        "Fl": 114,
+        "Uup": 115,
+        "Lv": 116,
+        "Uus": 117,
+        "Uuo": 118,
+    }
 
-    for node in molecule.nodes:
-        molecule.nodes[node]["atomic_num"] = atomicNumberfromSymbol[
+    for node in nx_graph_molecule.nodes:
+        nx_graph_molecule.nodes[node]["atomic_num"] = atomicNumberfromSymbol[
             "".join([c for c in node if c.isalpha()])
         ]
-        molecule.nodes[node][
+        nx_graph_molecule.nodes[node][
             "chiral_tag"
         ] = rdkit.Chem.rdchem.ChiralType.CHI_UNSPECIFIED
-        molecule.nodes[node]["formal_charge"] = 0
-        molecule.nodes[node]["is_aromatic"] = False
-        molecule.nodes[node]["hybridization"] = rdkit.Chem.rdchem.HybridizationType.SP3
-        molecule.nodes[node]["num_explicit_hs"] = 0
+        nx_graph_molecule.nodes[node]["formal_charge"] = 0
+        nx_graph_molecule.nodes[node]["is_aromatic"] = False
+        nx_graph_molecule.nodes[node]["hybridization"] = rdkit.Chem.rdchem.HybridizationType.SP3
+        nx_graph_molecule.nodes[node]["num_explicit_hs"] = 0
 
-    for e in molecule.edges:
-        molecule.edges[e]["bond_type"] = rdkit.Chem.rdchem.BondType.SINGLE
+    for e in nx_graph_molecule.edges:
+        nx_graph_molecule.edges[e]["bond_type"] = rdkit.Chem.rdchem.BondType.SINGLE
 
-    mmm = nx_to_mol(molecule)
+    mmm = nx_to_mol(nx_graph_molecule)
 
     mmm.Compute2DCoords()
 
     xy3 = return_carbon_xy3_positions(mmm)
 
     nmrproblem.xy3 = xy3
-
 
 
 def nx_to_mol(G: nx.Graph) -> rdkit.Chem.Mol:
@@ -522,7 +638,7 @@ def nx_to_mol(G: nx.Graph) -> rdkit.Chem.Mol:
         node_to_idx[node] = idx
 
     bond_types = nx.get_edge_attributes(G, "bond_type")
-    
+
     for edge in G.edges():
         first, second = edge
         ifirst = node_to_idx[first]
@@ -534,9 +650,9 @@ def nx_to_mol(G: nx.Graph) -> rdkit.Chem.Mol:
     return mol
 
 
-def create_hmbc_graph_fragments(nmrproblem, hmbc_edges: dict)-> dict:
+def create_hmbc_graph_fragments(nmrproblem, hmbc_edges: dict) -> dict:
     """create a graph of fragments from the hmbc_edges"""
-    
+
     hmbc_graphs = {}
     # ntwk_labels = []
 
@@ -576,21 +692,24 @@ def create_hmbc_graph_fragments(nmrproblem, hmbc_edges: dict)-> dict:
 class NMRproblem:
     """NMR problem class"""
 
-    def __init__(self, problemdata_info: dict, 
-                       loadfromwhere=None, 
-                       H1LarmorFreq=None, 
-                       qtstarted=True, 
-                       java_available=False, 
-                       xy3_calc_method="xy3", 
-                       java_command=None,
-                       expts_available=[]):
+    def __init__(
+        self,
+        problemdata_info: dict,
+        loadfromwhere=None,
+        H1LarmorFreq=None,
+        qtstarted=True,
+        java_available=False,
+        xy3_calc_method="xy3",
+        java_command=None,
+        expts_available=[],
+    ):
         """initialize NMR problem class"""
 
         # set added columns to false
         self.h1_df_numProtons_added = False
         self.h1_df_integral_added = False
         self.h1_df_jCouplingClass_added = False
-        self.h1_df_jCouplingVals_added = False  
+        self.h1_df_jCouplingVals_added = False
 
         self.qtstarted = False
         self.c13_from_hsqc = False
@@ -611,14 +730,32 @@ class NMRproblem:
             problemdata_info["data_directory"]
         )
 
-        self.hmbc_edge_colors = ('#1f77b4', '#ff7f0e', '#2ca02c',  '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
-                                  '#1f77b4', '#ff7f0e', '#2ca02c',  '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf')
+        self.hmbc_edge_colors = (
+            "#1f77b4",
+            "#ff7f0e",
+            "#2ca02c",
+            "#9467bd",
+            "#8c564b",
+            "#e377c2",
+            "#7f7f7f",
+            "#bcbd22",
+            "#17becf",
+            "#1f77b4",
+            "#ff7f0e",
+            "#2ca02c",
+            "#9467bd",
+            "#8c564b",
+            "#e377c2",
+            "#7f7f7f",
+            "#bcbd22",
+            "#17becf",
+        )
 
         self.xmin = -0.1
         self.ymin = -0.1
         self.xmax = 1.1
         self.ymax = 1.1
-        
+
         self.data_complete = False
 
         self.pngFiles = []
@@ -635,6 +772,7 @@ class NMRproblem:
         self.dfIndex = None
 
         self.moleculePNGpanel = None
+        self.nx_graph_molecule = None
         self.moleculeAtomsStr = ""
 
         self.protonAtoms = []
@@ -644,7 +782,7 @@ class NMRproblem:
 
         self.molecule_defined = False
         self.expected_molecule = None  # rdkit molecule
-        self.png = None                # image from png
+        self.png = None  # image from png
         self.smiles = None
         self.smiles_defined = False
         self.numProtonGroups = 0
@@ -677,7 +815,7 @@ class NMRproblem:
                 "obs": obs,
                 "sw": 18 * obs,
                 "dw": 1.0 / (18 * obs),
-                "car": (((16.0-(-2.0))/2)-2.0) * obs,
+                "car": (((16.0 - (-2.0)) / 2) - 2.0) * obs,
                 "size": int(32 * 1024),
                 "label": "1H",
                 "complex": True,
@@ -691,7 +829,7 @@ class NMRproblem:
                 "sw": 220 * obs / 4,
                 "dw": 1.0 / (220 * obs / 4),
                 "car": 220 * obs / 4.0 / 2.0,
-                "size": int(1024 * 32),
+                "size": int(1024 * 128),
                 "label": "13C",
                 "complex": True,
                 "encoding": "direct",
@@ -770,7 +908,6 @@ class NMRproblem:
             self.expected_molecule = create_rdkit_molecule_from_smiles(self.smiles)
             print("\nend: create_rdkit_molecule_from_smiles\n")
 
-
         # set xlims of 13C and 1H 1D spectra to +/- 10% of biggest and smallest ppm
         self.min_max_1D_ppm = []
 
@@ -786,11 +923,10 @@ class NMRproblem:
 
         # check if c13 or h1 created from hsqc and hmbc
         # do this by checking for certain columns in c13 and h1 dataframes
-        if 'CH3CH' in self.c13.columns:
+        if "CH3CH" in self.c13.columns:
             self.c13_from_hsqc = True
         else:
             self.c13_from_hsqc = False
-
 
         print("self.c13_from_hsqc", self.c13_from_hsqc)
         if self.c13_from_hsqc:
@@ -798,30 +934,35 @@ class NMRproblem:
             # to the CH3CH column in c13
             # if there are matches then update the numProtons column to 3 where there is a match
 
-            ch3_df = self.expected_molecule.molprops_df[self.expected_molecule.molprops_df.CH3]
+            ch3_df = self.expected_molecule.molprops_df[
+                self.expected_molecule.molprops_df.CH3
+            ]
             # drop duplicate rows based on c13ppm
-            ch3_df = ch3_df.drop_duplicates(subset=['c13ppm'])
-            
-            # sort ch3_df by ppm, lowest to highest
-            ch3_df = ch3_df.sort_values(by=['c13ppm'])
-            ch3ch_df = self.c13[self.c13.CH3CH].copy()
+            ch3_df = ch3_df.drop_duplicates(subset=["c13ppm"])
 
+            # sort ch3_df by ppm, lowest to highest
+            ch3_df = ch3_df.sort_values(by=["c13ppm"])
+            ch3ch_df = self.c13[self.c13.CH3CH].copy()
 
             for idx, ppm in zip(ch3_df.index, ch3_df.c13ppm):
                 # find the closest match in the c13 dataframe
                 # and update the numProtons column to 3
-                closest_match = ch3ch_df.iloc[(ch3ch_df['ppm']-ppm).abs().argsort()[:1]]
-                self.c13.loc[closest_match.index, 'numProtons'] = 3
+                closest_match = ch3ch_df.iloc[
+                    (ch3ch_df["ppm"] - ppm).abs().argsort()[:1]
+                ]
+                self.c13.loc[closest_match.index, "numProtons"] = 3
                 ch3ch_df.drop(closest_match.index, inplace=True)
 
             # update corresponding integral in h1 frame
             ch3_df = self.c13[self.c13.numProtons == 3]
             for idx, ppm in zip(ch3_df.index, ch3_df.ppm):
                 # find the closest match in the hsqc dataframe
-                closest_match = self.hsqc.iloc[(self.hsqc['f1_ppm']-ppm).abs().argsort()[:1]]
+                closest_match = self.hsqc.iloc[
+                    (self.hsqc["f1_ppm"] - ppm).abs().argsort()[:1]
+                ]
                 # update the integral in the h1 dataframe
-                self.h1.loc[closest_match.index, 'integral'] = 3
-                self.h1.loc[closest_match.index, 'numProtons'] = 3
+                self.h1.loc[closest_match.index, "integral"] = 3
+                self.h1.loc[closest_match.index, "numProtons"] = 3
 
             # update h1 integrals for CH2 groups
             ch2_df = self.hsqc[self.hsqc_df.CH2]
@@ -833,32 +974,44 @@ class NMRproblem:
 
                 if ch2_df_f1_ppm.loc[f1_ppm] == 1:
                     # set the integral of f2_ppm in self.h1 to 2
-                    self.h1.loc[self.h1.ppm == f2_ppm, 'integral'] = 2
-                    self.h1.loc[self.h1.ppm == f2_ppm, 'numProtons'] = 2
+                    self.h1.loc[self.h1.ppm == f2_ppm, "integral"] = 2
+                    self.h1.loc[self.h1.ppm == f2_ppm, "numProtons"] = 2
                 else:
                     # set the integral of f2_ppm in self.h1 to 1
-                    self.h1.loc[self.h1.ppm == f2_ppm, 'integral'] = 1
-                    self.h1.loc[self.h1.ppm == f2_ppm, 'numProtons'] = 1
-
+                    self.h1.loc[self.h1.ppm == f2_ppm, "integral"] = 1
+                    self.h1.loc[self.h1.ppm == f2_ppm, "numProtons"] = 1
 
             self.c13["attached_protons"] = self.c13["numProtons"]
 
-        # if missing integral or numprotons in self.h1 then try to 
+        # if missing integral or numprotons in self.h1 then try to
         # calculate them from hsqc and molprops_df information
 
-        if self.h1_df_integral_added or self.h1_df_numProtons_added:
-            self.hsqc = self.add_CH2_column_to_hsqc(self.hsqc)
-            self.hsqc = self.add_CHCH3_column_to_hsqc(self.hsqc)
+        if len(self.expts_available):
+            if self.h1_df_integral_added or self.h1_df_numProtons_added or ("H1_1D" not in self.expts_available):
+                self.hsqc = self.add_CH2_column_to_hsqc(self.hsqc)
+                self.hsqc = self.add_CHCH3_column_to_hsqc(self.hsqc)
 
-            self.c13 = self.c13_add_columns_compound_ch2_ch3ch_quat(self.c13, self.hsqc)
-            self.c13 = self.c13_update_numprotons_with_ch2_ch3ch(self.c13)
-            self.c13 = self.c13_update_numProtons_ch3(self.c13, self.expected_molecule.molprops_df)
-            self.h1 = self.h1_update_numprotons_integral_ch3(self.h1, self.c13, self.hsqc)
-            self.h1 = self.h1_update_numprotons_integral_ch2(self.h1, self.c13, self.hsqc)
+                self.c13 = self.c13_add_columns_compound_ch2_ch3ch_quat(self.c13, self.hsqc)
+                self.c13 = self.c13_update_numprotons_with_ch2_ch3ch(self.c13)
+                self.c13 = self.c13_update_numProtons_ch3(
+                    self.c13, self.expected_molecule.molprops_df
+                )
+                self.h1 = self.h1_update_numprotons_integral_ch3(
+                    self.h1, self.c13, self.hsqc
+                )
+                self.h1 = self.h1_update_numprotons_integral_ch2(
+                    self.h1, self.c13, self.hsqc
+                )
 
-            self.c13["attached_protons"] = self.c13["numProtons"]
-        print("self.c13\n", self.c13)
-        print("self.h1\n", self.h1)
+                self.c13["attached_protons"] = self.c13["numProtons"]
+
+        if self.expected_molecule is not None:
+            print(
+                "self.expected_molecule.molprops_df\n",
+                self.expected_molecule.molprops_df,
+            )
+
+        # 
 
     def add_CH2_column_to_hsqc(self, hsqc_df):
         hsqc_df["CH2"] = False
@@ -876,29 +1029,29 @@ class NMRproblem:
         c13["signaltype"] = "Compound"
 
         # label c13 values as CH2 or not using the hsqc_df
-        c13['CH2'] = False
+        c13["CH2"] = False
         for idx, ppm in zip(c13.index, c13.ppm):
             if ppm in hsqc.f1_ppm.values:
-                c13.loc[idx, 'CH2'] = hsqc[hsqc.f1_ppm == ppm]['CH2'].values[0]
+                c13.loc[idx, "CH2"] = hsqc[hsqc.f1_ppm == ppm]["CH2"].values[0]
 
-        c13['quaternary'] = False
+        c13["quaternary"] = False
         for idx, ppm in zip(c13.index, c13.ppm):
             if ppm not in hsqc.f1_ppm.values:
-                c13.loc[idx, 'quaternary'] = True
+                c13.loc[idx, "quaternary"] = True
 
-        c13['CH3CH'] = False
+        c13["CH3CH"] = False
         for idx, ppm in zip(c13.index, c13.ppm):
-            if not c13.loc[idx, 'quaternary'] and not c13.loc[idx, 'CH2']:
-                c13.loc[idx, 'CH3CH'] = True
+            if not c13.loc[idx, "quaternary"] and not c13.loc[idx, "CH2"]:
+                c13.loc[idx, "CH3CH"] = True
 
         return c13
 
     def c13_update_numprotons_with_ch2_ch3ch(self, c13):
 
         # add two to numProtons for CH2
-        c13.loc[c13.CH2, 'numProtons'] = 2
+        c13.loc[c13.CH2, "numProtons"] = 2
         # add one to numProtons for CH3CH
-        c13.loc[c13.CH3CH, 'numProtons'] = 1
+        c13.loc[c13.CH3CH, "numProtons"] = 1
 
         return c13
 
@@ -907,35 +1060,35 @@ class NMRproblem:
         ch3_df = molprops_df[molprops_df.CH3]
 
         # drop duplicate rows based on c13ppm
-        ch3_df = ch3_df.drop_duplicates(subset=['c13ppm'])
+        ch3_df = ch3_df.drop_duplicates(subset=["c13ppm"])
 
         # sort ch3_df by ppm, lowest to highest
-        ch3_df = ch3_df.sort_values(by=['c13ppm'])
+        ch3_df = ch3_df.sort_values(by=["c13ppm"])
         ch3ch_df = c13[c13.CH3CH].copy()
 
         for idx, ppm in zip(ch3_df.index, ch3_df.c13ppm):
             # find the closest match in the c13 dataframe
             # and update the numProtons column to 3
-            closest_match = ch3ch_df.iloc[(ch3ch_df['ppm']-ppm).abs().argsort()[:1]]
-            c13.loc[closest_match.index, 'numProtons'] = 3
+            closest_match = ch3ch_df.iloc[(ch3ch_df["ppm"] - ppm).abs().argsort()[:1]]
+            c13.loc[closest_match.index, "numProtons"] = 3
             ch3ch_df.drop(closest_match.index, inplace=True)
 
         return c13
 
     def h1_update_numprotons_integral_ch3(self, h1, c13, hsqc):
-    # update corresponding integral in h1 frame
+        # update corresponding integral in h1 frame
         ch3_df = c13[c13.numProtons == 3]
         for idx, ppm in zip(ch3_df.index, ch3_df.ppm):
             # find the closest match in the hsqc dataframe
-            closest_match = hsqc.iloc[(hsqc['f1_ppm']-ppm).abs().argsort()[:1]]
+            closest_match = hsqc.iloc[(hsqc["f1_ppm"] - ppm).abs().argsort()[:1]]
             # update the integral in the h1 dataframe
-            h1.loc[closest_match.index, 'integral'] = 3
-            h1.loc[closest_match.index, 'numProtons'] = 3
+            h1.loc[closest_match.index, "integral"] = 3
+            h1.loc[closest_match.index, "numProtons"] = 3
 
         return h1
 
     def h1_update_numprotons_integral_ch2(self, h1, c13, hsqc):
-    # update h1 integrals for CH2 groups
+        # update h1 integrals for CH2 groups
         ch2_df = hsqc[hsqc.CH2]
 
         # count frequency of f1_ppm in ch2_df
@@ -945,23 +1098,24 @@ class NMRproblem:
 
             if ch2_df_f1_ppm.loc[f1_ppm] == 1:
                 # set the integral of f2_ppm in self.h1 to 2
-                h1.loc[h1.ppm == f2_ppm, 'integral'] = 2
-                h1.loc[h1.ppm == f2_ppm, 'numProtons'] = 2
+                h1.loc[h1.ppm == f2_ppm, "integral"] = 2
+                h1.loc[h1.ppm == f2_ppm, "numProtons"] = 2
             else:
                 # set the integral of f2_ppm in self.h1 to 1
-                h1.loc[h1.ppm == f2_ppm, 'integral'] = 1
-                h1.loc[h1.ppm == f2_ppm, 'numProtons'] = 1
+                h1.loc[h1.ppm == f2_ppm, "integral"] = 1
+                h1.loc[h1.ppm == f2_ppm, "numProtons"] = 1
 
         return h1
-
 
     # define function to save pandas dataframes in nmrproblem to a single json file
     def save_dataframes_in_nmrproblem_to_json(self):
 
         # create filename from the name of the nmrproblem
 
-        filename = os.path.join(self.problemDirectoryPath, self.problemDirectory + ".json")
-            
+        filename = os.path.join(
+            self.problemDirectoryPath, self.problemDirectory + ".json"
+        )
+
         # create a dictionary to store the dataframes
         dataframes_dict = {}
 
@@ -971,37 +1125,42 @@ class NMRproblem:
         dataframes_dict["hsqc"] = self.hsqc.to_dict()
         dataframes_dict["hmbc"] = self.hmbc.to_dict()
         dataframes_dict["cosy"] = self.cosy.to_dict()
-        dataframes_dict["expected_molecule"] = self.expected_molecule.molprops_df.to_dict()
+        dataframes_dict[
+            "expected_molecule"
+        ] = self.expected_molecule.molprops_df.to_dict()
 
         # save the dictionary to a json file
         with open(filename, "w") as f:
             json.dump(dataframes_dict, f, indent=4)
 
-
     # define function to load pandas dataframes in nmrproblem from a single json file
     def load_dataframes_in_nmrproblem_from_json(self):
-            
-            # create filename from the name of the nmrproblem
-            filename = os.path.join(self.problemDirectoryPath, self.problemDirectory + ".json")
-    
-            # load the dictionary from the json file
-            with open(filename, "r") as f:
-                dataframes_dict = json.load(f)
-    
-            # add the dataframes to the dictionary
-            self.c13 = pd.DataFrame.from_dict(dataframes_dict["c13"])
-            self.h1 = pd.DataFrame.from_dict(dataframes_dict["h1"])
-            self.hsqc = pd.DataFrame.from_dict(dataframes_dict["hsqc"])
-            self.hmbc = pd.DataFrame.from_dict(dataframes_dict["hmbc"])
-            self.cosy = pd.DataFrame.from_dict(dataframes_dict["cosy"])
-            self.expected_molecule.molprops_df = pd.DataFrame.from_dict(dataframes_dict["expected_molecule"])
 
+        # create filename from the name of the nmrproblem
+        filename = os.path.join(
+            self.problemDirectoryPath, self.problemDirectory + ".json"
+        )
 
+        # load the dictionary from the json file
+        with open(filename, "r") as f:
+            dataframes_dict = json.load(f)
 
-    def tidy_up_excel_data(self)->tuple([bool, str]):
+        # add the dataframes to the dictionary
+        self.c13 = pd.DataFrame.from_dict(dataframes_dict["c13"])
+        self.h1 = pd.DataFrame.from_dict(dataframes_dict["h1"])
+        self.hsqc = pd.DataFrame.from_dict(dataframes_dict["hsqc"])
+        self.hmbc = pd.DataFrame.from_dict(dataframes_dict["hmbc"])
+        self.cosy = pd.DataFrame.from_dict(dataframes_dict["cosy"])
+        self.expected_molecule.molprops_df = pd.DataFrame.from_dict(
+            dataframes_dict["expected_molecule"]
+        )
+
+    def tidy_up_excel_data(self) -> tuple([bool, str]):
 
         # keep only the excels sheets that the user has selected
-        self.excelsheets = {k: v for k, v in self.excelsheets.items() if k in self.expts_available}
+        self.excelsheets = {
+            k: v for k, v in self.excelsheets.items() if k in self.expts_available
+        }
 
         # define a consistant set of column names for dataframes
         # For now we are only working with excel sheets created from MestresNove
@@ -1022,14 +1181,13 @@ class NMRproblem:
                 inplace=True,
             )  # If they exist in dataframe!
 
-
         # check that certain columns exist in the dataframes
         # if not, then return false, and an error message
         # will be displayed in the GUI
         return_error = False
         error_message = ""
         for k, df in self.excelsheets.items():
-            if k in ["H1_1D", "C13_1D", "H1_Pureshift"]:
+            if k in ["H1_1D", "C13_1D", "H1_pureshift"]:
                 if "ppm" not in df.columns:
                     return_error = True
                     return return_error, f"Column 'ppm' not found in {k} sheet"
@@ -1038,7 +1196,49 @@ class NMRproblem:
             if k in ["HSQC", "HMBC", "COSY", "NOESY"]:
                 if "f1_ppm" not in df.columns or "f2_ppm" not in df.columns:
                     return_error = True
-                    return return_error, f"Column 'f1_ppm' or 'f2_ppm' not found in {k} sheet"
+                    return (
+                        return_error,
+                        f"Column 'f1_ppm' or 'f2_ppm' not found in {k} sheet",
+                    )
+        print("self.expts_available = ", self.expts_available)
+        print("self.excelsheets.keys() = ", self.excelsheets.keys())
+        if "H1_1D" in self.excelsheets:
+            print("H1_1D num rows = ", self.excelsheets["H1_1D"].shape[0])
+        if "H1_pureshift" in self.excelsheets:
+            print("H1_pureshift num rows = ", self.excelsheets["H1_pureshift"].shape[0])
+        if "HSQC" in self.excelsheets:
+            print("HSQC num rows = ", self.excelsheets["HSQC"].shape[0])
+        # if H1_1D and H1_Pureshift are both present, then check that they have the same number of rows
+        if ("H1_1D" in self.excelsheets) and ("H1_pureshift" in self.excelsheets):
+            print(self.excelsheets["H1_1D"].shape[0],self.excelsheets["H1_pureshift"].shape[0])
+            if self.excelsheets["H1_1D"].shape[0] != self.excelsheets["H1_pureshift"].shape[0]:
+                return_error = True
+                if len(error_message) > 0:
+                    error_message += "\n"
+                error_message = error_message + "H1_1D and H1_Pureshift have different numbers of rows\n Pleae check excel file"
+        print("error_message", error_message)
+
+        # if H1_1D present, then check that H1_1D and HSQC have the same number of rows or
+        # the number of rows in HSQC is less than the number of rows in H1_1D
+        if "H1_1D" in self.excelsheets:
+            print(self.excelsheets["HSQC"].shape[0],self.excelsheets["H1_1D"].shape[0])
+            if self.excelsheets["HSQC"].shape[0] > self.excelsheets["H1_1D"].shape[0]:
+                return_error = True
+                if len(error_message) > 0:
+                    error_message += "\n"
+                error_message = error_message + "HSQC has more rows than H1_1D\n Pleae check excel file" 
+        print("error_message", error_message)
+
+        #if HSQC and H1_Pureshift are both present, then check that they have the same number of rows or
+        # the number of rows in HSQC is less than the number of rows in H1_Pureshift
+        if "H1_pureshift" in self.excelsheets:
+            print(self.excelsheets["HSQC"].shape[0],self.excelsheets["H1_pureshift"].shape[0])
+            if self.excelsheets["HSQC"].shape[0] > self.excelsheets["H1_pureshift"].shape[0]:
+                return_error = True
+                if len(error_message) > 0:
+                    error_message += "\n"
+                error_message = error_message + "HSQC has more rows than H1_Pureshift\n Pleae check excel file"
+        print("error_message", error_message)
 
         # replace any NaN values with 0
         for k, df in self.excelsheets.items():
@@ -1051,8 +1251,7 @@ class NMRproblem:
             print("No molecule sheet found")
             self.molecule_df = pd.DataFrame(columns=excel_orig_df_columns["molecule"])
 
-
-        if "H1_1D" in self.excelsheets:  
+        if "H1_1D" in self.excelsheets:
             self.h1_df = self.excelsheets["H1_1D"]
         else:
             print("No H1_1D sheet found")
@@ -1077,7 +1276,9 @@ class NMRproblem:
             self.pureshift_df = self.excelsheets["H1_pureshift"]
         else:
             print("No H1_pureshift sheet found")
-            self.pureshift_df = pd.DataFrame(columns=excel_orig_df_columns["H1_pureshift"])
+            self.pureshift_df = pd.DataFrame(
+                columns=excel_orig_df_columns["H1_pureshift"]
+            )
         if "C13_1D" in self.excelsheets:
             self.c13_df = self.excelsheets["C13_1D"]
         else:
@@ -1090,8 +1291,16 @@ class NMRproblem:
             self.noesy_df = pd.DataFrame(columns=excel_orig_df_columns["NOESY"])
 
         # sanitize column names again just in case they were not in the original excel file
-        for df in [self.h1_df, self.c13_df, self.pureshift_df, 
-                    self.hsqc_df, self.hmbc_df, self.cosy_df,   self.molecule_df, self.noesy_df]:
+        for df in [
+            self.h1_df,
+            self.c13_df,
+            self.pureshift_df,
+            self.hsqc_df,
+            self.hmbc_df,
+            self.cosy_df,
+            self.molecule_df,
+            self.noesy_df,
+        ]:
             df.rename(
                 columns={
                     "H's": "numProtons",
@@ -1106,7 +1315,7 @@ class NMRproblem:
                     "Type": "signaltype",
                 },
                 inplace=True,
-            ) 
+            )
 
         # Add missing columns to h1_df
         # numprotons, integral, jcouplingvals, jcouplingclass, Range
@@ -1127,108 +1336,223 @@ class NMRproblem:
         # in case of nans values changed to 0 in h1_df.jCouplingVals
         # then set corresponding jCouplingClass to "s"
         self.h1_df.loc[self.h1_df.jCouplingVals == 0, "jCouplingClass"] = "s"
-        
+
         # if signaltype wasn't defined in the excel sheets, then nan operation will
         # have converted cells to 0.0, so we need to convert them "Compound" again
-        for df in [self.h1_df, self.c13_df, self.pureshift_df, 
-                    self.hsqc_df, self.hmbc_df, self.cosy_df,  self.noesy_df]:
+        for df in [
+            self.h1_df,
+            self.c13_df,
+            self.pureshift_df,
+            self.hsqc_df,
+            self.hmbc_df,
+            self.cosy_df,
+            self.noesy_df,
+        ]:
             # check if signaltype column exists
             if "signaltype" in df.columns:
-                df.signaltype = df.signaltype.apply(lambda x: "Compound" if x == 0 else x)
+                df.signaltype = df.signaltype.apply(
+                    lambda x: "Compound" if x == 0 else x
+                )
             else:
                 df["signaltype"] = "Compound"
 
         # Add missing columns to the dataframes
         # Add intensity column to all dataframes and set value to 1
-        for df in [self.h1_df, self.c13_df, self.pureshift_df,
-                    self.hsqc_df, self.hmbc_df, self.cosy_df, self.noesy_df]:
+        for df in [
+            self.h1_df,
+            self.c13_df,
+            self.pureshift_df,
+            self.hsqc_df,
+            self.hmbc_df,
+            self.cosy_df,
+            self.noesy_df,
+        ]:
             if "intensity" not in df.columns:
                 df["intensity"] = 1
 
         if "ppm" in self.h1_df.columns and "range" not in self.h1_df.columns:
             self.h1_df_range_added = True
             for idx in self.h1_df.index:
-                self.h1_df.loc[idx, "range"] = f"{self.h1_df.loc[idx, 'ppm'] - 0.05} .. {self.h1_df.loc[idx, 'ppm'] + 0.05}"
-            
+                self.h1_df.loc[
+                    idx, "range"
+                ] = f"{self.h1_df.loc[idx, 'ppm'] - 0.05} .. {self.h1_df.loc[idx, 'ppm'] + 0.05}"
+
         # sort h1, c13 and pureshift jushapest in case they are out of order
         # reindex startting from 1
 
-        self.h1_df = self.h1_df.sort_values('ppm', ascending=False, ignore_index=True)
+        self.h1_df = self.h1_df.sort_values("ppm", ascending=False, ignore_index=True)
         self.h1_df.index = self.h1_df.index + 1
 
-        self.c13_df = self.c13_df.sort_values('ppm', ascending=False, ignore_index=True)
+        self.c13_df = self.c13_df.sort_values("ppm", ascending=False, ignore_index=True)
         self.c13_df.index = self.c13_df.index + 1
 
-        self.pureshift_df = self.pureshift_df.sort_values('ppm', ascending=False, ignore_index=True)
+        self.pureshift_df = self.pureshift_df.sort_values(
+            "ppm", ascending=False, ignore_index=True
+        )
         self.pureshift_df.index = self.pureshift_df.index + 1
 
         print("self.hsqc_df\n")
         print(self.hsqc_df)
         print("self.hsqc\n")
         print(self.hsqc_df)
-        
+
         return return_error, error_message
 
-    def init_h1_df_from_hsqc_df(self, hsqc_df: pd.DataFrame)->pd.DataFrame:
-        h1_df = pd.DataFrame(columns=['ppm', 'numProtons', 'integral', 'jCouplingVals', 'jCouplingClass', 'intensity', 'range', 'signaltype'])
-        h1_df['ppm'] = hsqc_df['f2_ppm'].copy()
-        h1_df['signaltype'] = hsqc_df['signaltype'].copy()
+    def init_h1_df_from_hsqc_df(self, hsqc_df: pd.DataFrame) -> pd.DataFrame:
+        h1_df = pd.DataFrame(
+            columns=[
+                "ppm",
+                "numProtons",
+                "integral",
+                "jCouplingVals",
+                "jCouplingClass",
+                "intensity",
+                "range",
+                "signaltype",
+            ]
+        )
+        h1_df["ppm"] = hsqc_df["f2_ppm"].copy()
+        h1_df["signaltype"] = hsqc_df["signaltype"].copy()
 
         # keep only rows where type is 'Compound' or  "" (empty)
-        h1_df = h1_df[h1_df['signaltype'] == 'Compound']
+        h1_df = h1_df[h1_df["signaltype"] == "Compound"]
 
         # order h1_df by ppm in place highest to lowest, reset index to 1,2,3,4,5...
-        h1_df = h1_df.sort_values('ppm', ascending=False, ignore_index=True)
+        h1_df = h1_df.sort_values("ppm", ascending=False, ignore_index=True)
         h1_df.index = h1_df.index + 1
-        
-        h1_df['numProtons'] = 1.0
-        h1_df['integral'] = 1.0
-        h1_df['jCouplingVals'] = 0.0
-        h1_df['jCouplingClass'] = 's'
-        h1_df['intensity'] = self.hsqc_df['intensity'].copy()
+
+        h1_df["numProtons"] = 1.0
+        h1_df["integral"] = 1.0
+        h1_df["jCouplingVals"] = 0.0
+        h1_df["jCouplingClass"] = "s"
+        h1_df["intensity"] = self.hsqc_df["intensity"].copy()
         # create range column from ppm column +/- 0.05
-        h1_df['range'] = ""
+        h1_df["range"] = ""
 
         for idx in h1_df.index:
-            h1_df.loc[idx, "range"] = f"{h1_df.loc[idx, 'ppm'] - 0.05} .. {h1_df.loc[idx, 'ppm'] + 0.05}"
+            h1_df.loc[
+                idx, "range"
+            ] = f"{h1_df.loc[idx, 'ppm'] - 0.05} .. {h1_df.loc[idx, 'ppm'] + 0.05}"
 
         return h1_df
 
     def init_h1_and_pureshift_from_c13_hsqc_hmbc_cosy(self):
-        self.h1_df = pd.DataFrame(columns=['ppm', 'numProtons', 'integral', 'jCouplingVals', 'jCouplingClass', 'intensity', 'range', 'signaltype'])
-        self.h1_df['ppm'] = self.hsqc_df['f2_ppm'].copy()
-        self.h1_df['signaltype'] = self.hsqc_df['signaltype'].copy()
+        self.h1_df = pd.DataFrame(
+            columns=[
+                "ppm",
+                "numProtons",
+                "integral",
+                "jCouplingVals",
+                "jCouplingClass",
+                "intensity",
+                "range",
+                "signaltype",
+            ]
+        )
+        self.h1_df["ppm"] = self.hsqc_df["f2_ppm"].copy()
+        self.h1_df["signaltype"] = self.hsqc_df["signaltype"].copy()
 
         # keep only rows where type is 'Compound' or  "" (empty)
+        self.h1_df = self.h1_df[self.h1_df["signaltype"] == "Compound"]
 
-        self.h1_df = self.h1_df[self.h1_df['signaltype'] == 'Compound']
-        
-        self.h1_df['numProtons'] = 1.0
-        self.h1_df['integral'] = 1.0
-        self.h1_df['jCouplingVals'] = 0.0
-        self.h1_df['jCouplingClass'] = 's'
-        self.h1_df['intensity'] = self.hsqc_df['intensity'].copy()
-        self.h1_df['range'] = 0.0
+        self.h1_df["numProtons"] = 1.0
+        self.h1_df["integral"] = 1.0
+        self.h1_df["jCouplingVals"] = 0.0
+        self.h1_df["jCouplingClass"] = "s"
+        self.h1_df["intensity"] = self.hsqc_df["intensity"].copy()
+        self.h1_df["range"] = 0.0
 
         # order h1_df by ppm in place highest to lowest, reset index to 1,2,3,4,5...
-        self.h1_df = self.h1_df.sort_values('ppm', ascending=False, ignore_index=True)
+        self.h1_df = self.h1_df.sort_values("ppm", ascending=False, ignore_index=True)
         self.h1_df.index = self.h1_df.index + 1
 
         # create pureshift_df from h1_df
         self.pureshift_df = self.h1_df.copy()
 
+    def init_h1_from_pureshift(self):
+        h1_df = pd.DataFrame(
+            columns=[
+                "ppm",
+                "numProtons",
+                "integral",
+                "jCouplingVals",
+                "jCouplingClass",
+                "intensity",
+                "range",
+                "signaltype",
+            ]
+        )
+        h1_df["ppm"] = self.pureshift_df["ppm"].copy()
+        h1_df["signaltype"] = self.pureshift_df["signaltype"].copy()
 
+        # keep only rows where type is 'Compound' or  "" (empty)
+
+        h1_df = h1_df[h1_df["signaltype"] == "Compound"]
+
+        h1_df["numProtons"] = 1.0
+        h1_df["integral"] = 1.0
+        h1_df["jCouplingVals"] = 0.0
+        h1_df["jCouplingClass"] = "s"
+        h1_df["intensity"] = 1.0
+        h1_df["range"] = 0.0
+
+        # order h1_df by ppm in place highest to lowest, reset index to 1,2,3,4,5...
+        h1_df = h1_df.sort_values("ppm", ascending=False, ignore_index=True)
+        h1_df.index = h1_df.index + 1
+
+        return h1_df
+
+    def define_hsqc_f2integral(self):
+
+        print("in define_hsqc_f2integral")
+
+
+        h1 = self.h1
+        hsqc = self.hsqc
+
+        print("h1\n", h1)
+
+        print("hsqc\n", hsqc)
+
+        if "f2_integral" not in hsqc.columns:
+            hsqc["f2_integral"] = 0
+
+        for i in h1.index:
+            if i in hsqc.index:
+                hsqc.loc[i, "f2_integral"] = int(
+                    # np.round(h1.loc[hsqc.loc[i, "f2_i"], "integral"])
+                    np.round(h1.loc[hsqc.loc[i, "f2_i"], "numProtons"])
+                )
+
+        print("hsqc\n", hsqc)
+
+
+    def define_c13_attached_protons(self):
+        c13 = self.c13
+        hsqc = self.hsqc
+
+        print("in define_c13_attached_protons")
+
+
+        c13["attached_protons"] = 0
+
+        for i in c13.ppm.index:
+            dddf = hsqc[hsqc.f1_ppm == c13.loc[i, "ppm"]]
+            if dddf.shape[0]:
+                c13.loc[i, "attached_protons"] = int(dddf.f2_integral.sum())
+
+        print(c13)
 
     def find_and_group_CH2s(self, df1):
 
         # get a list of the CH2 resonances
         ch2_vals = df1[df1.CH2].f1_ppm.tolist()
         ch2_idx_vals = df1[df1.CH2].index.tolist()
-        
+
         unique_ch2s = []
         unique_idxs = []
 
-        #start with first hmbc value in the hmbc list
+        # start with first hmbc value in the hmbc list
         # create a probability distribution around it and obtain the probability of all the other values to
         # to see if they are close to the first value.
         # all values that have a +ve probability are close to the first value
@@ -1240,47 +1564,62 @@ class NMRproblem:
             # choose first from the list
             p0 = ch2_vals[0]
             # find list of hmbc values that are similar to the first in the list
-            similar_ch2s = [p for p in ch2_vals if stats.norm.pdf(p, loc=p0, scale=0.01 ) > 0]
-            similar_idxs = [i for i, p in zip(ch2_idx_vals, ch2_vals) if stats.norm.pdf(p, loc=p0, scale=0.01 ) > 0]
+            similar_ch2s = [
+                p for p in ch2_vals if stats.norm.pdf(p, loc=p0, scale=0.01) > 0
+            ]
+            similar_idxs = [
+                i
+                for i, p in zip(ch2_idx_vals, ch2_vals)
+                if stats.norm.pdf(p, loc=p0, scale=0.01) > 0
+            ]
             # save the list
             unique_ch2s.append(similar_ch2s)
             unique_idxs.append(similar_idxs)
 
-            # keep only hmbc values that were not similar 
-            ch2_idx_vals = [i for i, p in zip(ch2_idx_vals, ch2_vals) if stats.norm.pdf(p, loc=p0, scale=0.01 ) == 0]
-            ch2_vals = [p for p in ch2_vals if stats.norm.pdf(p, loc=p0, scale=0.01 ) == 0]
-        
+            # keep only hmbc values that were not similar
+            ch2_idx_vals = [
+                i
+                for i, p in zip(ch2_idx_vals, ch2_vals)
+                if stats.norm.pdf(p, loc=p0, scale=0.01) == 0
+            ]
+            ch2_vals = [
+                p for p in ch2_vals if stats.norm.pdf(p, loc=p0, scale=0.01) == 0
+            ]
+
         return unique_idxs, unique_ch2s
 
-
-
-    def find_nearest(self, true_values:list, value:float):
+    def find_nearest(self, true_values: list, value: float):
         arraynp = np.asarray(true_values)
         idx = (np.abs(arraynp - value)).argmin()
         return arraynp[idx]
 
-
-    def tidyup_ppm_values(self, df:pd.DataFrame, true_values:list, column_name: str)->pd.DataFrame:
+    def tidyup_ppm_values(
+        self, df: pd.DataFrame, true_values: list, column_name: str
+    ) -> pd.DataFrame:
 
         # make a copy of the column_name adding a suffix orig
         df[f"{column_name}_orig"] = df[column_name]
-        
+
         # make a probability column to see how far replacement is from original
         df[f"{column_name}_prob"] = 0
 
-
         # create dataframe with ppm values and their nearest true value
         # dfnew = df.assign(nearest_true_value = df[column_name].apply(lambda x: find_nearest(true_values, x)))
-        df[column_name] = df[column_name].apply(lambda x: self.find_nearest(true_values, x))
-        
-        #calculate probabilities
+        df[column_name] = df[column_name].apply(
+            lambda x: self.find_nearest(true_values, x)
+        )
+
+        # calculate probabilities
         for idx in df.index:
-            df.loc[ idx, f"{column_name}_prob"] = stats.norm.pdf(df.loc[idx, column_name], loc=df.loc[idx, f"{column_name}_orig"], scale=0.005)
+            df.loc[idx, f"{column_name}_prob"] = stats.norm.pdf(
+                df.loc[idx, column_name],
+                loc=df.loc[idx, f"{column_name}_orig"],
+                scale=0.005,
+            )
 
         return df
 
-
-    def load_excel_file(self, excelFileNameDirName: str, excel_fn=None)->bool:
+    def load_excel_file(self, excelFileNameDirName: str, excel_fn=None) -> bool:
         # Load the excel file if provided
 
         print("load_excel_file: self.qtstarted", self.qtstarted)
@@ -1311,15 +1650,19 @@ class NMRproblem:
             self.excelsheets = pd.read_excel(
                 self.excelFiles[0], sheet_name=None, index_col=0
             )
-            self.exceldf_attributes = {k: {'empty':df.empty, 'num_rows':df.shape[0]} 
-                                            for k, df in self.excelsheets.items()}
+            self.exceldf_attributes = {
+                k: {"empty": df.empty, "num_rows": df.shape[0]}
+                for k, df in self.excelsheets.items()
+            }
             self.exceldf_attributes_df = pd.DataFrame(self.exceldf_attributes)
-            
+
         except FileNotFoundError:
             # display qt message box  if excel file not found or not readable
 
             if self.qtstarted:
-                msgBox = QMessageBox("Excel file not found", "Excel file not found", QMessageBox.Ok) 
+                msgBox = QMessageBox(
+                    "Excel file not found", "Excel file not found", QMessageBox.Ok
+                )
                 msgBox = QMessageBox()
                 msgBox.setIcon(QMessageBox.Information)
                 msgBox.setText("Excel File not Found\n{}".format(self.excelFiles[0]))
@@ -1327,7 +1670,7 @@ class NMRproblem:
                 msgBox.setStandardButtons(QMessageBox.Ok)
                 rtn = msgBox.exec_()
             else:
-                print("Excel File not Found\n{}".format(self.excelFiles[0]))  
+                print("Excel File not Found\n{}".format(self.excelFiles[0]))
             return False
         except PermissionError:
             # display qt message box  if excel file not found or not readable
@@ -1342,7 +1685,7 @@ class NMRproblem:
             else:
                 print("Cannot Open\n{}".format(self.excelFiles[0]))
             return False
-            
+
         return True
 
     def init_c13_from_hsqc_and_hmbc(self):
@@ -1350,36 +1693,41 @@ class NMRproblem:
         # find CH2 groups in hsqc_df
         # CH2 groups where intensity is < 0.0
 
-        self.hsqc_df['CH2'] = False
-        self.hsqc_df.loc[self.hsqc_df.intensity < 0,"CH2"] = True
+        self.hsqc_df["CH2"] = False
+        self.hsqc_df.loc[self.hsqc_df.intensity < 0, "CH2"] = True
 
         unique_idxs, unique_ch2s = self.find_and_group_CH2s(self.hsqc_df)
 
         # replace hsqc CH2 values in f1_ppm of HSQC
         for idx, ch2 in zip(unique_idxs, unique_ch2s):
-            self.hsqc_df.loc[idx, 'f1_ppm'] = np.mean(ch2)
+            self.hsqc_df.loc[idx, "f1_ppm"] = np.mean(ch2)
 
         # replace values for f2_ppm in hmbc starting from f2_ppm hsqc
-        self.hmbc_df = self.tidyup_ppm_values(self.hmbc_df, 
-                            sorted(self.hsqc_df.f2_ppm.unique().tolist(), reverse=True), 'f2_ppm')
+        self.hmbc_df = self.tidyup_ppm_values(
+            self.hmbc_df,
+            sorted(self.hsqc_df.f2_ppm.unique().tolist(), reverse=True),
+            "f2_ppm",
+        )
 
         # find all f1_ppm HMBC idx resonances that are not showing up in the HSQC f2_ppm
         iii = []
         for i in self.hmbc_df.index:
             prob_vals = []
             for c in self.hsqc_df.f1_ppm.unique():
-                prob_vals.append(stats.norm.pdf(self.hmbc_df.loc[i,'f1_ppm'], loc=c, scale=0.01 ))
-            if np.array(prob_vals).sum() == 0:  
+                prob_vals.append(
+                    stats.norm.pdf(self.hmbc_df.loc[i, "f1_ppm"], loc=c, scale=0.01)
+                )
+            if np.array(prob_vals).sum() == 0:
                 iii.append(i)
             else:
                 pass
 
         # keep only the unique hmbc resonances not in f1_ppm HSQC
         # get a list of the hmbc resonances
-        hmbcs = self.hmbc_df.loc[iii, 'f1_ppm'].tolist()
+        hmbcs = self.hmbc_df.loc[iii, "f1_ppm"].tolist()
         unique_hmbc = []
 
-        #start with first hmbc value in the hmbc list
+        # start with first hmbc value in the hmbc list
         # create a probability distribution around it and obtain the probability of all the other values to
         # to see if they are close to the first value.
         # all values that have a +ve probability are close to the first value
@@ -1391,12 +1739,14 @@ class NMRproblem:
             # choose first from the list
             p0 = hmbcs[0]
             # find list of hmbc values that are similar to the first in the list
-            similar_hmbcs = [p for p in hmbcs if stats.norm.pdf(p, loc=p0, scale=0.01 ) > 0]
+            similar_hmbcs = [
+                p for p in hmbcs if stats.norm.pdf(p, loc=p0, scale=0.01) > 0
+            ]
             # save the list
             unique_hmbc.append(similar_hmbcs)
-            
-            # keep only hmbc values that were not similar 
-            hmbcs = [p for p in hmbcs if stats.norm.pdf(p, loc=p0, scale=0.01 ) == 0]
+
+            # keep only hmbc values that were not similar
+            hmbcs = [p for p in hmbcs if stats.norm.pdf(p, loc=p0, scale=0.01) == 0]
 
         # for h in unique_hmbc:
         #     print(np.mean(h), h)
@@ -1405,10 +1755,14 @@ class NMRproblem:
         mean_unique_hmbc_vals = [np.mean(h) for h in unique_hmbc]
 
         # tidyup f1_ppm values in hmbc that are not in f1_ppm HSQC
-        hmbc_1  = self.tidyup_ppm_values(self.hmbc_df.loc[iii], mean_unique_hmbc_vals, 'f1_ppm')
+        hmbc_1 = self.tidyup_ppm_values(
+            self.hmbc_df.loc[iii], mean_unique_hmbc_vals, "f1_ppm"
+        )
 
         # tidyup f1_ppm values in hmbc that are in f1_ppm HSQC
-        hmbc_2  = self.tidyup_ppm_values(self.hmbc_df.drop(iii), self.hsqc_df.f1_ppm.unique(), 'f1_ppm')
+        hmbc_2 = self.tidyup_ppm_values(
+            self.hmbc_df.drop(iii), self.hsqc_df.f1_ppm.unique(), "f1_ppm"
+        )
 
         # rejoin two parts of HMBC data
         self.hmbc_df = pd.concat([hmbc_1, hmbc_2])
@@ -1416,39 +1770,51 @@ class NMRproblem:
 
         # add f2p_ppm column to HSQC and HMBC tables
         # f2p_ppm is C13 one to one relation between f1_ppm and f2_ppm in HSQC
-        self.hmbc_df['f2p_ppm'] = 0.0
-        for idx, f2ppmHSQC, f1ppmHSQC in zip(self.hsqc_df.index, self.hsqc_df.f2_ppm, self.hsqc_df.f1_ppm):
-            self.hmbc_df.loc[self.hmbc_df.f2_ppm == f2ppmHSQC, 'f2p_ppm'] = f1ppmHSQC
+        self.hmbc_df["f2p_ppm"] = 0.0
+        for idx, f2ppmHSQC, f1ppmHSQC in zip(
+            self.hsqc_df.index, self.hsqc_df.f2_ppm, self.hsqc_df.f1_ppm
+        ):
+            self.hmbc_df.loc[self.hmbc_df.f2_ppm == f2ppmHSQC, "f2p_ppm"] = f1ppmHSQC
 
         # return list of C13 values
-        c13_list  = sorted(set(self.hmbc_df.f1_ppm).union(set(self.hmbc_df.f2p_ppm), set(self.hsqc_df.f1_ppm)), reverse=True)
+        c13_list = sorted(
+            set(self.hmbc_df.f1_ppm).union(
+                set(self.hmbc_df.f2p_ppm), set(self.hsqc_df.f1_ppm)
+            ),
+            reverse=True,
+        )
 
         # create a dataframe of C13 values
-        self.c13_df = pd.DataFrame(c13_list, columns=['ppm'])
-        self.c13_df['signaltype'] = 'Compound'
-        self.c13_df.index = self.c13_df.index+1
-        
+        self.c13_df = pd.DataFrame(c13_list, columns=["ppm"])
+        self.c13_df["signaltype"] = "Compound"
+        self.c13_df.index = self.c13_df.index + 1
+
         # label c13 values as CH2 or not using the hsqc_df
-        self.c13_df['CH2'] = False
+        self.c13_df["CH2"] = False
         for idx, ppm in zip(self.c13_df.index, self.c13_df.ppm):
             if ppm in self.hsqc_df.f1_ppm.values:
-                self.c13_df.loc[idx, 'CH2'] = self.hsqc_df[self.hsqc_df.f1_ppm == ppm]['CH2'].values[0]
+                self.c13_df.loc[idx, "CH2"] = self.hsqc_df[self.hsqc_df.f1_ppm == ppm][
+                    "CH2"
+                ].values[0]
 
         #  label c13 values as quaternary if not present in hsqc_df
-        self.c13_df['quaternary'] = False
+        self.c13_df["quaternary"] = False
         for idx, ppm in zip(self.c13_df.index, self.c13_df.ppm):
             if ppm not in self.hsqc_df.f1_ppm.values:
-                self.c13_df.loc[idx, 'quaternary'] = True
+                self.c13_df.loc[idx, "quaternary"] = True
 
         # label c13 values as CH3CH if quaternary and CH2 both False
-        self.c13_df['CH3CH'] = False
+        self.c13_df["CH3CH"] = False
         for idx, ppm in zip(self.c13_df.index, self.c13_df.ppm):
-            if not self.c13_df.loc[idx, 'quaternary'] and not self.c13_df.loc[idx, 'CH2']:
-                self.c13_df.loc[idx, 'CH3CH'] = True
+            if (
+                not self.c13_df.loc[idx, "quaternary"]
+                and not self.c13_df.loc[idx, "CH2"]
+            ):
+                self.c13_df.loc[idx, "CH3CH"] = True
 
         return self.c13_df
 
-    def init_class_from_excel(self, excelFileNameDirName: str, excel_fn=None)->bool:
+    def init_class_from_excel(self, excelFileNameDirName: str, excel_fn=None) -> bool:
         """
         read in class parameters from excel file found in problem directory if found
 
@@ -1464,11 +1830,8 @@ class NMRproblem:
 
         """
 
-
         if not self.load_excel_file(excelFileNameDirName, excel_fn):
             return False
-
-        
 
         return_error, return_message = self.tidy_up_excel_data()
         if return_error:
@@ -1485,34 +1848,108 @@ class NMRproblem:
                 print(return_message)
             return False
 
-        if "molecule" in self.excelsheets:
-            if "molecule" not in self.excelsheets["molecule"].columns:
-                self.moleculeAtomsStr = ""
-            else:
-                self.moleculeAtomsStr = self.excelsheets["molecule"].molecule.values[0]
-            self.molecule_defined = True
-            self.smiles = self.excelsheets["molecule"].smiles.values[0]
-            if isinstance(self.smiles, str):
-                self.smiles_defined = True
-            else:
-                self.smiles_defined = False
-            if isinstance(self.moleculeAtomsStr, str) and len(self.moleculeAtomsStr) > 0:
-                self.calculate_dbe()
-            else: # define dbe, moleculeAtomStr and elements from smiles string
-                self.expected_molecule = nmrmol.NMRmol.from_smiles(self.smiles)
-                self.dbe = self.expected_molecule.dbe
-                self.elements = self.expected_molecule.elements
-                # reconstruct moleculeAtomsStr from elements
-                self.moleculeAtomsStr = CalcMolFormula(self.expected_molecule)
-        else:
-            print("molecule not in sheet")
-            self.dbe = 0
-            self.elements = {'H': 0, 'C':0}
-            self.molecule_defined = False
+        # check if excel file contains a molecule definition and a smiles definition if not
+        # then output an error message and return False
+        if "molecule" not in self.excelsheets:
+            if self.qtstarted:
+                # create qt5 warning dialog with return_message
 
+                msg_box = QMessageBox()
+                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setText("No molecule sheet found in excel file")
+                msg_box.setStandardButtons(QMessageBox.Ok)
+                msg_box.exec()
+                msg_box.setWindowTitle("Error in Excel file")
+            else:
+                print("No molecule sheet found in excel file")
+            return False
+
+        if "smiles" not in self.excelsheets["molecule"].columns:
+            if self.qtstarted:
+                # create qt5 warning dialog with return_message
+
+                msg_box = QMessageBox()
+                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setText("No smiles column found in molecule sheet")
+                msg_box.setStandardButtons(QMessageBox.Ok)
+                msg_box.exec()
+                msg_box.setWindowTitle("Error in Excel file")
+            else:
+                print("No smiles column found in molecule sheet")
+            return False
+
+        # check if molecule sheet contains a valid smiles string
+        if not isinstance(self.excelsheets["molecule"].smiles.values[0], str):
+            if self.qtstarted:
+                # create qt5 warning dialog with return_message
+
+                msg_box = QMessageBox()
+                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setText("No smiles string found in molecule sheet")
+                msg_box.setStandardButtons(QMessageBox.Ok)
+                msg_box.exec()
+                msg_box.setWindowTitle("Error in Excel file")
+            else:
+                print("No smiles string found in molecule sheet")
+            return False
+        else:
+            self.smiles = self.excelsheets["molecule"].smiles.values[0]
+            # check if smiles string is valid using rdkit
+            
+            self.expected_molecule = Chem.MolFromSmiles(self.smiles)
+            if self.expected_molecule is None:
+                if self.qtstarted:
+                    # create qt5 warning dialog with return_message
+
+                    msg_box = QMessageBox()
+                    msg_box.setIcon(QMessageBox.Warning)
+                    msg_box.setText("Invalid smiles string found in molecule sheet")
+                    msg_box.setStandardButtons(QMessageBox.Ok)
+                    msg_box.exec()
+                    msg_box.setWindowTitle("Error in Excel file")
+                else:
+                    print("Invalid smiles string found in molecule sheet")
+                return False
+
+        # finally create rdkit molecule from smiles string
+        self.expected_molecule = create_rdkit_molecule_from_smiles(self.smiles)
+        self.dbe = self.expected_molecule.dbe
+        self.elements = self.expected_molecule.elements
+        self.png = self.expected_molecule.png
+        # reconstruct moleculeAtomsStr from elements
+        self.moleculeAtomsStr = CalcMolFormula(self.expected_molecule)
+
+        # if "molecule" in self.excelsheets:
+        #     if "molecule" not in self.excelsheets["molecule"].columns:
+        #         self.moleculeAtomsStr = ""
+        #     else:
+        #         self.moleculeAtomsStr = self.excelsheets["molecule"].molecule.values[0]
+        #     self.molecule_defined = True
+        #     self.smiles = self.excelsheets["molecule"].smiles.values[0]
+        #     if isinstance(self.smiles, str):
+        #         self.smiles_defined = True
+        #     else:
+        #         self.smiles_defined = False
+        #     if (
+        #         isinstance(self.moleculeAtomsStr, str)
+        #         and len(self.moleculeAtomsStr) > 0
+        #     ):
+        #         self.calculate_dbe()
+        #     else:  # define dbe, moleculeAtomStr and elements from smiles string
+        #         # self.expected_molecule = nmrmol.NMRmol.from_smiles(self.smiles)
+        #         self.expected_molecule = create_rdkit_molecule_from_smiles(self.smiles)
+        #         self.dbe = self.expected_molecule.dbe
+        #         self.elements = self.expected_molecule.elements
+        #         # reconstruct moleculeAtomsStr from elements
+        #         self.moleculeAtomsStr = CalcMolFormula(self.expected_molecule)
+        # else:
+        #     print("molecule not in sheet")
+        #     self.dbe = 0
+        #     self.elements = {"H": 0, "C": 0}
+        #     self.molecule_defined = False
 
         # do basic checks on excels sheets and decide how to proceed
-        if {"H1_pureshift", "HSQC"}.issubset(self.expts_available): 
+        if {"H1_pureshift", "HSQC"}.issubset(self.expts_available):
             self.pureshift_data_present = True
             self.pureshift_data_missing = False
         else:
@@ -1546,20 +1983,37 @@ class NMRproblem:
             self.HMBC_data_present = False
             self.HMBC_data_missing = True
 
-        if (self.pureshift_data_missing and self.H1_data_missing and self.C13_data_present):
+        if (
+            self.pureshift_data_missing
+            and self.H1_data_missing
+            and self.C13_data_present
+        ):
             # use f2_ppm values in hsqc_df to define h1_df:
             self.init_h1_and_pureshift_from_c13_hsqc_hmbc_cosy()
             self.c13_from_hsqc = True
 
-        elif (self.pureshift_data_missing and self.H1_data_missing and self.C13_data_missing):
+        elif (
+            self.pureshift_data_missing
+            and self.H1_data_missing
+            and self.C13_data_missing
+        ):
             self.c13_from_hsqc = True
             # use f2_ppm values in hsqc_df to define h1_df:
             self.c13_df = self.init_c13_from_hsqc_and_hmbc()
             self.init_h1_and_pureshift_from_c13_hsqc_hmbc_cosy()
 
-        elif ((self.pureshift_data_present or self.H1_data_present) and self.C13_data_missing):
+        elif (
+            self.pureshift_data_present or self.H1_data_present
+        ) and self.C13_data_missing:
             self.c13_df = self.init_c13_from_hsqc_and_hmbc()
             self.c13_from_hsqc = True
+       
+        elif  (self.H1_data_missing and self.pureshift_data_present and self.C13_data_present):
+            self.h1_df = self.init_h1_from_pureshift()
+            self.define_hsqc_f2integral()
+            print("\nself.h1_df\n", self.h1_df)
+
+
         else:
             self.c13_from_hsqc = False
 
@@ -1570,61 +2024,74 @@ class NMRproblem:
         # attempt to remove solvent peaks
         # test if hsqc_df is empty
         if not self.hsqc_df.empty:
-            self.hsqc = self.hsqc_df[self.hsqc_df.signaltype == "Compound"][['f2_ppm', 'f1_ppm', 'intensity', "signaltype"]].copy()
+            self.hsqc = self.hsqc_df[self.hsqc_df.signaltype == "Compound"][
+                ["f2_ppm", "f1_ppm", "intensity", "signaltype"]
+            ].copy()
         if self.hsqc.empty:
             # maybe user forgot to set type to compound so search for "" in Type column
-            self.hsqc = self.hsqc_df[self.hsqc_df.signaltype == ""][['f2_ppm', 'f1_ppm', 'intensity', 'signaltype']].copy()
+            self.hsqc = self.hsqc_df[self.hsqc_df.signaltype == ""][
+                ["f2_ppm", "f1_ppm", "intensity", "signaltype"]
+            ].copy()
             self.hsqc["signaltype"] = "Compound"
-        
+
         if self.hsqc.empty:
             print("hsqc is empty")
             return False
             # sys.exit()
-            
+
         if self.c13_df.empty:
             return False
         else:
-            self.c13 = self.c13_df[self.c13_df.signaltype == "Compound"][['ppm']].copy()
+            self.c13 = self.c13_df[self.c13_df.signaltype == "Compound"][["ppm"]].copy()
             if self.c13.empty:
                 # maybe user forgot to set type to compound so search for "" in Type column
-                self.c13 = self.c13_df[self.c13_df.signaltype == ""][['ppm']].copy()
+                self.c13 = self.c13_df[self.c13_df.signaltype == ""][["ppm"]].copy()
                 self.c13["signaltype"] = "Compound"
             if self.c13.empty:
                 return False
 
-            self.c13['numProtons'] = 0
-            self.c13['attached_protons'] = 0
-            if {'CH2', 'CH3CH', 'quaternary'}.issubset(self.c13_df.columns):
-                self.c13['CH2'] = self.c13_df[self.c13_df.signaltype == "Compound"]['CH2'].copy()
-                self.c13['CH3CH'] = self.c13_df[self.c13_df.signaltype == "Compound"]['CH3CH'].copy()
-                self.c13['quaternary'] = self.c13_df[self.c13_df.signaltype == "Compound"]['quaternary'].copy()
+            self.c13["numProtons"] = 0
+            self.c13["attached_protons"] = 0
+            if {"CH2", "CH3CH", "quaternary"}.issubset(self.c13_df.columns):
+                self.c13["CH2"] = self.c13_df[self.c13_df.signaltype == "Compound"][
+                    "CH2"
+                ].copy()
+                self.c13["CH3CH"] = self.c13_df[self.c13_df.signaltype == "Compound"][
+                    "CH3CH"
+                ].copy()
+                self.c13["quaternary"] = self.c13_df[
+                    self.c13_df.signaltype == "Compound"
+                ]["quaternary"].copy()
 
                 # add two to numProtons for CH2
-                self.c13.loc[self.c13.CH2, 'numProtons'] = 2
+                self.c13.loc[self.c13.CH2, "numProtons"] = 2
                 # add one to numProtons for CH3CH
-                self.c13.loc[self.c13.CH3CH, 'numProtons'] = 1
+                self.c13.loc[self.c13.CH3CH, "numProtons"] = 1
 
-            self.c13.loc[:,'attached_protons'] = self.c13.numProtons
-
+            self.c13.loc[:, "attached_protons"] = self.c13.numProtons
 
         if not self.pureshift_df.empty:
-            self.h1 = self.pureshift_df[self.pureshift_df.signaltype == "Compound"][['ppm']].copy()
+            self.h1 = self.pureshift_df[self.pureshift_df.signaltype == "Compound"][
+                ["ppm"]
+            ].copy()
             if self.h1.empty:
                 # maybe user forgot to set type to compound so search for "" in Type column
-                self.h1 = self.pureshift_df[self.pureshift_df.signaltype == ""][['ppm']].copy()
+                self.h1 = self.pureshift_df[self.pureshift_df.signaltype == ""][
+                    ["ppm"]
+                ].copy()
                 self.h1["signaltype"] = "Compound"
             if self.h1.empty:
                 print("h1 is empty")
                 return False
         elif not self.h1_df.empty:
-            self.h1 = self.h1_df[['ppm']].copy()
+            self.h1 = self.h1_df[["ppm"]].copy()
         else:
             print("No pureshift_df or h1_df")
             print("Program should not reach this point")
             return False
 
         # check if integral column was missing from h1_df, if so replace integral values by using hsqc
-        
+
         print("h1_df_integral_added = ", self.h1_df_integral_added)
         if self.h1_df_integral_added:
             print("calculating integral values from hsqc")
@@ -1636,7 +2103,6 @@ class NMRproblem:
         self.symmetric_molecule = False
         if self.elements["C"] > 0 and self.elements["C"] > self.numCarbonGroups:
             self.symmetric_molecule = True
-
 
         self.c13["attached_protons"] = 0
         self.c13["ppmH1s"] = None
@@ -1672,6 +2138,7 @@ class NMRproblem:
         self.cosy["f2Cp_i"] = ""
 
         self.c13["max_bonds"] = 4
+        
         self.h1["integral"] = self.h1_df["integral"]
         self.h1["numProtons"] = self.h1_df["numProtons"]
         self.h1["jCouplingClass"] = self.h1_df["jCouplingClass"]
@@ -1693,7 +2160,7 @@ class NMRproblem:
         # HSQC
         self.hsqc = self.tidyup_ppm_values(self.hsqc, self.c13.ppm.tolist(), "f1_ppm")
         self.hsqc = self.tidyup_ppm_values(self.hsqc, self.h1.ppm.tolist(), "f2_ppm")
-        
+
         # for i in self.hsqc.index:
         #     self.hsqc.loc[i, "f1_ppm"] = self.find_nearest(
         #         self.c13.ppm.tolist(), self.hsqc.loc[i, "f1_ppm"]
@@ -1706,7 +2173,7 @@ class NMRproblem:
         self.cosy = self.tidyup_ppm_values(self.cosy, self.h1.ppm.tolist(), "f1_ppm")
         self.cosy = self.tidyup_ppm_values(self.cosy, self.h1.ppm.tolist(), "f2_ppm")
 
-        #check if any probability equals zero and remove the row
+        # check if any probability equals zero and remove the row
         # because it is likely that proton is not connected directly to carbon
         self.cosy.drop(self.cosy[self.cosy.f1_ppm_prob == 0].index, inplace=True)
         self.cosy.drop(self.cosy[self.cosy.f2_ppm_prob == 0].index, inplace=True)
@@ -1833,10 +2300,16 @@ class NMRproblem:
             )
 
             self.hmbc.loc[i, "f2_i"] = self.H1ppmH1index.get(self.hmbc.loc[i, "f2_ppm"])
-            self.hmbc.loc[i, "f1_i"] = self.C13ppmC13index.get(self.hmbc.loc[i, "f1_ppm"])
+            self.hmbc.loc[i, "f1_i"] = self.C13ppmC13index.get(
+                self.hmbc.loc[i, "f1_ppm"]
+            )
 
-            self.hmbc.loc[i, "f1C_i"] = self.C13ppmC13label.get(self.hmbc.loc[i, "f1_ppm"])
-            self.hmbc.loc[i, "f2H_i"] = self.H1ppmH1label.get(self.hmbc.loc[i, "f2_ppm"])
+            self.hmbc.loc[i, "f1C_i"] = self.C13ppmC13label.get(
+                self.hmbc.loc[i, "f1_ppm"]
+            )
+            self.hmbc.loc[i, "f2H_i"] = self.H1ppmH1label.get(
+                self.hmbc.loc[i, "f2_ppm"]
+            )
             self.hmbc.loc[i, "f2Cp_i"] = self.hsqcH1ppmC13label.get(
                 self.hmbc.loc[i, "f2_ppm"]
             )
@@ -1849,9 +2322,17 @@ class NMRproblem:
         self.df.loc[self.protonAtoms, "ppm"] = self.h1.ppm.values
         self.df.loc[self.carbonAtoms, "ppm"] = self.c13.ppm.values
 
-        self.df.loc["integral", self.protonAtoms] = np.round(self.h1.integral.values)
-        self.df.loc["J type", self.protonAtoms] = self.h1.jCouplingClass.values
-        self.df.loc["J Hz", self.protonAtoms] = self.h1.jCouplingVals.values
+        if self.h1.shape[0] > 0:
+            print("self.h1.integral.values", self.h1.integral.values)
+            self.df.loc["integral", self.protonAtoms] = np.round(self.h1.integral.values)
+            self.df.loc["integral", self.protonAtoms] = np.round(self.h1.integral.values)
+            self.df.loc["J type", self.protonAtoms] = self.h1.jCouplingClass.values
+            self.df.loc["J Hz", self.protonAtoms] = self.h1.jCouplingVals.values
+        else:
+            self.df.loc["integral", self.protonAtoms] = 0
+            self.df.loc["J type", self.protonAtoms] = "s"
+            self.df.loc["J Hz", self.protonAtoms] = 0.0
+
         self.convertJHzToLists()
 
         self.df.loc["C13 hyb", self.protonAtoms + self.carbonAtoms] = 0
@@ -1880,7 +2361,7 @@ class NMRproblem:
         for ci in self.cosy.f1Cp_i.unique():
             lll = self.cosy[self.cosy.f1Cp_i == ci]["f2Cp_i"].tolist()
             # remove None from list
-            lll = [ l for l in lll if l]
+            lll = [l for l in lll if l]
             if ci in lll:
                 lll.remove(ci)
             # add ci only if not None
@@ -1896,10 +2377,9 @@ class NMRproblem:
 
         return True
 
-
     def build_xy3(self):
 
-        #start off xy3 positions from random positions just in case no other method works
+        # start off xy3 positions from random positions just in case no other method works
 
         self.init_xy3_from_random()
 
@@ -1911,13 +2391,11 @@ class NMRproblem:
             return True
         else:
             print("xy3 from random positions")
-            
+
             return self.init_xy3_from_random()
 
         print("xy3 not initiated")
         return False
-
-
 
     def init_xy3_from_random(self):
         """
@@ -1930,7 +2408,6 @@ class NMRproblem:
         build_xy3_representation_of_molecule(self)
         return True
 
-
     def init_xy3_from_json(self):
         if not self.xy3_calc_method == "xy3":
             return False
@@ -1939,10 +2416,9 @@ class NMRproblem:
         self.xy3 = read_xy3_jsonfile(self.problemdata_info)
         return isinstance(self.xy3, dict)
 
-
     def init_xy3_from_c13predictions(self):
 
-        if  not isinstance(self.smiles, str):
+        if not isinstance(self.smiles, str):
             return False
 
         if not self.java_available:
@@ -1956,8 +2432,8 @@ class NMRproblem:
         xy = np.array(list(self.xy3.values()))
         cxxx, cyyy = xy.T
 
-        self.c13['x'] = cxxx
-        self.c13['y'] = cyyy
+        self.c13["x"] = cxxx
+        self.c13["y"] = cyyy
 
         mol = create_rdkit_molecule_from_smiles(self.smiles)
 
@@ -1967,19 +2443,34 @@ class NMRproblem:
         xy = np.array(list(xy3.values()))
         cxxx, cyyy = xy.T
 
-        molprops = [ [atom.GetIdx(), 
-                      atom.GetNumImplicitHs(), 
-                      atom.GetTotalNumHs(), 
-                      atom.GetDegree(), 
-                      atom.GetHybridization(), 
-                      atom.GetIsAromatic()] for atom in mol.GetAtoms() if 'C' == atom.GetSymbol()]
+        molprops = [
+            [
+                atom.GetIdx(),
+                atom.GetNumImplicitHs(),
+                atom.GetTotalNumHs(),
+                atom.GetDegree(),
+                atom.GetHybridization(),
+                atom.GetIsAromatic(),
+            ]
+            for atom in mol.GetAtoms()
+            if "C" == atom.GetSymbol()
+        ]
 
-        mol_df = pd.DataFrame(data=molprops, columns=['idx', 'implicitHs', 'totalNumHs', 'degree', 'hybridization', 'aromatic'])
-        mol_df['x'] = cxxx
-        mol_df['y'] = cyyy
+        mol_df = pd.DataFrame(
+            data=molprops,
+            columns=[
+                "idx",
+                "implicitHs",
+                "totalNumHs",
+                "degree",
+                "hybridization",
+                "aromatic",
+            ],
+        )
+        mol_df["x"] = cxxx
+        mol_df["y"] = cyyy
         # mol_df['idx2'] = idx
 
-        
         # mol_df['ppm'] = c13.sort_values(by=['C'], ignore_index=True)['predicted']
 
         with open("mol.mol", "w") as fp:
@@ -1994,80 +2485,88 @@ class NMRproblem:
 
         df = pd.read_csv("mol.csv")
 
-        mol_df['C'] = df['C'].to_list()
-        mol_df['predicted'] = df['mean'].to_list()
-        mol_df = mol_df.sort_values(by=['predicted'], ignore_index=True, ascending=False)
+        mol_df["C"] = df["C"].to_list()
+        mol_df["predicted"] = df["mean"].to_list()
+        mol_df = mol_df.sort_values(
+            by=["predicted"], ignore_index=True, ascending=False
+        )
 
-        self.c13['predicted'] = 0
-        self.c13['C'] = 0
+        self.c13["predicted"] = 0
+        self.c13["C"] = 0
 
         # check if dataframes have the same number of rows
         # copy across mol information
         if self.c13.shape[0] == mol_df.shape[0]:
-            self.c13['predicted'] = mol_df['predicted'].to_list()
-            self.c13['C'] = mol_df['idx'].to_list()
-            self.c13['x'] = mol_df['x'].to_list()
-            self.c13['y'] = mol_df['y'].to_list()
+            self.c13["predicted"] = mol_df["predicted"].to_list()
+            self.c13["C"] = mol_df["idx"].to_list()
+            self.c13["x"] = mol_df["x"].to_list()
+            self.c13["y"] = mol_df["y"].to_list()
         elif self.c13.shape[0] < df.shape[0]:
             # keep only unique rows based on mean ppm
-            df_sym = mol_df.drop_duplicates(subset=['predicted'], ignore_index=True)
+            df_sym = mol_df.drop_duplicates(subset=["predicted"], ignore_index=True)
             if self.c13.shape[0] == df_sym.shape[0]:
-                
-                self.c13['predicted'] = df_sym['predicted'].to_list()
-                self.c13['C'] = df_sym['idx'].to_list()
-                self.c13['x'] = df_sym['x'].to_list()
-                self.c13['y'] = df_sym['y'].to_list()
+
+                self.c13["predicted"] = df_sym["predicted"].to_list()
+                self.c13["C"] = df_sym["idx"].to_list()
+                self.c13["x"] = df_sym["x"].to_list()
+                self.c13["y"] = df_sym["y"].to_list()
 
                 mol_df = df_sym
-        
 
-
+        self.c13["attached_protons_predicted"] = 0
         for numprotons in range(4):
-            c13view = self.c13[self.c13.attached_protons==numprotons]
-            mol_dfview = mol_df[mol_df.totalNumHs==numprotons].sort_values(by=['predicted'], ignore_index=True, ascending=False)
+            c13view = self.c13[self.c13.attached_protons == numprotons]
+            mol_dfview = mol_df[mol_df.totalNumHs == numprotons].sort_values(
+                by=["predicted"], ignore_index=True, ascending=False
+            )
 
+            mol_dfview = mol_dfview.drop_duplicates(subset=["predicted"], ignore_index=True)
 
-            if c13view.shape[0]  == mol_dfview.shape[0]:
+            if c13view.shape[0] == mol_dfview.shape[0]:
                 for i1, i2 in zip(c13view.index, mol_dfview.index):
-                    self.c13.loc[i1, 'predicted'] = mol_dfview.loc[i2, 'predicted']
-                    self.c13.loc[i1, 'C'] = mol_dfview.loc[i2, 'idx']
-                    self.c13.loc[i1, 'x'] = mol_dfview.loc[i2, 'x']
-                    self.c13.loc[i1, 'y'] = mol_dfview.loc[i2, 'y']
-                    self.c13.loc[i1, 'attached_protons_predicted'] = mol_dfview.loc[i2,"totalNumHs"]
+                    self.c13.loc[i1, "predicted"] = mol_dfview.loc[i2, "predicted"]
+                    self.c13.loc[i1, "C"] = mol_dfview.loc[i2, "idx"]
+                    self.c13.loc[i1, "x"] = mol_dfview.loc[i2, "x"]
+                    self.c13.loc[i1, "y"] = mol_dfview.loc[i2, "y"]
+                    self.c13.loc[i1, "attached_protons_predicted"] = mol_dfview.loc[
+                        i2, "totalNumHs"
+                    ]
             else:
                 print("shapes not equal")
                 # continue only if numprotons == 0
-                if numprotons == 0:
-                    print("numprotons", numprotons)
-                    print("c13view", c13view)
-                    print("mol_dfview", mol_dfview)
-                    # loop through c13view and find the closest match in mol_dfview
-                    for i1 in c13view.index:
-                        # print(i1)
-                        # print(self.c13.loc[i1, 'predicted'][])
-                        # print(mol_dfview['predicted'])
-                        # print(mol_dfview['predicted'].sub(self.c13.loc[i1, 'predicted']).abs().idxmin())
-                        i2 = mol_dfview['predicted'].sub(c13view.loc[i1, 'ppm']).abs().idxmin()
-                        
-                        self.c13.loc[i1, 'predicted'] = mol_dfview.loc[i2, 'predicted']
-                        self.c13.loc[i1, 'C'] = mol_dfview.loc[i2, 'idx']
-                        self.c13.loc[i1, 'x'] = mol_dfview.loc[i2, 'x']
-                        self.c13.loc[i1, 'y'] = mol_dfview.loc[i2, 'y']
-                        self.c13.loc[i1, 'attached_protons_predicted'] = mol_dfview.loc[i2,"totalNumHs"]
+                # if numprotons == 0:
+                # print("numprotons", numprotons)
+                # print("c13view", c13view)
+                # print("mol_dfview", mol_dfview)
+                # # loop through c13view and find the closest match in mol_dfview
+                # for i1 in c13view.index:
+                #     # print(i1)
+                #     # print(self.c13.loc[i1, 'predicted'][])
+                #     # print(mol_dfview['predicted'])
+                #     # print(mol_dfview['predicted'].sub(self.c13.loc[i1, 'predicted']).abs().idxmin())
+                #     i2 = mol_dfview['predicted'].sub(c13view.loc[i1, 'ppm']).abs().idxmin()
 
-                        print(i1, self.c13.loc[i1, ['ppm', 'x', 'y', 'attached_protons_predicted']])
-                        print( i2, mol_dfview.loc[i2, ['predicted', 'x', 'y']])
-                        print("\n")
-                        # remove closest match from mol_dfview
-                        mol_dfview = mol_dfview.drop(i2)
+                #     self.c13.loc[i1, 'predicted'] = mol_dfview.loc[i2, 'predicted']
+                #     self.c13.loc[i1, 'C'] = mol_dfview.loc[i2, 'idx']
+                #     self.c13.loc[i1, 'x'] = mol_dfview.loc[i2, 'x']
+                #     self.c13.loc[i1, 'y'] = mol_dfview.loc[i2, 'y']
+                #     self.c13.loc[i1, 'attached_protons_predicted'] = mol_dfview.loc[i2,"totalNumHs"]
 
-       
+                #     print(i1, self.c13.loc[i1, ['ppm', 'x', 'y', 'attached_protons_predicted']])
+                #     print( i2, mol_dfview.loc[i2, ['predicted', 'x', 'y']])
+                #     print("\n")
+                #     # remove closest match from mol_dfview
+                #     mol_dfview = mol_dfview.drop(i2)
+
         # initiate xy3
 
         self.xy3 = {}
 
         for i in self.c13.index:
-            self.xy3[self.c13.loc[i,'label']] = [self.c13.loc[i,'x'], self.c13.loc[i,'y']]
+            self.xy3[self.c13.loc[i, "label"]] = [
+                self.c13.loc[i, "x"],
+                self.c13.loc[i, "y"],
+            ]
 
         return True
 
@@ -2418,7 +2917,6 @@ class NMRproblem:
 
         self.calculate_dbe()
 
-
         if changed:
             # delete old dataframe and then recreate it with new params
             self.create_new_nmrproblem_df()
@@ -2499,22 +2997,24 @@ class NMRproblem:
         self.df = self.df.fillna("")
 
         # update df with default values
-        self.df.loc["integral", self.protonAtoms + self.carbonAtoms] = [1,] * len(
-            self.protonAtoms + self.carbonAtoms
-        )
-        self.df.loc["J type", self.protonAtoms + self.carbonAtoms] = ["s",] * len(
-            self.protonAtoms + self.carbonAtoms
-        )
-        self.df.loc["J Hz", self.protonAtoms + self.carbonAtoms] = ["[0]",] * len(
-            self.protonAtoms + self.carbonAtoms
-        )
-        self.df.loc["hsqc", self.protonAtoms + self.carbonAtoms] = ["[]",] * len(
-            self.protonAtoms + self.carbonAtoms
-        )
-        self.df.loc["hmbc", self.protonAtoms + self.carbonAtoms] = ["[]",] * len(
-            self.protonAtoms + self.carbonAtoms
-        )
-        self.df.loc["cosy", self.protonAtoms] = ["[]",] * len(self.protonAtoms)
+        self.df.loc["integral", self.protonAtoms + self.carbonAtoms] = [
+            1,
+        ] * len(self.protonAtoms + self.carbonAtoms)
+        self.df.loc["J type", self.protonAtoms + self.carbonAtoms] = [
+            "s",
+        ] * len(self.protonAtoms + self.carbonAtoms)
+        self.df.loc["J Hz", self.protonAtoms + self.carbonAtoms] = [
+            "[0]",
+        ] * len(self.protonAtoms + self.carbonAtoms)
+        self.df.loc["hsqc", self.protonAtoms + self.carbonAtoms] = [
+            "[]",
+        ] * len(self.protonAtoms + self.carbonAtoms)
+        self.df.loc["hmbc", self.protonAtoms + self.carbonAtoms] = [
+            "[]",
+        ] * len(self.protonAtoms + self.carbonAtoms)
+        self.df.loc["cosy", self.protonAtoms] = [
+            "[]",
+        ] * len(self.protonAtoms)
 
         self.udic[0]["atoms"] = self.protonAtoms
         self.udic[1]["atoms"] = self.carbonAtoms
@@ -2883,13 +3383,14 @@ class NMRproblem:
                 fid0 = fid0 * exp(-pi * lb * ttt)
                 spec = fftpack.fftshift(fftpack.fft(fid0)).real
 
-                base_line_value = spec[-1]
+                base_line_value = spec[:100].mean()
+                print("base_line_value", base_line_value)
 
                 ileft = 0
                 iright = -1
-                while spec[ileft] < 5 * base_line_value:
+                while spec[ileft] < 100 * base_line_value:
                     ileft += 1
-                while spec[iright] < 5 * base_line_value:
+                while spec[iright] < 100 * base_line_value:
                     iright -= 1
 
                 expt["peak_ranges"][h1] = [ileft, npts + iright]

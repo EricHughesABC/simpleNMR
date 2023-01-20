@@ -7,6 +7,9 @@ import pandas as pd
 import rdkit
 from rdkit import Chem
 from rdkit.Chem import AllChem
+from rdkit.Chem import Draw
+import PIL
+
 
 class NMRmol(rdkit.Chem.rdchem.Mol):
     """NMRmol is a subclass of rdkit.Chem.rdchem.Mol"""
@@ -26,7 +29,9 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
         if platform.system() == "Darwin":
             self.MAC_OS = True
             self.WINDOWS_OS = False
-            if not os.system("jre/amazon-corretto-17.jdk/Contents/Home/bin/java --version"):
+            if not os.system(
+                "jre/amazon-corretto-17.jdk/Contents/Home/bin/java --version"
+            ):
                 self.JAVA_AVAILABLE = True
                 self.JAVA_COMMAND = "jre/amazon-corretto-17.jdk/Contents/Home/bin/java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
                 print("MAC Local JAVA is available")
@@ -47,31 +52,46 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
                 self.JAVA_AVAILABLE = False
                 print("JAVA is not available")
 
-
         self.dbe = self.calc_dbe()
         self.elements = self.init_elements_dict()
         self.num_carbon_atoms = self.elements.get("C", 0)
         self.num_hydrogen_atoms = self.elements.get("H", 0)
+        self.png = self.create_png()
+        self.smiles = self.create_smiles()
 
+        molprops = [
+            [
+                atom.GetIdx(),
+                atom.GetNumImplicitHs(),
+                atom.GetTotalNumHs(),
+                atom.GetDegree(),
+                atom.GetHybridization(),
+                atom.GetIsAromatic(),
+            ]
+            for atom in self.GetAtoms()
+            if "C" == atom.GetSymbol()
+        ]
 
+        self.molprops_df = pd.DataFrame(
+            data=molprops,
+            columns=[
+                "idx",
+                "implicitHs",
+                "totalNumHs",
+                "degree",
+                "hybridization",
+                "aromatic",
+            ],
+        )
+        self.molprops_df = self.molprops_df.set_index(["idx"])
 
-        molprops = [ [atom.GetIdx(), 
-                    atom.GetNumImplicitHs(), 
-                    atom.GetTotalNumHs(), 
-                    atom.GetDegree(), 
-                    atom.GetHybridization(), 
-                    atom.GetIsAromatic()] for atom in self.GetAtoms() if 'C' == atom.GetSymbol()]
-
-        self.molprops_df = pd.DataFrame(data=molprops, columns=['idx', 'implicitHs', 'totalNumHs', 'degree', 'hybridization', 'aromatic'])
-        self.molprops_df = self.molprops_df.set_index(['idx'])
-        
         print("\nstart calculating c13 chemical shifts\n")
         c13_chemical_shifts_df = self.calculated_c13_chemical_shifts()
         print("\nfinished calculating c13 chemical shifts\n")
 
         # add c13 chemical shifts to molprops_df if available
         if isinstance(c13_chemical_shifts_df, pd.DataFrame):
-            self.molprops_df = self.molprops_df.join(c13_chemical_shifts_df, how='left')
+            self.molprops_df = self.molprops_df.join(c13_chemical_shifts_df, how="left")
 
         self.molprops_df["c13ppm"] = self.molprops_df["mean"]
 
@@ -92,32 +112,48 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
         self.molprops_df.loc[self.molprops_df["totalNumHs"] == 1, "CH1"] = True
 
         # calculate number of carbons with protons attached
-        self.num_carbon_atoms_with_protons = self.molprops_df[self.molprops_df.totalNumHs > 0].shape[0]
+        self.num_carbon_atoms_with_protons = self.molprops_df[
+            self.molprops_df.totalNumHs > 0
+        ].shape[0]
 
         # calculate number of carbons without protons attached
-        self.num_quaternary_carbons = self.molprops_df[self.molprops_df.totalNumHs == 0].shape[0]
+        self.num_quaternary_carbons = self.molprops_df[
+            self.molprops_df.totalNumHs == 0
+        ].shape[0]
 
         # calculate number of carbon with two protons attached
-        self.num_ch2_carbon_atoms = self.molprops_df[self.molprops_df.totalNumHs == 2].shape[0]
+        self.num_ch2_carbon_atoms = self.molprops_df[
+            self.molprops_df.totalNumHs == 2
+        ].shape[0]
 
         # calculate number of carbon with three protons attached
-        self.num_ch3_carbon_atoms = self.molprops_df[self.molprops_df.totalNumHs == 3].shape[0]
+        self.num_ch3_carbon_atoms = self.molprops_df[
+            self.molprops_df.totalNumHs == 3
+        ].shape[0]
 
         # calculate number of carbon with one proton  attached
-        self.num_ch_carbon_atoms = self.molprops_df[self.molprops_df.totalNumHs == 1].shape[0]
+        self.num_ch_carbon_atoms = self.molprops_df[
+            self.molprops_df.totalNumHs == 1
+        ].shape[0]
 
-
-
-
-    #initialize class from smiles string
+    # initialize class from smiles string
     @classmethod
     def from_smiles(cls, smiles: str):
+       
         return cls(Chem.MolFromSmiles(smiles))
 
     def init_elements_dict(self):
-        return pd.DataFrame([[atom.GetIdx(), atom.GetSymbol() ] 
-                                for atom in Chem.AddHs(self).GetAtoms()], 
-                                    columns=["atom_index", "atom_symbol"])["atom_symbol"].value_counts().to_dict()
+        return (
+            pd.DataFrame(
+                [
+                    [atom.GetIdx(), atom.GetSymbol()]
+                    for atom in Chem.AddHs(self).GetAtoms()
+                ],
+                columns=["atom_index", "atom_symbol"],
+            )["atom_symbol"]
+            .value_counts()
+            .to_dict()
+        )
 
     # calculate DBE for molecule
     def calc_dbe(self) -> int:
@@ -134,9 +170,14 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
 
     def return_proton_groups(self) -> dict:
         # create pandas dataframe with carbon atom index and number of attached protons
-        df = pd.DataFrame([[atom.GetIdx(), atom.GetTotalNumHs()] 
-                               for atom in self.GetAtoms() if atom.GetAtomicNum() == 6], 
-                                  columns=["atom_index", "num_hydrogens"])
+        df = pd.DataFrame(
+            [
+                [atom.GetIdx(), atom.GetTotalNumHs()]
+                for atom in self.GetAtoms()
+                if atom.GetAtomicNum() == 6
+            ],
+            columns=["atom_index", "num_hydrogens"],
+        )
         df = df["num_hydrogens"].value_counts().sort_index()
         return df.to_dict()
 
@@ -157,7 +198,7 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
     # return dictionary of dictionarys, first key is the number of protons, second key is carbon atom index, value is calculated C13 NMR chemical shift for molecule
     def c13_nmr_shifts(self) -> dict:
         c13_nmr_shifts = {}
-        for k,v in self.proton_groups().items():
+        for k, v in self.proton_groups().items():
             c13_nmr_shifts[k] = {}
             for i in v:
                 c13_nmr_shifts[k][i] = None
@@ -172,13 +213,12 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
             for k, v in c13_nmr_shifts.items():
                 for k2, v2 in v.items():
                     # find row in c13ppm_df with atom index k2
-                    v[k2] = c13ppm_df.loc[k2,"mean"]
+                    v[k2] = c13ppm_df.loc[k2, "mean"]
 
             print("c13_nmr_shifts", c13_nmr_shifts)
         return c13_nmr_shifts
 
-
-    def calc_c13_chemical_shifts_using_nmrshift2D(self)->pd.DataFrame:
+    def calc_c13_chemical_shifts_using_nmrshift2D(self) -> pd.DataFrame:
 
         with open("mol.mol", "w") as fp:
             fp.write(Chem.MolToMolBlock(self))
@@ -189,14 +229,12 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
             print("NMRShift2D failed to calculate C13 chemical shifts")
             return False
         else:
-            mol_df = pd.read_csv('mol.csv', index_col=0)
+            mol_df = pd.read_csv("mol.csv", index_col=0)
             mol_df.index = mol_df.index - 1
-            return mol_df  
-
-
+            return mol_df
 
     def num_protons_attached_to_carbons(self) -> int:
-        num_protons = sum([k*v for k,v in self.return_proton_groups().items()])
+        num_protons = sum([k * v for k, v in self.return_proton_groups().items()])
         return num_protons
 
     def num_proton_groups(self) -> int:
@@ -213,15 +251,31 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
     def carbon_idx(self) -> list:
         return [atom.GetIdx() for atom in self.GetAtoms() if atom.GetAtomicNum() == 6]
 
-
     def query_molprops_df(self, column_id: str, value) -> pd.DataFrame:
-        return self.molprops_df[self.molprops_df[column_id] == value][['implicitHs', 
-                                                                       'degree', 
-                                                                       'aromatic', 
-                                                                       'hybridization', 
-                                                                       'CH2',
-                                                                       'c13ppm']]
+        return self.molprops_df[self.molprops_df[column_id] == value][
+            ["implicitHs", "degree", "aromatic", "hybridization", "CH2", "c13ppm"]
+        ]
 
+    def create_smiles(self) -> str:
+        """Creates a smiles string from a rdkit molecule"""
+        return Chem.MolToSmiles(self)
+
+    def create_png(self) -> PIL.Image.Image:
+        """Creates a png image from a smiles string via rdkit"""
+        png = None
+
+
+
+        mol2 = Chem.AddHs(self)
+        AllChem.EmbedMolecule(mol2, randomSeed=3)
+        rdkit_molecule = Chem.RemoveHs(mol2)
+
+        rdkit_molecule.Compute2DCoords()
+
+        # Draw.MolToFile(molecule, "molecule.png")
+        # png = Image.open("molecule.png")
+        png = Draw.MolToImage(rdkit_molecule, size=(800, 800))
+        return png
 
 if __name__ == "__main__":
     mol = NMRmol.from_smiles("CCC2Cc1ccccc1C2=O")
@@ -232,7 +286,3 @@ if __name__ == "__main__":
     print("mol.num_ch_carbon_atoms", mol.num_ch_carbon_atoms)
     print("mol.num_ch2_carbon_atoms", mol.num_ch2_carbon_atoms)
     print("mol.num_ch3_carbon_atoms", mol.num_ch3_carbon_atoms)
-
-
-
-        

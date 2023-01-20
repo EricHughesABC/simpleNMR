@@ -83,12 +83,14 @@ class MatplotlibMoleculePlot(Figure):
         self.xmax = 1.1
         self.ymax = 1.1
 
-        custom_lines = [Line2D([0], [0], color="blue", lw=4),
-                Line2D([0], [0], color="orange", lw=4),
-                Line2D([0], [0], color="green", lw=4),
-                Line2D([0], [0], color="purple", lw=4)]
+        custom_lines = [
+            Line2D([0], [0], color="blue", lw=4),
+            Line2D([0], [0], color="orange", lw=4),
+            Line2D([0], [0], color="green", lw=4),
+            Line2D([0], [0], color="purple", lw=4),
+        ]
 
-        self.ax.legend(custom_lines, ['- C -', '- CH', '- CH$_2$', '- CH$_3$'])
+        self.ax.legend(custom_lines, ["- C -", "- CH", "- CH$_2$", "- CH$_3$"])
 
         if self.nmrproblem.data_complete:
             self.draw_molecule(self.nmrproblem, self.ax)
@@ -121,7 +123,10 @@ class MatplotlibMoleculePlot(Figure):
 
         if not isinstance(self.nmrproblem.png, type(None)):
             self.bkgnd = self.ax.imshow(
-                self.nmrproblem.png, aspect="auto", extent=[0, 1, 1, 0], alpha=0.6,
+                self.nmrproblem.png,
+                aspect="auto",
+                extent=[0, 1, 1, 0],
+                alpha=0.6,
             )
 
         self.ax.set_xlim(-0.1, 1.1)
@@ -160,9 +165,9 @@ class MatplotlibMoleculePlot(Figure):
         """initialize hmbc graph plots"""
         hmbc_graph_plots = {}
 
-        for node in self.nmrproblem.molecule.nodes:
+        for node in self.nmrproblem.nx_graph_molecule.nodes:
             hmbc_graph_plots[node] = {}
-        for node in self.nmrproblem.molecule.nodes:
+        for node in self.nmrproblem.nx_graph_molecule.nodes:
             if node not in hmbc_graphs:
                 continue
             hmbc_graph_plots[node]["hmbc_nodes"] = nx_pylab.draw_networkx_nodes(
@@ -226,7 +231,7 @@ class MatplotlibMoleculePlot(Figure):
         """initialize molecule plots"""
 
         mol_edges = nx_pylab.draw_networkx_edges(
-            nmrprblm.molecule,
+            nmrprblm.nx_graph_molecule,
             nmrprblm.xy3,
             ax=ax,
             edge_color="r",
@@ -235,15 +240,15 @@ class MatplotlibMoleculePlot(Figure):
         )
 
         mol_nodes = nx_pylab.draw_networkx_nodes(
-            nmrprblm.molecule,
+            nmrprblm.nx_graph_molecule,
             nmrprblm.xy3,
             node_color=[
-                nmrprblm.molecule.nodes[node]["node_color"]
-                for node in nmrprblm.molecule.nodes
+                nmrprblm.nx_graph_molecule.nodes[node]["node_color"]
+                for node in nmrprblm.nx_graph_molecule.nodes
             ],
             edgecolors=[
-                nmrprblm.molecule.nodes[node]["node_color"]
-                for node in nmrprblm.molecule.nodes
+                nmrprblm.nx_graph_molecule.nodes[node]["node_color"]
+                for node in nmrprblm.nx_graph_molecule.nodes
             ],
             linewidths=0.2,
             node_size=500,
@@ -255,11 +260,11 @@ class MatplotlibMoleculePlot(Figure):
         # scatterplt = self.mol_nodes
         mol_nodes.scatter_facecolors_rgba = mol_nodes.get_facecolors()
         mol_nodes.scatter_edgecolors_rgba = mol_nodes.get_edgecolors()
-        mol_nodes.my_labels = [f"C{n+1}" for n in range(len(nmrprblm.molecule.nodes))]
+        mol_nodes.my_labels = [f"C{n+1}" for n in range(len(nmrprblm.nx_graph_molecule.nodes))]
         mol_nodes.node_highlighted = False
 
         mol_labels = nx_pylab.draw_networkx_labels(
-            nmrprblm.molecule, nmrprblm.xy3, ax=ax
+            nmrprblm.nx_graph_molecule, nmrprblm.xy3, ax=ax
         )
 
         return mol_edges, mol_nodes, mol_labels
@@ -592,7 +597,7 @@ if __name__ == "__main__":
             self.mol_ind = self.node_pick_ind
 
             # move nodes, edges and labels associated with hmbc network for each carbon atom
-            for node in self.nmrproblem.molecule.nodes:
+            for node in self.nmrproblem.nx_graph_molecule.nodes:
                 if node in self.hmbc_graph_plots:
 
                     hmbc_nodes = self.hmbc_graph_plots[node]["hmbc_nodes"]
@@ -791,7 +796,7 @@ if __name__ == "__main__":
             # update edges, nodes and labels
             # update them even if they are not visible so that keep in sync
             # with the moved display
-            for node in self.nmrproblem.molecule.nodes:
+            for node in self.nmrproblem.nx_graph_molecule.nodes:
                 # hmbc_nodes = self.molecule_plot.hmbc_graph_plots[n]["hmbc_nodes"]
                 hmbc_edges = self.molecule_plot.hmbc_graph_plots[node]["hmbc_edges"]
                 hmbc_labels = self.molecule_plot.hmbc_graph_plots[node]["hmbc_labels"]

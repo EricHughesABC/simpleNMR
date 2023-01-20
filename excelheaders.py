@@ -157,6 +157,6 @@ excel_orig_df_columns = {
         "Type",
         "Flags",
         "Impurity/Compound",
-        "Annotation"
-    ]
+        "Annotation",
+    ],
 }

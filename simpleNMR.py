@@ -49,6 +49,7 @@ import pandas as pd
 from PIL import Image
 
 import nmrProblem
+
 # from test_excel_simplenmr import TestExcelSimpleNMR
 from qt5_tabs_001 import EditDataFrameDialog
 from moleculePlot import MatplotlibMoleculePlot
@@ -120,7 +121,6 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 
 # print("JAVA_COMMAND = ", JAVA_COMMAND)
-
 
 
 class MoleculePlotCanvas(FigureCanvasQTAgg):
@@ -276,7 +276,7 @@ class MainWidget(QMainWindow):
         self.wcLabel.setText(
             f"Molecule: {self.nmrproblem.moleculeAtomsStr} DBE: {int(self.nmrproblem.dbe)}"
         )
-        
+
         # hbox = QHBoxLayout()
         # hbox.addWidget(self.moleculeCanvas)
         # hbox.addWidget(self.spectraCanvas)
@@ -285,7 +285,6 @@ class MainWidget(QMainWindow):
         # self.centralWidget.show()
 
     def hover_over_specplot(self, event, specplot, molplot):
-
 
         # just return if toolbar is active
 
@@ -321,7 +320,11 @@ class MainWidget(QMainWindow):
             if "H" in lbl:
                 # set the annotation to the peak
                 atom_index = int(lbl[1:])
-                print("atom_index: ", atom_index, self.nmrproblem.h1.loc[atom_index, "ppm"])
+                print(
+                    "atom_index: ",
+                    atom_index,
+                    self.nmrproblem.h1.loc[atom_index, "ppm"],
+                )
                 ppm = self.nmrproblem.h1.loc[atom_index, "ppm"]
                 integral = self.nmrproblem.h1.loc[atom_index, "integral"]
                 jcoupling = self.nmrproblem.h1.loc[atom_index, "jCouplingClass"]
@@ -603,7 +606,7 @@ class MainWidget(QMainWindow):
         self.mol_ind = self.node_pick_ind
 
         # move nodes, edges and labels associated with hmbc network for each carbon atom
-        for n in self.nmrproblem.molecule.nodes:
+        for n in self.nmrproblem.nx_graph_molecule.nodes:
             if n in self.hmbc_graph_plots:
 
                 hmbc_nodes = self.hmbc_graph_plots[n]["hmbc_nodes"]
@@ -823,7 +826,7 @@ class MainWidget(QMainWindow):
         # update edges, nodes and labels
         # update them even if they are not visible so that keep in sync
         # with the moved display
-        for n in self.nmrproblem.molecule.nodes:
+        for n in self.nmrproblem.nx_graph_molecule.nodes:
             hmbc_nodes = self.moleculePlot.hmbc_graph_plots[n]["hmbc_nodes"]
             hmbc_edges = self.moleculePlot.hmbc_graph_plots[n]["hmbc_edges"]
             hmbc_labels = self.moleculePlot.hmbc_graph_plots[n]["hmbc_labels"]
@@ -1069,8 +1072,10 @@ class MainWidget(QMainWindow):
             data_info = nmrProblem.parse_argv([fn, workingdir, fn])
 
             # get method for caculating XY3 data
-            xy3_dlg = XY3dialog(java_available=JAVA_AVAILABLE, 
-                                 sheets_missing=nmrProblem.get_missing_sheets(data_info["excel_fn"]))
+            xy3_dlg = XY3dialog(
+                java_available=JAVA_AVAILABLE,
+                sheets_missing=nmrProblem.get_missing_sheets(data_info["excel_fn"]),
+            )
 
             if xy3_dlg.exec():
                 xy3_calc_method, expts_available = xy3_dlg.get_method()
@@ -1084,21 +1089,32 @@ class MainWidget(QMainWindow):
                 java_available=JAVA_AVAILABLE,
                 xy3_calc_method=xy3_calc_method,
                 java_command=JAVA_COMMAND,
-                expts_available=expts_available
+                expts_available=expts_available,
             )
 
             if nmrproblem.data_complete:
-                define_hsqc_f2integral(nmrproblem)
+                nmrproblem.define_hsqc_f2integral()
                 if (nmrproblem.c13_from_hsqc) or (nmrproblem.h1_df_integral_added):
                     # nmrproblem.df.loc["integral", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
-                    nmrproblem.df.loc["attached protons", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
-                    nmrproblem.df.loc["C13 hyb", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
+                    nmrproblem.df.loc[
+                        "attached protons", nmrproblem.carbonAtoms
+                    ] = nmrproblem.c13.attached_protons.values
+                    nmrproblem.df.loc[
+                        "C13 hyb", nmrproblem.carbonAtoms
+                    ] = nmrproblem.c13.attached_protons.values
                     # do the same for nmrproblem,protonAtoms
-                    nmrproblem.df.loc["integral", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
-                    nmrproblem.df.loc["attached protons", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
-                    nmrproblem.df.loc["C13 hyb", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
+                    nmrproblem.df.loc[
+                        "integral", nmrproblem.protonAtoms
+                    ] = nmrproblem.h1.integral.values
+                    nmrproblem.df.loc[
+                        "attached protons", nmrproblem.protonAtoms
+                    ] = nmrproblem.h1.integral.values
+                    nmrproblem.df.loc[
+                        "C13 hyb", nmrproblem.protonAtoms
+                    ] = nmrproblem.h1.integral.values
                 else:
-                    define_c13_attached_protons(nmrproblem)
+                    nmrproblem.define_hsqc_f2integral()
+                    nmrproblem.define_c13_attached_protons()
 
                 nmrProblem.build_model(nmrproblem)
                 nmrProblem.build_molecule_graph_network(nmrproblem)
@@ -1115,7 +1131,6 @@ class MainWidget(QMainWindow):
         # Logic for creating a new file goes here...
         # self.csideWidget.setText("<b>File > New</b> clicked")
 
- 
     def newFromTopspin(self):
         print("New Topspin")
 
@@ -1135,8 +1150,10 @@ class MainWidget(QMainWindow):
         if fileName:
             workingdir, fn = os.path.split(fileName)
             data_info = nmrProblem.parse_argv([fn, workingdir, fn])
-            xy3_dlg = XY3dialog(java_available=JAVA_AVAILABLE, 
-                                  sheets_missing=nmrProblem.get_missing_sheets(data_info["excel_fn"]))
+            xy3_dlg = XY3dialog(
+                java_available=JAVA_AVAILABLE,
+                sheets_missing=nmrProblem.get_missing_sheets(data_info["excel_fn"]),
+            )
             if xy3_dlg.exec():
                 xy3_calc_method, expts_available = xy3_dlg.get_method()
                 # add "molecule" to expts_available
@@ -1144,28 +1161,39 @@ class MainWidget(QMainWindow):
 
                 print("line 1143: nmrproblem")
                 nmrproblem = nmrProblem.NMRproblem(
-                # nmrproblem = TestExcelSimpleNMR(
+                    # nmrproblem = TestExcelSimpleNMR(
                     data_info,
                     java_available=JAVA_AVAILABLE,
                     xy3_calc_method=xy3_calc_method,
                     java_command=JAVA_COMMAND,
-                    expts_available=expts_available
+                    expts_available=expts_available,
                 )
 
             if nmrproblem.data_complete:
 
-                define_hsqc_f2integral(nmrproblem)
+                nmrproblem.define_hsqc_f2integral()
                 if (nmrproblem.c13_from_hsqc) or (nmrproblem.h1_df_integral_added):
                     # nmrproblem.df.loc["integral", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
-                    nmrproblem.df.loc["attached protons", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
-                    nmrproblem.df.loc["C13 hyb", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
+                    nmrproblem.df.loc[
+                        "attached protons", nmrproblem.carbonAtoms
+                    ] = nmrproblem.c13.attached_protons.values
+                    nmrproblem.df.loc[
+                        "C13 hyb", nmrproblem.carbonAtoms
+                    ] = nmrproblem.c13.attached_protons.values
                     # do the same for nmrproblem,protonAtoms
-                    nmrproblem.df.loc["integral", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
-                    nmrproblem.df.loc["attached protons", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
-                    nmrproblem.df.loc["C13 hyb", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
+                    nmrproblem.df.loc[
+                        "integral", nmrproblem.protonAtoms
+                    ] = nmrproblem.h1.integral.values
+                    nmrproblem.df.loc[
+                        "attached protons", nmrproblem.protonAtoms
+                    ] = nmrproblem.h1.integral.values
+                    nmrproblem.df.loc[
+                        "C13 hyb", nmrproblem.protonAtoms
+                    ] = nmrproblem.h1.integral.values
                 else:
-                    define_c13_attached_protons(nmrproblem)
-                    
+                    nmrproblem.define_hsqc_f2integral()
+                    nmrproblem.define_c13_attached_protons()
+
                 nmrProblem.build_model(nmrproblem)
                 nmrProblem.build_molecule_graph_network(nmrproblem)
                 # nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
@@ -1178,7 +1206,7 @@ class MainWidget(QMainWindow):
         # self.centralWidget.setText("<b>File > Open...</b> clicked")
 
     def saveFile(self):
-        for n in self.nmrproblem.molecule.nodes:
+        for n in self.nmrproblem.nx_graph_molecule.nodes:
             self.nmrproblem.xy3[n] = self.moleculePlot.hmbc_graph_plots[n][
                 "hmbc_nodes"
             ].get_offsets()[0]
@@ -1389,29 +1417,32 @@ class MainWidget(QMainWindow):
         self.old_node = False
 
 
-def define_hsqc_f2integral(nmrproblem):
+# def define_hsqc_f2integral(nmrproblem):
 
-    h1 = nmrproblem.h1
-    hsqc = nmrproblem.hsqc
+#     h1 = nmrproblem.h1
+#     hsqc = nmrproblem.hsqc
 
-    for i in h1.index:
-        if i in hsqc.index:
-            hsqc.loc[i, "f2_integral"] = int(
-                np.round(h1.loc[hsqc.loc[i, "f2_i"], "integral"])
-            )
+#     if "f2_integral" not in hsqc.columns:
+#         hsqc["f2_integral"] = 0
+
+#     for i in h1.index:
+#         if i in hsqc.index:
+#             hsqc.loc[i, "f2_integral"] = int(
+#                 np.round(h1.loc[hsqc.loc[i, "f2_i"], "integral"])
+#             )
 
 
-def define_c13_attached_protons(nmrproblem):
-    c13 = nmrproblem.c13
-    hsqc = nmrproblem.hsqc
+# def define_c13_attached_protons(nmrproblem):
+#     c13 = nmrproblem.c13
+#     hsqc = nmrproblem.hsqc
 
-    c13["attached_protons"] = 0
+#     c13["attached_protons"] = 0
 
-    for i in c13.ppm.index:
-        dddf = hsqc[hsqc.f1_ppm == c13.loc[i, "ppm"]]
+#     for i in c13.ppm.index:
+#         dddf = hsqc[hsqc.f1_ppm == c13.loc[i, "ppm"]]
 
-        if dddf.shape[0]:
-            c13.loc[i, "attached_protons"] = int(dddf.f2_integral.sum())
+#         if dddf.shape[0]:
+#             c13.loc[i, "attached_protons"] = int(dddf.f2_integral.sum())
 
 
 if __name__ == "__main__":
@@ -1420,7 +1451,7 @@ if __name__ == "__main__":
 
     # set current working directory to the directory of this file
     # os.chdir(os.path.dirname(os.path.realpath(__file__)))
-    nnumtimes=1
+    nnumtimes = 1
     if platform.system() == "Windows":
         JAVA_AVAILABLE = True
         # test if local windows ins installed
@@ -1430,7 +1461,7 @@ if __name__ == "__main__":
             JAVA_COMMAND = '"jre\\javawindows\\bin\\java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"'
             print("\nWINDOWS Local JAVA is available\n")
             print("\nnumber of times", nnumtimes, "\n")
-            nnumtimes=nnumtimes+1
+            nnumtimes = nnumtimes + 1
         else:
             JAVA_AVAILABLE = False
             print("JAVA is not available")
@@ -1453,7 +1484,6 @@ if __name__ == "__main__":
             JAVA_AVAILABLE = False
             print("JAVA is not available")
 
-
     print("JAVA_COMMAND = ", JAVA_COMMAND)
 
     app = QApplication(sys.argv)
@@ -1464,23 +1494,25 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
 
         data_info = nmrProblem.parse_argv()
-        xy3_dlg = XY3dialog(java_available=JAVA_AVAILABLE, 
-                            sheets_missing=nmrProblem.get_missing_sheets(data_info["excel_fn"]))
+        xy3_dlg = XY3dialog(
+            java_available=JAVA_AVAILABLE,
+            sheets_missing=nmrProblem.get_missing_sheets(data_info["excel_fn"]),
+        )
 
         if xy3_dlg.exec_():
             xy3_calc_method_str, expts_available = xy3_dlg.get_method()
             # add "molecule" to the list of available experiments
             expts_available.append("molecule")
 
-        # data_info = nmrProblem.parse_argv()
+            # data_info = nmrProblem.parse_argv()
             print("line 1430: nmrproblem")
             nmrproblem = nmrProblem.NMRproblem(
-            # nmrproblem = TestExcelSimpleNMR(
+                # nmrproblem = TestExcelSimpleNMR(
                 data_info,
                 java_available=JAVA_AVAILABLE,
                 xy3_calc_method=xy3_calc_method_str,
                 java_command=JAVA_COMMAND,
-                expts_available=expts_available
+                expts_available=expts_available,
             )
 
         else:
@@ -1488,38 +1520,48 @@ if __name__ == "__main__":
             data_info = nmrProblem.parse_argv(my_argv=[""])
             print("line 1441: nmrproblem")
             nmrproblem = nmrProblem.NMRproblem(
-            # nmrproblem = TestExcelSimpleNMR(
+                # nmrproblem = TestExcelSimpleNMR(
                 data_info,
                 java_available=JAVA_AVAILABLE,
                 xy3_calc_method=xy3_calc_method_str,
                 java_command=JAVA_COMMAND,
-                expts_available=[]
+                expts_available=[],
             )
 
     else:
         data_info = nmrProblem.parse_argv()
         print("line 1441: nmrproblem")
         nmrproblem = nmrProblem.NMRproblem(
-        # nmrproblem = TestExcelSimpleNMR(
+            # nmrproblem = TestExcelSimpleNMR(
             data_info,
             java_available=JAVA_AVAILABLE,
             xy3_calc_method=xy3_calc_method_str,
             java_command=JAVA_COMMAND,
-            expts_available=[]
+            expts_available=[],
         )
-
 
     if nmrproblem.data_complete:
         if (nmrproblem.c13_from_hsqc) or (nmrproblem.h1_df_integral_added):
             # nmrproblem.df.loc["integral", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
-            nmrproblem.df.loc["attached protons", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
-            nmrproblem.df.loc["C13 hyb", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
+            nmrproblem.df.loc[
+                "attached protons", nmrproblem.carbonAtoms
+            ] = nmrproblem.c13.attached_protons.values
+            nmrproblem.df.loc[
+                "C13 hyb", nmrproblem.carbonAtoms
+            ] = nmrproblem.c13.attached_protons.values
             # do the same for nmrproblem,protonAtoms
-            nmrproblem.df.loc["integral", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
-            nmrproblem.df.loc["attached protons", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
-            nmrproblem.df.loc["C13 hyb", nmrproblem.protonAtoms] = nmrproblem.h1.integral.values
+            nmrproblem.df.loc[
+                "integral", nmrproblem.protonAtoms
+            ] = nmrproblem.h1.integral.values
+            nmrproblem.df.loc[
+                "attached protons", nmrproblem.protonAtoms
+            ] = nmrproblem.h1.integral.values
+            nmrproblem.df.loc[
+                "C13 hyb", nmrproblem.protonAtoms
+            ] = nmrproblem.h1.integral.values
         else:
-            define_c13_attached_protons(nmrproblem)
+            nmrproblem.define_hsqc_f2integral()
+            nmrproblem.define_c13_attached_protons()
 
         nmrProblem.build_model(nmrproblem)
         nmrProblem.build_molecule_graph_network(nmrproblem)
@@ -1529,7 +1571,6 @@ if __name__ == "__main__":
         print("xy3:", nmrproblem.xy3)
         # save dataframes to json
         nmrproblem.save_dataframes_in_nmrproblem_to_json()
-
 
     ex = MainWidget(nmrproblem)
 
