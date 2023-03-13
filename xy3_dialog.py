@@ -84,8 +84,14 @@ class XY3dialog(QDialog):
         # Display warning if HSQC is one of the missing sheets
         if "HSQC" in self.sheets_missing:
             self.checkboxes["HSQC"].setText(
-                "WARNING: HSQC is missing! Program requires HSQC."
+                "WARNING: HSQC data is missing! Program requires HSQC data to run."
             )
+            # set the HSQC checkbox text to red
+            self.checkboxes["HSQC"].setStyleSheet("color: red")
+
+
+            # set the okay button to disabled
+            self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
 
         # do not allow editing of HSQC, COSY and HMBC by default
         self.checkboxes["HSQC"].setEnabled(False)

@@ -84,6 +84,9 @@ WINDOWS_OS = False
 LINUX_OS = False
 MAC_OS = False
 
+global XYDIM
+XYDIM = 800
+
 # print("platform.system", platform.system())
 
 # # set current working directory to the directory of this file
@@ -1081,6 +1084,9 @@ class MainWidget(QMainWindow):
                 xy3_calc_method, expts_available = xy3_dlg.get_method()
                 # add "molecule" to expts_available
                 expts_available.append("molecule")
+
+            else:
+                return
             # Create new problem
             # nmrproblem = TestExcelSimpleNMR(
             print("line 1080: nmrproblem")
@@ -1168,6 +1174,8 @@ class MainWidget(QMainWindow):
                     java_command=JAVA_COMMAND,
                     expts_available=expts_available,
                 )
+            else:
+                return
 
             if nmrproblem.data_complete:
 
@@ -1321,7 +1329,7 @@ class MainWidget(QMainWindow):
         self.nmrproblem.smiles = smilesText
 
         molecule = Chem.MolFromSmiles(smilesText)
-        Draw.MolToFile(molecule, "molecule.png", size=(800, 800))
+        Draw.MolToFile(molecule, "molecule.png", size=(XYDIM, XYDIM))
         # self.nmrproblem.png = Image.open("molecule.png").transpose(
         #     PIL.Image.FLIP_LEFT_RIGHT
         # )

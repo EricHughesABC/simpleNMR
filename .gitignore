@@ -1,4 +1,4 @@
-# Byte-compiled / optimized / DLL files
+# Byte-compiled / optimized / DLL filest
 __pycache__/
 *.py[cod]
 *$py.class
@@ -12,14 +12,18 @@ __pycache__/
 # molecule png file
 molecule.png
 
+# specific bat files
+cp_to_dropbox.bat
+
 # python test files
-test*.py
+test*.*
 
 # Development files notebooks
 develop/
 
 # test example problem files
 test_exampleproblems/
+test_simpleNMR_D3/
 
 # png, mol, mdl, smi and csv files in toplevel directory
 *.png

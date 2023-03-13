@@ -42,6 +42,8 @@ import nmrmol
 
 global JAVA_AVAILABLE
 global JAVA_COMMAND
+global XYDIM
+XYDIM = 800
 
 # new_dataframes = {}
 
@@ -50,20 +52,28 @@ def get_missing_sheets(excel_fname: str) -> set:
 
     # read in the excel file into a pandas dataframe
 
-    excelsheets = pd.read_excel(excel_fname, sheet_name=None, index_col=0)
-    # create a set of sheets keys that  are missing
-    missing_sheets = set(excel_orig_df_columns.keys()) - set(excelsheets.keys())
+    missing_sheets = set()
 
-    # determine if sheets present are empty
-    empty_sheets = {key for key in excelsheets.keys() if excelsheets[key].empty}
+    try:
+        excelsheets = pd.read_excel(excel_fname, sheet_name=None, index_col=0)
+        # create a set of sheets keys that  are missing
+        missing_sheets = set(excel_orig_df_columns.keys()) - set(excelsheets.keys())
 
-    # return the union of the two sets
-    missing_sheets = missing_sheets.union(empty_sheets)
+        # determine if sheets present are empty
+        empty_sheets = {key for key in excelsheets.keys() if excelsheets[key].empty}
 
-    # remove the sheets that start with the name sheet
-    missing_sheets = {
-        sheet for sheet in missing_sheets if not sheet.lower().startswith("sheet")
-    }
+        # return the union of the two sets
+        missing_sheets = missing_sheets.union(empty_sheets)
+
+        # remove the sheets that start with the name sheet
+        missing_sheets = {
+            sheet for sheet in missing_sheets if not sheet.lower().startswith("sheet")
+        }
+
+    except PermissionError:
+        print("Permission Error: Please close the excel file and try again")
+    except FileNotFoundError:
+        print("File Not Found Error: Please check the file name and try again")
 
     return missing_sheets
 
@@ -235,6 +245,18 @@ def parse_argv(my_argv=None, qtstarted=True):
     }
 
 
+# TODO Rename this here and in `parse_argv`
+def _extracted_from_parse_argv_(data_directory):
+    msg_box = QMessageBox()
+    msg_box.setIcon(QMessageBox.Information)
+    msg_box.setText(
+        f"No excel file found in data directory\n{data_directory}"
+    )
+    msg_box.setStandardButtons(QMessageBox.Ok)
+    msg_box.exec()
+    msg_box.setWindowTitle("Excel File Not Found")
+
+
 def read_smiles_file(problemdata_info: dict) -> str:
     """Reads the smiles file and returns the smiles string
 
@@ -274,10 +296,7 @@ def create_png_from_smiles(smiles_str: str) -> PIL.Image.Image:
 
     rdkit_molecule.Compute2DCoords()
 
-    # Draw.MolToFile(molecule, "molecule.png")
-    # png = Image.open("molecule.png")
-    png = Draw.MolToImage(rdkit_molecule, size=(800, 800))
-    return png
+    return Draw.MolToImage(rdkit_molecule, size=(XYDIM, XYDIM))
 
 
 def create_rdkit_molecule_from_smiles(smiles_str: str) -> nmrmol.NMRmol:
@@ -296,7 +315,7 @@ def create_rdkit_molecule_from_smiles(smiles_str: str) -> nmrmol.NMRmol:
 
     rdkit_molecule.Compute2DCoords()
 
-    d2d = Draw.rdMolDraw2D.MolDraw2DSVG(800, 800)
+    d2d = Draw.rdMolDraw2D.MolDraw2DSVG(XYDIM, XYDIM)
     d2d.DrawMolecule(rdkit_molecule)
     d2d.FinishDrawing()
 
@@ -304,8 +323,8 @@ def create_rdkit_molecule_from_smiles(smiles_str: str) -> nmrmol.NMRmol:
         idx = atom.GetIdx()
         pt = d2d.GetDrawCoords(idx)
 
-        atom.SetDoubleProp("x", pt.x / 800)
-        atom.SetDoubleProp("y", pt.y / 800)
+        atom.SetDoubleProp("x", pt.x / XYDIM)
+        atom.SetDoubleProp("y", pt.y / XYDIM)
 
     print("nmrmol.NMRmol(rdkit_molecule)")
     ret = nmrmol.NMRmol(rdkit_molecule)
@@ -317,7 +336,7 @@ def create_rdkit_molecule_from_smiles(smiles_str: str) -> nmrmol.NMRmol:
 def return_carbon_xy3_positions(rdkit_molecule: Chem.Mol) -> dict:
     """Returns the xy3 positions of the carbon atoms in the molecule"""
 
-    d2d = Draw.rdMolDraw2D.MolDraw2DSVG(800, 800)
+    d2d = Draw.rdMolDraw2D.MolDraw2DSVG(XYDIM, XYDIM)
     d2d.DrawMolecule(rdkit_molecule)
     d2d.FinishDrawing()
     xy3_positions = {}
@@ -325,8 +344,8 @@ def return_carbon_xy3_positions(rdkit_molecule: Chem.Mol) -> dict:
         if atom.GetSymbol() == "C":
             idx = atom.GetIdx()
             point = d2d.GetDrawCoords(idx)
-            xy3_positions["C" + str(idx + 1)] = np.asarray(
-                [point.x / 800.0, point.y / 800.0]
+            xy3_positions[f"C{str(idx + 1)}"] = np.asarray(
+                [point.x / XYDIM, point.y / XYDIM]
             )
     return xy3_positions
 
@@ -672,9 +691,8 @@ def create_hmbc_graph_fragments(nmrproblem, hmbc_edges: dict) -> dict:
             continue
 
         # create hmbc graph for node c and add  xy coodinates
-        hmbc_graphs[c] = {}
-        hmbc_graphs[c]["graph"] = nx.Graph()
-        hmbc_graphs[c]["xy"] = dict((k, xy3[k]) for k in [c] + list(hmbc_edges[c]) if k)
+        hmbc_graphs[c] = {"graph": nx.Graph()}
+        hmbc_graphs[c]["xy"] = {k: xy3[k] for k in [c] + list(hmbc_edges[c]) if k}
         hmbc_graphs[c]["colors"] = []
 
         # add nodes to hmbc graph
@@ -704,6 +722,7 @@ class NMRproblem:
         expts_available=[],
     ):
         """initialize NMR problem class"""
+        self.excelsheets = {}
 
         # set added columns to false
         self.h1_df_numProtons_added = False
@@ -866,10 +885,15 @@ class NMRproblem:
             if self.init_class_from_yml(self.problemDirectory):
                 print("1: init_class_from_yml")
                 self.data_complete = True
-
-            elif self.init_class_from_excel(self.problemDirectory):
+            else:
+                rtn_okay, msg =  self.init_class_from_excel(self.problemDirectory)
                 print("2: init_class_from_excel")
-                self.data_complete = True
+                if rtn_okay:
+                    self.data_complete = True
+                else:
+                    self.data_complete = False
+                    return
+                
 
         else:
             print("loadfromwhere", loadfromwhere)
@@ -881,17 +905,20 @@ class NMRproblem:
                 else:
                     self.data_complete = False
                     print("self.data_complete: ", self.data_complete)
+                    return
             elif loadfromwhere == "xlsx":
 
-                if self.init_class_from_excel(
+                rtn_ok, msg = self.init_class_from_excel(
                     self.problemDirectory, problemdata_info["excel_fn"]
-                ):
+                )
+                if rtn_ok:
                     print("4: init_class_from_excel")
                     self.data_complete = True
                     print("self.data_complete: ", self.data_complete)
                 else:
                     self.data_complete = False
                     print("self.data_complete: ", self.data_complete)
+                    return
 
         self.png = read_png_file(problemdata_info)
         if not isinstance(self.smiles, str):
@@ -901,12 +928,19 @@ class NMRproblem:
             else:
                 self.smiles_defined = False
 
+
+        print("self.smiles_defined: ", self.smiles_defined)
+        print("self.smiles: ", self.smiles)
+
         if isinstance(self.smiles, str):
             self.smiles_defined = True
             self.png = create_png_from_smiles(self.smiles)
             print("\nstart: create_rdkit_molecule_from_smiles\n")
             self.expected_molecule = create_rdkit_molecule_from_smiles(self.smiles)
             print("\nend: create_rdkit_molecule_from_smiles\n")
+
+        else:
+            return
 
         # set xlims of 13C and 1H 1D spectra to +/- 10% of biggest and smallest ppm
         self.min_max_1D_ppm = []
@@ -923,6 +957,9 @@ class NMRproblem:
 
         # check if c13 or h1 created from hsqc and hmbc
         # do this by checking for certain columns in c13 and h1 dataframes
+
+        print("self.c13.columns", self.c13.columns)
+        print("self.c13.shape", self.c13.shape)
         if "CH3CH" in self.c13.columns:
             self.c13_from_hsqc = True
         else:
@@ -986,7 +1023,7 @@ class NMRproblem:
         # if missing integral or numprotons in self.h1 then try to
         # calculate them from hsqc and molprops_df information
 
-        if len(self.expts_available):
+        if self.expts_available: # list is not empty
             if self.h1_df_integral_added or self.h1_df_numProtons_added or ("H1_1D" not in self.expts_available):
                 self.hsqc = self.add_CH2_column_to_hsqc(self.hsqc)
                 self.hsqc = self.add_CHCH3_column_to_hsqc(self.hsqc)
@@ -1047,6 +1084,9 @@ class NMRproblem:
         return c13
 
     def c13_update_numprotons_with_ch2_ch3ch(self, c13):
+
+        print("c13_update_numprotons_with_ch2_ch3ch c13")
+        print(c13)
 
         # add two to numProtons for CH2
         c13.loc[c13.CH2, "numProtons"] = 2
@@ -1125,6 +1165,11 @@ class NMRproblem:
         dataframes_dict["hsqc"] = self.hsqc.to_dict()
         dataframes_dict["hmbc"] = self.hmbc.to_dict()
         dataframes_dict["cosy"] = self.cosy.to_dict()
+        dataframes_dict["c13_df"] = self.c13_df.to_dict()
+        dataframes_dict["h1_df"] = self.h1_df.to_dict()
+        dataframes_dict["hsqc_df"] = self.hsqc_df.to_dict()
+        dataframes_dict["hmbc_df"] = self.hmbc_df.to_dict()
+        dataframes_dict["cosy_df"] = self.cosy_df.to_dict()
         dataframes_dict[
             "expected_molecule"
         ] = self.expected_molecule.molprops_df.to_dict()
@@ -1504,15 +1549,8 @@ class NMRproblem:
 
     def define_hsqc_f2integral(self):
 
-        print("in define_hsqc_f2integral")
-
-
         h1 = self.h1
         hsqc = self.hsqc
-
-        print("h1\n", h1)
-
-        print("hsqc\n", hsqc)
 
         if "f2_integral" not in hsqc.columns:
             hsqc["f2_integral"] = 0
@@ -1524,15 +1562,9 @@ class NMRproblem:
                     np.round(h1.loc[hsqc.loc[i, "f2_i"], "numProtons"])
                 )
 
-        print("hsqc\n", hsqc)
-
-
     def define_c13_attached_protons(self):
         c13 = self.c13
         hsqc = self.hsqc
-
-        print("in define_c13_attached_protons")
-
 
         c13["attached_protons"] = 0
 
@@ -1541,7 +1573,6 @@ class NMRproblem:
             if dddf.shape[0]:
                 c13.loc[i, "attached_protons"] = int(dddf.f2_integral.sum())
 
-        print(c13)
 
     def find_and_group_CH2s(self, df1):
 
@@ -1674,6 +1705,8 @@ class NMRproblem:
             return False
         except PermissionError:
             # display qt message box  if excel file not found or not readable
+
+            print("PermissionError: Cannot Open\n{}".format(self.excelFiles[0]))
 
             if self.qtstarted:
                 msgBox = QMessageBox()
@@ -1814,7 +1847,7 @@ class NMRproblem:
 
         return self.c13_df
 
-    def init_class_from_excel(self, excelFileNameDirName: str, excel_fn=None) -> bool:
+    def init_class_from_excel(self, excelFileNameDirName: str, excel_fn=None):
         """
         read in class parameters from excel file found in problem directory if found
 
@@ -1826,12 +1859,12 @@ class NMRproblem:
         Returns
         -------
         bool
-            DESCRIPTION. Return True if excel found and processed
+            DESCRIPTION. Return True if excel found and processed and message
 
         """
 
         if not self.load_excel_file(excelFileNameDirName, excel_fn):
-            return False
+            return False, "Excel file not found"
 
         return_error, return_message = self.tidy_up_excel_data()
         if return_error:
@@ -1846,7 +1879,7 @@ class NMRproblem:
                 msg_box.setWindowTitle("Error in Excel file")
             else:
                 print(return_message)
-            return False
+            return False, return_message
 
         # check if excel file contains a molecule definition and a smiles definition if not
         # then output an error message and return False
@@ -1862,7 +1895,7 @@ class NMRproblem:
                 msg_box.setWindowTitle("Error in Excel file")
             else:
                 print("No molecule sheet found in excel file")
-            return False
+            return False, "No molecule sheet found in excel file"
 
         if "smiles" not in self.excelsheets["molecule"].columns:
             if self.qtstarted:
@@ -1876,7 +1909,7 @@ class NMRproblem:
                 msg_box.setWindowTitle("Error in Excel file")
             else:
                 print("No smiles column found in molecule sheet")
-            return False
+            return False, "No smiles column found in molecule sheet"
 
         # check if molecule sheet contains a valid smiles string
         if not isinstance(self.excelsheets["molecule"].smiles.values[0], str):
@@ -1891,7 +1924,7 @@ class NMRproblem:
                 msg_box.setWindowTitle("Error in Excel file")
             else:
                 print("No smiles string found in molecule sheet")
-            return False
+            return False, "No smiles string found in molecule sheet"
         else:
             self.smiles = self.excelsheets["molecule"].smiles.values[0]
             # check if smiles string is valid using rdkit
@@ -1909,7 +1942,7 @@ class NMRproblem:
                     msg_box.setWindowTitle("Error in Excel file")
                 else:
                     print("Invalid smiles string found in molecule sheet")
-                return False
+                return False, "Invalid smiles string found in molecule sheet"
 
         # finally create rdkit molecule from smiles string
         self.expected_molecule = create_rdkit_molecule_from_smiles(self.smiles)
@@ -2035,12 +2068,33 @@ class NMRproblem:
             self.hsqc["signaltype"] = "Compound"
 
         if self.hsqc.empty:
-            print("hsqc is empty")
-            return False
+            if self.qtstarted:
+                # create qt5 warning dialog with return_message
+
+                msg_box = QMessageBox()
+                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setText("hsqc excel sheet is empty")
+                msg_box.setStandardButtons(QMessageBox.Ok)
+                msg_box.exec()
+                msg_box.setWindowTitle("Error in Excel file: hsqc is empty")
+            else:
+                print("hsqc is empty")
+            return False, "hsqc is empty"
             # sys.exit()
 
         if self.c13_df.empty:
-            return False
+            if self.qtstarted:
+                # create qt5 warning dialog with return_message
+
+                msg_box = QMessageBox()
+                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setText("c13 excel sheet is empty")
+                msg_box.setStandardButtons(QMessageBox.Ok)
+                msg_box.exec()
+                msg_box.setWindowTitle("Error in Excel file: c13 is empty")
+            else:
+                print("c13 is empty")
+            return False, "c13 is empty"
         else:
             self.c13 = self.c13_df[self.c13_df.signaltype == "Compound"][["ppm"]].copy()
             if self.c13.empty:
@@ -2048,7 +2102,18 @@ class NMRproblem:
                 self.c13 = self.c13_df[self.c13_df.signaltype == ""][["ppm"]].copy()
                 self.c13["signaltype"] = "Compound"
             if self.c13.empty:
-                return False
+                if self.qtstarted:
+                    # create qt5 warning dialog with return_message
+
+                    msg_box = QMessageBox()
+                    msg_box.setIcon(QMessageBox.Warning)
+                    msg_box.setText("c13 excel sheet is empty")
+                    msg_box.setStandardButtons(QMessageBox.Ok)
+                    msg_box.exec()
+                    msg_box.setWindowTitle("Error in Excel file: c13 is empty")
+                else:
+                    print("c13 is empty")
+                return False, "c13 is empty"
 
             self.c13["numProtons"] = 0
             self.c13["attached_protons"] = 0
@@ -2081,14 +2146,34 @@ class NMRproblem:
                 ].copy()
                 self.h1["signaltype"] = "Compound"
             if self.h1.empty:
-                print("h1 is empty")
-                return False
+                if self.qtstarted:
+                    # create qt5 warning dialog with return_message
+
+                    msg_box = QMessageBox()
+                    msg_box.setIcon(QMessageBox.Warning)
+                    msg_box.setText("h1 excel sheet is empty")
+                    msg_box.setStandardButtons(QMessageBox.Ok)
+                    msg_box.exec()
+                    msg_box.setWindowTitle("Error in Excel file: h1 is empty")
+                else:
+                    print("h1 is empty")
+                return False, "h1 is empty"
         elif not self.h1_df.empty:
             self.h1 = self.h1_df[["ppm"]].copy()
         else:
-            print("No pureshift_df or h1_df")
-            print("Program should not reach this point")
-            return False
+            if self.qtstarted:
+                # create qt5 warning dialog with return_message
+
+                msg_box = QMessageBox()
+                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setText("h1_df or pureshift_df excel sheet is empty")
+                msg_box.setStandardButtons(QMessageBox.Ok)
+                msg_box.exec()
+                msg_box.setWindowTitle("Error in Excel file: h1 is empty")
+            else:
+                print("No pureshift_df or h1_df")
+                print("Program should not reach this point")
+            return False,   "No pureshift_df or h1_df"
 
         # check if integral column was missing from h1_df, if so replace integral values by using hsqc
 
@@ -2375,7 +2460,7 @@ class NMRproblem:
 
         self.update_attachedprotons_c13hyb()
 
-        return True
+        return True, "ok"
 
     def build_xy3(self):
 
@@ -2487,76 +2572,123 @@ class NMRproblem:
 
         mol_df["C"] = df["C"].to_list()
         mol_df["predicted"] = df["mean"].to_list()
+        mol_df["ppm"] =mol_df["predicted"]
         mol_df = mol_df.sort_values(
             by=["predicted"], ignore_index=True, ascending=False
         )
 
+        # self.c13["predicted"] = 0
+        # self.c13["C"] = 0
+
+        # # check if dataframes have the same number of rows
+        # # copy across mol information
+        # if self.c13.shape[0] == mol_df.shape[0]:
+        #     self.c13["predicted"] = mol_df["predicted"].to_list()
+        #     self.c13["C"] = mol_df["idx"].to_list()
+        #     self.c13["x"] = mol_df["x"].to_list()
+        #     self.c13["y"] = mol_df["y"].to_list()
+        # elif self.c13.shape[0] < df.shape[0]:
+        #     # keep only unique rows based on mean ppm
+        #     df_sym = mol_df.drop_duplicates(subset=["predicted"], ignore_index=True)
+        #     if self.c13.shape[0] == df_sym.shape[0]:
+
+        #         self.c13["predicted"] = df_sym["predicted"].to_list()
+        #         self.c13["C"] = df_sym["idx"].to_list()
+        #         self.c13["x"] = df_sym["x"].to_list()
+        #         self.c13["y"] = df_sym["y"].to_list()
+
+        #         mol_df = df_sym
+
+        # self.c13["attached_protons_predicted"] = 0
+        # for numprotons in range(4):
+        #     c13view = self.c13[self.c13.attached_protons == numprotons]
+        #     mol_dfview = mol_df[mol_df.totalNumHs == numprotons].sort_values(
+        #         by=["predicted"], ignore_index=True, ascending=False
+        #     )
+            
+        #     mol_dfview = mol_dfview.drop_duplicates(subset=["predicted"], ignore_index=True)
+
+        #     if c13view.shape[0] == mol_dfview.shape[0]:
+        #         for i1, i2 in zip(c13view.index, mol_dfview.index):
+        #             self.c13.loc[i1, "predicted"] = mol_dfview.loc[i2, "predicted"]
+        #             self.c13.loc[i1, "C"] = mol_dfview.loc[i2, "idx"]
+        #             self.c13.loc[i1, "x"] = mol_dfview.loc[i2, "x"]
+        #             self.c13.loc[i1, "y"] = mol_dfview.loc[i2, "y"]
+        #             self.c13.loc[i1, "attached_protons_predicted"] = mol_dfview.loc[
+        #                 i2, "totalNumHs"
+        #             ]
+        #     else:
+        #         print("shapes not equal")
+
         self.c13["predicted"] = 0
         self.c13["C"] = 0
-
-        # check if dataframes have the same number of rows
-        # copy across mol information
-        if self.c13.shape[0] == mol_df.shape[0]:
-            self.c13["predicted"] = mol_df["predicted"].to_list()
-            self.c13["C"] = mol_df["idx"].to_list()
-            self.c13["x"] = mol_df["x"].to_list()
-            self.c13["y"] = mol_df["y"].to_list()
-        elif self.c13.shape[0] < df.shape[0]:
-            # keep only unique rows based on mean ppm
-            df_sym = mol_df.drop_duplicates(subset=["predicted"], ignore_index=True)
-            if self.c13.shape[0] == df_sym.shape[0]:
-
-                self.c13["predicted"] = df_sym["predicted"].to_list()
-                self.c13["C"] = df_sym["idx"].to_list()
-                self.c13["x"] = df_sym["x"].to_list()
-                self.c13["y"] = df_sym["y"].to_list()
-
-                mol_df = df_sym
-
         self.c13["attached_protons_predicted"] = 0
-        for numprotons in range(4):
-            c13view = self.c13[self.c13.attached_protons == numprotons]
-            mol_dfview = mol_df[mol_df.totalNumHs == numprotons].sort_values(
-                by=["predicted"], ignore_index=True, ascending=False
-            )
+        self.c13["expected_idx"] = np.NaN
+        self.c13["expected_ppm"] = np.NaN
 
-            mol_dfview = mol_dfview.drop_duplicates(subset=["predicted"], ignore_index=True)
+        molsym_df = mol_df.drop_duplicates(subset=['ppm'])
+
+        mol_df.sort_values(by=["ppm"], inplace=True, ascending=False)
+        molsym_df.sort_values(by=["ppm"], inplace=True, ascending=False)
+
+        for numprotons in range(4):
+            c13view = self.c13[self.c13["attached_protons"] == numprotons]
+            mol_dfview = mol_df[mol_df["totalNumHs"] == numprotons]
+            molsym_df_view = molsym_df[molsym_df["totalNumHs"] == numprotons]
 
             if c13view.shape[0] == mol_dfview.shape[0]:
-                for i1, i2 in zip(c13view.index, mol_dfview.index):
-                    self.c13.loc[i1, "predicted"] = mol_dfview.loc[i2, "predicted"]
-                    self.c13.loc[i1, "C"] = mol_dfview.loc[i2, "idx"]
-                    self.c13.loc[i1, "x"] = mol_dfview.loc[i2, "x"]
-                    self.c13.loc[i1, "y"] = mol_dfview.loc[i2, "y"]
-                    self.c13.loc[i1, "attached_protons_predicted"] = mol_dfview.loc[
-                        i2, "totalNumHs"
-                    ]
+                self.c13.loc[c13view.index, "expected_idx"] = mol_dfview.index
+                self.c13.loc[c13view.index, "C"] = mol_dfview.index
+                self.c13.loc[c13view.index, "expected_ppm"] = mol_df.loc[ mol_dfview.index,"ppm"].values
+                self.c13.loc[c13view.index, "predicted"] = mol_df.loc[ mol_dfview.index,"ppm"].values
+                self.c13.loc[c13view.index, "x"] = mol_df.loc[mol_dfview.index, "x"].values
+                self.c13.loc[c13view.index, "y"] = mol_df.loc[mol_dfview.index, "y"].values
+                self.c13.loc[c13view.index, "attached_protons_predicted"] = mol_df.loc[mol_dfview.index, "totalNumHs"].values
+
+            elif c13view.shape[0] == molsym_df_view.shape[0]:
+                self.c13.loc[c13view.index, "expected_idx"] = molsym_df_view.index
+                self.c13.loc[c13view.index, "C"] = molsym_df_view.index
+                self.c13.loc[c13view.index, "expected_ppm"] = molsym_df.loc[molsym_df_view.index, "ppm"].values
+                self.c13.loc[c13view.index, "predicted"] = molsym_df.loc[molsym_df_view.index, "ppm"].values
+                self.c13.loc[c13view.index, "x"] = molsym_df.loc[molsym_df_view.index, "x"].values
+                self.c13.loc[c13view.index, "y"] = molsym_df.loc[molsym_df_view.index, "y"].values
+                self.c13.loc[c13view.index, "attached_protons_predicted"] = molsym_df.loc[molsym_df_view.index, "totalNumHs"].values
+
+            elif c13view.shape[0] < mol_dfview.shape[0]:
+                # attempt to match the rows in c13view to the rows in mol_dfview based on closest ppm
+
+                # first make a copy of the mol_dfview index column and the ppm column into separate lists
+                mol_dfview_idx = mol_dfview.index.to_list()
+                mol_dfview_ppm = mol_dfview["ppm"].to_list()
+
+                # now loop through the c13view rows and find the closest ppm in mol_dfview
+                for i in c13view.index:
+                    # find the closest ppm in mol_dfview
+                    min_idx = mol_dfview_ppm.index(min(mol_dfview_ppm, key=lambda x: abs(x - c13view.loc[i, "ppm"])))
+
+                    # assign the values from mol_dfview to c13view
+                    self.c13.loc[i, "expected_idx"] = mol_dfview_idx[min_idx]
+                    self.c13.loc[i, "C"] = mol_dfview_idx[min_idx]
+                    self.c13.loc[i, "expected_ppm"] = mol_dfview.loc[mol_dfview_idx[min_idx], "ppm"]
+                    self.c13.loc[i, "predicted"] = mol_dfview.loc[mol_dfview_idx[min_idx], "ppm"]
+                    self.c13.loc[i, "x"] = mol_dfview.loc[mol_dfview_idx[min_idx], "x"]
+                    self.c13.loc[i, "y"] = mol_dfview.loc[mol_dfview_idx[min_idx], "y"]
+                    self.c13.loc[i, "attached_protons_predicted"] = mol_dfview.loc[mol_dfview_idx[min_idx], "totalNumHs"]
+
+                    # remove the row from mol_dfview so it can't be used again
+                    mol_dfview_idx.pop(min_idx)
+                    mol_dfview_ppm.pop(min_idx)
+
+                    # update the mol_dfview based on the new mol_dfview_idx
+                    mol_dfview = mol_dfview.loc[mol_dfview_idx]
+                    
+
+
+
             else:
-                print("shapes not equal")
-                # continue only if numprotons == 0
-                # if numprotons == 0:
-                # print("numprotons", numprotons)
-                # print("c13view", c13view)
-                # print("mol_dfview", mol_dfview)
-                # # loop through c13view and find the closest match in mol_dfview
-                # for i1 in c13view.index:
-                #     # print(i1)
-                #     # print(self.c13.loc[i1, 'predicted'][])
-                #     # print(mol_dfview['predicted'])
-                #     # print(mol_dfview['predicted'].sub(self.c13.loc[i1, 'predicted']).abs().idxmin())
-                #     i2 = mol_dfview['predicted'].sub(c13view.loc[i1, 'ppm']).abs().idxmin()
+                print("problem with registration of c13 with expected molecule")
 
-                #     self.c13.loc[i1, 'predicted'] = mol_dfview.loc[i2, 'predicted']
-                #     self.c13.loc[i1, 'C'] = mol_dfview.loc[i2, 'idx']
-                #     self.c13.loc[i1, 'x'] = mol_dfview.loc[i2, 'x']
-                #     self.c13.loc[i1, 'y'] = mol_dfview.loc[i2, 'y']
-                #     self.c13.loc[i1, 'attached_protons_predicted'] = mol_dfview.loc[i2,"totalNumHs"]
-
-                #     print(i1, self.c13.loc[i1, ['ppm', 'x', 'y', 'attached_protons_predicted']])
-                #     print( i2, mol_dfview.loc[i2, ['predicted', 'x', 'y']])
-                #     print("\n")
-                #     # remove closest match from mol_dfview
-                #     mol_dfview = mol_dfview.drop(i2)
+        print("c13\n", self.c13[["ppm", "x", "y", "C", "expected_ppm", "expected_idx"]])
 
         # initiate xy3
 

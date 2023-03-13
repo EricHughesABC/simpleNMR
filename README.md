@@ -29,7 +29,7 @@ Sometimes the java code has been compiled for a later version and will not run. 
  
  An executable of the program can be be created using pyinstaller for windows or macos.  A .spec file for creating a single executable has been created. The command to create an executable is 
  
- ```pyinstaller simpleNMR.py simpleNMR_with_includes-F.spec```
+ ```pyinstaller simpleNMR_with_includes-F.spec```
  
  Before running the command it is best practise to copy the following files over to a new directory and run the aboove command from there.
  
@@ -84,25 +84,4 @@ There are a number of example problems in the **exampleProblems** folder and the
 
 ```Guide to NMR Spectral Interpretation A Problem-Based Approach to Determining the Structures of Small Organic Molecules. Antonio Randazzo, 2018, Loghia Publishing. ISBN: 978-88-95122-40-3```
 
- - ch9_013
- - ch9_016
- - ch9_021
- - ch9_025
- - ch9_041
- - ch9_048
- - ch9_053
- - ch9_069
- - ch9_092
- - ch9_102
  
- - ethyleneDiamine
- - glycidyl_methacrylate
- - Rotenone
- - nowick
- - Problem74
- - Problem79
- - Problem90
- - Problem90a
- 
-
-
