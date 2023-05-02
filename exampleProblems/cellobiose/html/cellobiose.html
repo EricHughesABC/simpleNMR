@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#customers {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgb(78, 75, 75);
+  color: white;
+}
+
+.flex-container {
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  background-color: #f1f1f1;
+  flex-wrap: wrap;
+}
+
+.flex-container > div {
+  background-color: white;
+  margin: 10px;
+  padding: 20px;
+  font-size: 30px;
+}
+</style>
+</head>
+<body>
+
+
+
+<div class="flex-container">
+  <div style="flex-grow: 1">
+    <h3>Predicted carbon</h3>
+    <img src="predicted_carbon_shifts.png" alt="expected carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h3>Experimental carbon</h3>
+    <img src="carbon_shifts.png" alt="carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h3>Experimental proton</h3>
+    <img src="proton_shifts.png" alt="carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h3>Details</h3>
+    <ul>
+      <li>cellobiose</li>
+      <li>O[C@H]2[C@H](O[C@@H]1O[C@H](CO)[C@@H](O)[C@H](O)[C@H]1O)[C@H](OC(O)[C@@H]2O)CO</li>
+    </ul>
+  </div>
+  <div style="flex-grow: 2"><table border="1" class="dataframe" id="customers">
+  <thead>
+    <tr style="text-align: right;">
+      <th>predicted</th>
+      <th>carbon</th>
+      <th>proton</th>
+      <th>integral</th>
+      <th>J Class</th>
+      <th>J Coupling</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>61.52</td>
+      <td>61.3</td>
+      <td>4.46,4.09</td>
+      <td>1, 1</td>
+      <td>dd, dd</td>
+      <td>[2.13, 12.25], [4.26, 12.26]</td>
+    </tr>
+    <tr>
+      <td>62.49</td>
+      <td>61.5</td>
+      <td>4.37,4.03</td>
+      <td>1, 1</td>
+      <td>dd, dd</td>
+      <td>[4.34, 12.50], [2.33, 12.47]</td>
+    </tr>
+    <tr>
+      <td>70.68</td>
+      <td>67.7</td>
+      <td>5.06</td>
+      <td>1</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>74.63</td>
+      <td>69.3</td>
+      <td>4.99</td>
+      <td>1</td>
+      <td>dd</td>
+      <td>[3.76, 10.34]</td>
+    </tr>
+    <tr>
+      <td>75.02</td>
+      <td>69.3</td>
+      <td>5.42</td>
+      <td>1</td>
+      <td>dd</td>
+      <td>[9.26, 10.35]</td>
+    </tr>
+    <tr>
+      <td>74.93</td>
+      <td>70.7</td>
+      <td>3.97</td>
+      <td>1</td>
+      <td>ddd</td>
+      <td>[2.18, 4.29, 10.10]</td>
+    </tr>
+    <tr>
+      <td>73.46</td>
+      <td>71.6</td>
+      <td>4.92</td>
+      <td>1</td>
+      <td>dd</td>
+      <td>[7.94, 9.37]</td>
+    </tr>
+    <tr>
+      <td>77.24</td>
+      <td>72.0</td>
+      <td>3.65</td>
+      <td>1</td>
+      <td>ddd</td>
+      <td>[2.33, 4.34, 9.98]</td>
+    </tr>
+    <tr>
+      <td>76.07</td>
+      <td>72.9</td>
+      <td>5.13</td>
+      <td>1</td>
+      <td>t</td>
+      <td>[9.38, 9.38]</td>
+    </tr>
+    <tr>
+      <td>79.82</td>
+      <td>76.1</td>
+      <td>3.77</td>
+      <td>1</td>
+      <td>dd</td>
+      <td>[9.27, 10.15]</td>
+    </tr>
+    <tr>
+      <td>96.10</td>
+      <td>88.9</td>
+      <td>6.23</td>
+      <td>1</td>
+      <td>d</td>
+      <td>[3.73]</td>
+    </tr>
+    <tr>
+      <td>103.97</td>
+      <td>100.9</td>
+      <td>4.49</td>
+      <td>1</td>
+      <td>d</td>
+      <td>[7.95]</td>
+    </tr>
+  </tbody>
+</table></div>  
+</div>
+  
+</body>
+</html>
+

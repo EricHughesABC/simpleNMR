@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Highlight Atom on Table Row Hover</title>
+  <style>
+    .highlight {
+      fill: red;
+    }
+
+    .fill-white {
+      fill: #fff;
+    }
+    .fill-black {
+      fill: #000;
+    }
+  </style>
+
+<style>
+    .tableFixHead {
+      overflow-y: auto; /* make the table scrollable if height is more than 200 px  */
+      height: 200px; /* gives an initial height of 200px to the table */
+    }
+    .tableFixHead thead th {
+      position: sticky; /* make the table heads sticky */
+      top: 0px; /* table head will be placed from the top of the table and sticks to it */
+    }
+    table {
+      border-collapse: collapse; /* make the table borders collapse to each other */
+      width: 100%;
+    }
+    th,
+    td {
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+    }
+    th {
+      background: #eee;
+    }
+
+    #summary_table {
+      font-family: Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    #summary_table td, #summary_table th {
+      border: 1px solid #ddd;
+      padding: 8px;
+      font-size: 13px;
+    }
+    
+    #summary_table tr:nth-child(even){background-color: #f2f2f2;}
+    
+    #summary_table tr:hover {background-color: #ddd;}
+    
+    #summary_table th {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      text-align: left;
+      background-color: rgb(78, 75, 75);
+      color: white;
+      font-size: 13px;
+    }
+    
+    .flex-container {
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      background-color: #f1f1f1;
+      flex-wrap: wrap;
+    }
+    
+    .flex-container > div {
+      background-color: white;
+      margin: 5px;
+      padding: 5px;
+      font-size: 13px;
+    }
+    </style>
+</head>
+<body>
+
+  <h3><h3>Filename: {{filename}}  Smiles: {{smiles}}</h3></h3>
+
+  <div class="flex-container">
+    <div style="flex-grow: 1">
+        <h4>Predicted C13</h4>
+        {{svg1}}
+    </div>
+    <div style="flex-grow: 1">
+        <h4>Experimental C13</h4>
+        {{svg2}}
+    </div>
+    <div style="flex-grow: 1">
+      <h4>Experimental H1</h4>
+      {{svg3}}
+    </div>
+    <div class="tableFixHead" style="flex-grow: 1">
+        {{table}}
+        <button id="toggleButton">Toggle Overflow</button>
+    </div>
+  </div>
+
+<script>
+  const toggleButton = document.getElementById('toggleButton');
+  const table = document.querySelector('.tableFixHead');
+
+  toggleButton.addEventListener('click', () => {
+    table.classList.toggle('tableFixHead');
+  });
+
+  const svgs = document.querySelectorAll('svg');
+
+  var atoms = [];
+
+  for (let i = 0; i < svgs.length; i++){
+    const atoms2 = svgs[i].querySelectorAll('path');
+
+    atoms = atoms.concat(atoms2);
+  }
+
+  const rows = document.querySelectorAll('tbody tr');
+
+  function highlightAtom() {
+    const atomNumberCell = this.getElementsByTagName('td')[0];
+    if (atomNumberCell && atomNumberCell.textContent) {
+      const atomNumber = atomNumberCell.textContent;
+      const atomClass = `atom-${atomNumber}`;
+      for (let j=0; j<atoms.length; j++){
+        for (let i = 0; i < atoms[j].length; i++) {
+            if (atoms[j][i].classList.contains(atomClass)) {
+              atoms[j][i].classList.remove('fill-black');
+              atoms[j][i].classList.remove('fill-white');
+              atoms[j][i].classList.add('highlight');
+            } else {
+              if (atoms[j][i].classList.contains('atom')){
+                atoms[j][i].classList.remove('highlight');
+                atoms[j][i].classList.remove('fill-black');
+                atoms[j][i].classList.add('fill-white');
+            }
+            }
+        }
+      }
+    }
+  }
+
+  for (let i = 0; i < rows.length; i++) {
+    rows[i].addEventListener('mouseover', highlightAtom);
+    rows[i].addEventListener('mouseout', () => { 
+      for (let j=0; j<atoms.length; j++){
+        atoms[j].forEach(atom => atom.classList.remove('highlight'));
+        // atoms[j].forEach(atom => atom.classList.remove('fill-white'));
+        atoms[j].forEach(atom => atom.classList.add('fill-black'));
+      }
+    });
+  }
+
+  // function highlightAtom() {
+  //   const atomNumberCell = this.getElementsByTagName('td')[0];
+  //   if (atomNumberCell && atomNumberCell.textContent) {
+  //     const atomNumber = atomNumberCell.textContent;
+  //     const atomClass = `atom-${atomNumber}`;
+  //     for (let j=0; j<atoms.length; j++){
+  //       for (let i = 0; i < atoms[j].length; i++) {
+  //           if (atoms[j][i].classList.contains(atomClass)) {
+  //             atoms[j][i].classList.add('highlight');
+  //           } else {
+  //             atoms[j][i].classList.remove('highlight');
+  //           }
+  //       }
+  //     }
+  //   }
+  // }
+
+  // for (let i = 0; i < rows.length; i++) {
+  //   rows[i].addEventListener('mouseover', highlightAtom);
+  //   rows[i].addEventListener('mouseout', () => { 
+  //     for (let j=0; j<atoms.length; j++){
+  //       atoms[j].forEach(atom => atom.classList.remove('highlight'));
+  //     }
+  //   });
+  // }
+</script>
+</body>
+</html>

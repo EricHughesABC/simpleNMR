@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#customers {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgb(78, 75, 75);
+  color: white;
+}
+
+.flex-container {
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  background-color: #f1f1f1;
+  flex-wrap: wrap;
+}
+
+.flex-container > div {
+  background-color: white;
+  margin: 10px;
+  padding: 20px;
+  font-size: 30px;
+}
+</style>
+</head>
+<body>
+
+
+
+<div class="flex-container">
+  <div style="flex-grow: 1">
+    <h3>Predicted carbon</h3>
+    <img src="predicted_carbon_shifts.png" alt="expected carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h3>Experimental carbon</h3>
+    <img src="carbon_shifts.png" alt="carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h3>Experimental proton</h3>
+    <img src="proton_shifts.png" alt="carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h3>Details</h3>
+    <ul>
+      <li>nowick</li>
+      <li>CC(C)C1COC12CCN(C)C2=O</li>
+    </ul>
+  </div>
+  <div style="flex-grow: 2"><table border="1" class="dataframe" id="customers">
+  <thead>
+    <tr style="text-align: right;">
+      <th>predicted</th>
+      <th>carbon</th>
+      <th>proton</th>
+      <th>integral</th>
+      <th>J Class</th>
+      <th>J Coupling</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>20.29</td>
+      <td>19.2</td>
+      <td>0.89</td>
+      <td>3</td>
+      <td>d</td>
+      <td>[6.69]</td>
+    </tr>
+    <tr>
+      <td>20.29</td>
+      <td>20.7</td>
+      <td>1.03</td>
+      <td>3</td>
+      <td>d</td>
+      <td>[6.76]</td>
+    </tr>
+    <tr>
+      <td>33.46</td>
+      <td>25.1</td>
+      <td>1.48</td>
+      <td>3</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>35.55</td>
+      <td>33.2</td>
+      <td>2.74,2.47</td>
+      <td>1, 1</td>
+      <td>dt, dt</td>
+      <td>[9.78, 9.78, 17.31], [6.30, 6.30, 17.00]</td>
+    </tr>
+    <tr>
+      <td>29.40</td>
+      <td>33.6</td>
+      <td>1.67</td>
+      <td>1</td>
+      <td>dQ</td>
+      <td>[6.45,6.45,6.45,6.45,17.3]</td>
+    </tr>
+    <tr>
+      <td>49.76</td>
+      <td>34.2</td>
+      <td>2.16</td>
+      <td>2</td>
+      <td>dd</td>
+      <td>[6.11, 9.50]</td>
+    </tr>
+    <tr>
+      <td>40.40</td>
+      <td>61.8</td>
+      <td>3.60</td>
+      <td>1</td>
+      <td>dt</td>
+      <td>[6.83, 6.83, 10.07]</td>
+    </tr>
+    <tr>
+      <td>73.28</td>
+      <td>71.1</td>
+      <td>4.15,3.85</td>
+      <td>1, 1</td>
+      <td>t, dd</td>
+      <td>[8.09, 8.09], [6.47, 8.43]</td>
+    </tr>
+    <tr>
+      <td>77.48</td>
+      <td>100.1</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>173.25</td>
+      <td>179.1</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table></div>  
+</div>
+  
+</body>
+</html>
+

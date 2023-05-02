@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    #summary_table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    #summary_table td, #summary_table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    }
+
+    #summary_table tr:nth-child(even){background-color: #f2f2f2;}
+
+    #summary_table tr:hover {background-color: #ddd;}
+
+    #summary_table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: rgb(78, 75, 75);
+    color: white;
+    }
+
+    .flex-container {
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    background-color: #f1f1f1;
+    flex-wrap: wrap;
+    }
+
+    .flex-container > div {
+    background-color: white;
+    margin: 10px;
+    padding: 20px;
+    font-size: 30px;
+    }
+
+    .fill-white {
+      fill: #fff;
+    }
+    .fill-black {
+      fill: #000;
+    }
+</style>
+</head>
+<body>
+
+
+
+<div class="flex-container">
+  <div style="flex-grow: 1">
+    <h3>Predicted carbon</h3>
+    {{results_expected_image_svg}}
+  </div>
+  <div style="flex-grow: 1">
+    <h3>Experimental carbon</h3>
+    <!-- {{results_carbon_image_svg}} -->
+  </div>
+  <div style="flex-grow: 1">
+    <h3>Experimental proton</h3>
+    <!-- {{results_proton_image_svg}} -->
+  </div>
+  <div style="flex-grow: 1">
+    <h3>Details</h3>
+    <ul>
+      <li>{{filename}}</li>
+      <li>{{smiles}}</li>
+    </ul>
+  </div>
+  <div style="flex-grow: 2">{{results_table}}</div>  
+</div>
+
+
+<script>
+  const svgs = document.querySelectorAll('svg');
+  console.log("svgs.length: ", svgs.length);
+
+  var atoms = [];
+
+  for (let i = 0; i < svgs.length; i++){
+    const atoms2 = svgs[i].querySelectorAll('path');
+
+    atoms = atoms.concat(atoms2);
+  }
+  console.log("atoms:", atoms);
+
+  const rows = document.querySelectorAll('tbody tr');
+
+  // function highlightAtom() {
+  //   const atomNumberCell = this.getElementsByTagName('td')[0];
+  //   if (atomNumberCell && atomNumberCell.textContent) {
+  //     const atomNumber = atomNumberCell.textContent;
+  //     const atomClass = `atom-${atomNumber}`;
+  //     for (let j=0; j<atoms.length; j++){
+  //       for (let i = 0; i < atoms[j].length; i++) {
+  //           if (atoms[j][i].classList.contains(atomClass)) {
+  //           atoms[j][i].classList.add('highlight');
+  //           } else {
+  //           atoms[j][i].classList.remove('highlight');
+  //           }
+  //       }
+  //     }
+  //   }
+  // }
+
+  // for (let i = 0; i < rows.length; i++) {
+  //   rows[i].addEventListener('mouseover', highlightAtom);
+  //   rows[i].addEventListener('mouseout', () => { 
+  //     for (let j=0; j<atoms.length; j++){
+  //       atoms[j].forEach(atom => atom.classList.remove('highlight'));
+  //     }
+  //   });
+  // }
+
+  function highlightAtom() {
+    const atomNumberCell = this.getElementsByTagName('td')[0];
+    if (atomNumberCell && atomNumberCell.textContent) {
+      const atomNumber = atomNumberCell.textContent;
+      const atomClass = `atom-${atomNumber}`;
+      for (let j=0; j<atoms.length; j++){
+        for (let i = 0; i < atoms[j].length; i++) {
+            if (atoms[j][i].classList.contains(atomClass)) {
+            atoms[j][i].classList.add('highlight');
+            } else {
+              atoms[j][i].classList.remove('highlight');
+              atoms[j][i].classList.remove('fill-black');
+            atoms[j][i].classList.add('fill-white');
+            }
+        }
+      }
+    }
+  }
+
+  for (let i = 0; i < rows.length; i++) {
+    rows[i].addEventListener('mouseover', highlightAtom);
+    rows[i].addEventListener('mouseout', () => { 
+      for (let j=0; j<atoms.length; j++){
+        atoms[j].forEach(atom => atom.classList.remove('highlight'));
+        atoms[j].forEach(atom => atom.classList.remove('fill-white'));
+        atoms[j].forEach(atom => atom.classList.add('fill-black'));
+      }
+    });
+  }
+  
+  </script>
+  
+</body>
+</html>
+
+

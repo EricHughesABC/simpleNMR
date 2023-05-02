@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#customers {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: DodgerBlue;
+  color: white;
+}
+
+.flex-container {
+  display: flex;
+  background-color: DodgerBlue;
+  flex-wrap: wrap;
+}
+
+.flex-container > div {
+  background-color: #f1f1f1;
+  margin: 10px;
+  padding: 20px;
+  font-size: 30px;
+}
+</style>
+</head>
+<body>
+
+
+
+<div class="flex-container">
+  <div style="flex-grow: 1">
+    <h2>predicted carbon</h2>
+    <img src="predicted_carbon_shifts.png" alt="expected carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h2>experimental carbon</h2>
+    <img src="carbon_shifts.png" alt="carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h2>experimental proton</h2>
+    <img src="proton_shifts.png" alt="carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h2>details</h2>
+    <ul>
+      <li>ch9_049</li>
+      <li>NCCCCC(N)C(=O)O</li>
+    </ul>
+  </div>
+  <div style="flex-grow: 2"><table border="1" class="dataframe" id="customers">
+  <thead>
+    <tr style="text-align: right;">
+      <th>predicted</th>
+      <th>carbon</th>
+      <th>proton</th>
+      <th>integral</th>
+      <th>J Class</th>
+      <th>J Coupling</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>22.67</td>
+      <td>24.0</td>
+      <td>1.48</td>
+      <td>2</td>
+      <td>qd</td>
+      <td>[10,10,10,2]</td>
+    </tr>
+    <tr>
+      <td>29.32</td>
+      <td>29.0</td>
+      <td>1.72</td>
+      <td>2</td>
+      <td>q</td>
+      <td>[8,8,8]</td>
+    </tr>
+    <tr>
+      <td>29.28</td>
+      <td>33.0</td>
+      <td>1.89</td>
+      <td>2</td>
+      <td>dt</td>
+      <td>[7, 1,1]</td>
+    </tr>
+    <tr>
+      <td>40.34</td>
+      <td>42.0</td>
+      <td>3.01</td>
+      <td>2</td>
+      <td>t</td>
+      <td>[8,8]</td>
+    </tr>
+    <tr>
+      <td>55.69</td>
+      <td>57.0</td>
+      <td>3.73</td>
+      <td>1</td>
+      <td>t</td>
+      <td>[8,8]</td>
+    </tr>
+    <tr>
+      <td>174.47</td>
+      <td>185.0</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table></div>  
+</div>
+  
+</body>
+</html>
+

@@ -73,6 +73,8 @@ class XY3dialog(QDialog):
             self.checkboxes[key].setChecked(True)
 
         # disable the boxes where the sheets are missing
+        print("sheets missing: ", self.sheets_missing)
+        
         for key in self.sheets_missing:
             self.checkboxes[key].setEnabled(False)
             self.checkboxes[key].setChecked(False)

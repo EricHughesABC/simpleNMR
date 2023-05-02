@@ -32,6 +32,9 @@ test_simpleNMR_D3/
 *.csv
 *.mdl
 
+# backup python files
+*_bckup.py
+
 # java portable runtime environments
 # jre/
 

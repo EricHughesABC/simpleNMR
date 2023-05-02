@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#customers {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgb(78, 75, 75);
+  color: white;
+}
+
+.flex-container {
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  background-color: #f1f1f1;
+  flex-wrap: wrap;
+}
+
+.flex-container > div {
+  background-color: white;
+  margin: 10px;
+  padding: 20px;
+  font-size: 30px;
+}
+</style>
+</head>
+<body>
+
+
+
+<div class="flex-container">
+  <div style="flex-grow: 1">
+    <h3>Predicted carbon</h3>
+    <img src="predicted_carbon_shifts.png" alt="expected carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h3>Experimental carbon</h3>
+    <img src="carbon_shifts.png" alt="carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h3>Experimental proton</h3>
+    <img src="proton_shifts.png" alt="carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h3>Details</h3>
+    <ul>
+      <li>Camptothecin</li>
+      <li>CC[C@@]1(O)C(=O)OCC2=C1C=C1N(CC3=CC4=CC=CC=C4N=C13)C2=O</li>
+    </ul>
+  </div>
+  <div style="flex-grow: 2"><table border="1" class="dataframe" id="customers">
+  <thead>
+    <tr style="text-align: right;">
+      <th>predicted</th>
+      <th>carbon</th>
+      <th>proton</th>
+      <th>integral</th>
+      <th>J Class</th>
+      <th>J Coupling</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>7.0</td>
+      <td>7.8</td>
+      <td>0.89</td>
+      <td>3</td>
+      <td>t</td>
+      <td>[7.33, 7.33]</td>
+    </tr>
+    <tr>
+      <td>29.8</td>
+      <td>30.3</td>
+      <td>1.88</td>
+      <td>2</td>
+      <td>ddt</td>
+      <td>[7.13, 7.13, 14.07, 17.43]</td>
+    </tr>
+    <tr>
+      <td>51.4</td>
+      <td>50.3</td>
+      <td>5.29</td>
+      <td>2</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>67.8</td>
+      <td>65.3</td>
+      <td>5.44</td>
+      <td>2</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>71.3</td>
+      <td>72.4</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>101.5</td>
+      <td>96.7</td>
+      <td>7.35</td>
+      <td>1</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>122.0</td>
+      <td>119.1</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>129.1</td>
+      <td>127.7</td>
+      <td>7.71</td>
+      <td>1</td>
+      <td>ddd</td>
+      <td>[1.20, 6.77, 8.10]</td>
+    </tr>
+    <tr>
+      <td>129.9</td>
+      <td>128.0</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>129.7</td>
+      <td>128.5</td>
+      <td>8.13</td>
+      <td>1</td>
+      <td>dd</td>
+      <td>[1.42, 8.18]</td>
+    </tr>
+    <tr>
+      <td>129.8</td>
+      <td>129.1</td>
+      <td>8.17</td>
+      <td>1</td>
+      <td>dd</td>
+      <td>[1.02, 8.42]</td>
+    </tr>
+    <tr>
+      <td>130.9</td>
+      <td>129.9</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>131.9</td>
+      <td>130.4</td>
+      <td>7.87</td>
+      <td>1</td>
+      <td>ddd</td>
+      <td>[1.47, 6.84, 8.41]</td>
+    </tr>
+    <tr>
+      <td>133.3</td>
+      <td>131.6</td>
+      <td>8.69</td>
+      <td>1</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>146.2</td>
+      <td>145.5</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>149.6</td>
+      <td>147.9</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>149.2</td>
+      <td>150.0</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>153.9</td>
+      <td>152.6</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>168.3</td>
+      <td>156.8</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>171.9</td>
+      <td>172.5</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table></div>  
+</div>
+  
+</body>
+</html>
+

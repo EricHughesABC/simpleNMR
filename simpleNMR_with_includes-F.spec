@@ -8,8 +8,8 @@ a = Analysis(
     ['simpleNMR.py'],
     pathex=[],
     binaries=[],
-    datas=[('cdk-2.7.1.jar', '.'), ('NewTest.class', '.'), ('predictorc.jar', '.'), ('cstables/*', 'csTables')],
-    hiddenimports=[],
+    datas=[('cdk-2.7.1.jar', '.'), ('NewTest.class', '.'), ('predictorc.jar', '.'), ('cstables/*', 'csTables'), ('html/results_summary_template.html', 'html'), ('html/w3.css', 'html')],
+    hiddenimports=["sklearn.utils._typedefs", "sklearn.neighbors._partition_nodes", "sklearn.utils._weight_vector"],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -20,6 +20,7 @@ a = Analysis(
     noarchive=False,
 )
 a.datas += Tree('jre', prefix='jre')
+a.datas += Tree('html', prefix='html')
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(

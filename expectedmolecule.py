@@ -4,14 +4,16 @@ import platform
 import numpy as np
 import pandas as pd
 
+
 import rdkit
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem import Draw
 import PIL
 
+import java
 
-global XYDIM
+
 XYDIM = 800
 
 # 
@@ -19,31 +21,49 @@ XYDIM = 800
 
 class expectedMolecule:
 
-    if platform.system() == "Darwin":
-        MAC_OS = True
-        WINDOWS_OS = False
-        if not os.system(
-            "jre/amazon-corretto-17.jdk/Contents/Home/bin/java --version"
-        ):
-            JAVA_AVAILABLE = True
-            JAVA_COMMAND = "jre/amazon-corretto-17.jdk/Contents/Home/bin/java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
-        else:
-            JAVA_AVAILABLE = False
 
-    elif platform.system() == "Windows":
-        WINDOWS_OS = True
-        MAC_OS = False
-        # test if local windows ins installed
-        if not os.system('"jre\\javawindows\\bin\\java -version"'):
-            JAVA_AVAILABLE = True
-            WINDOWS_OS = True
-            JAVA_COMMAND = '"jre\\javawindows\\bin\\java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"'
-        else:
-            JAVA_AVAILABLE = False
+
+    # if platform.system() == "Darwin":
+    #     MAC_OS = True
+    #     WINDOWS_OS = False
+    #     if not os.system(
+    #         "jre/amazon-corretto-17.jdk/Contents/Home/bin/java --version"
+    #     ):
+    #         JAVA_AVAILABLE = True
+    #         JAVA_COMMAND = "jre/amazon-corretto-17.jdk/Contents/Home/bin/java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
+    #     else:
+    #         JAVA_AVAILABLE = False
+
+    # elif platform.system() == "Windows":
+    #     WINDOWS_OS = True
+    #     MAC_OS = False
+    #     # test if local windows ins installed
+    #     if not os.system('"jre\\javawindows\\bin\\java -version"'):
+    #         JAVA_AVAILABLE = True
+    #         WINDOWS_OS = True
+    #         JAVA_COMMAND = '"jre\\javawindows\\bin\\java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"'
+    #     else:
+    #         JAVA_AVAILABLE = False
+
+    # print("JAVA_AVAILABLE", JAVA_AVAILABLE)
+    # print("JAVA_COMMAND", JAVA_COMMAND)
 
     def __init__(self, smiles_str):
         self.smiles_str = smiles_str
         self.mol = Chem.MolFromSmiles(smiles_str)
+
+        self.java_available = java.JAVA_AVAILABLE
+        self.java_command = java.JAVA_COMMAND
+
+        # fix coordinates of molecule before creating png
+
+        self.mol = Chem.AddHs(self.mol)
+        AllChem.EmbedMolecule(self.mol, randomSeed=3)
+        self.mol = Chem.RemoveHs(self.mol)
+
+        self.mol.Compute2DCoords()
+
+        self.png = Draw.MolToImage(self.mol, size=(XYDIM, XYDIM))
 
         self.dbe = self.calc_dbe()
         self.elements = self.init_elements_dict()
@@ -75,6 +95,7 @@ class expectedMolecule:
             ],
         )
         self.molprops_df = self.molprops_df.set_index(["idx"])
+        self.molprops_df["idx"] = self.molprops_df.index
 
         # define quaternary carbon atoms column for totalNumHs == 0
         self.molprops_df["quaternary"] = False
@@ -118,8 +139,6 @@ class expectedMolecule:
                 # check if atom is carbon
                 if self.mol.GetAtomWithIdx(atom).GetSymbol() == "C":
                     self.molprops_df.loc[atom, "ring_size"] = len(ring)
-
-        self.png = self.create_png()
 
         self.has_symmetry = len(self.mol.GetSubstructMatches(self.mol, uniquify=False, maxMatches=3)) > 1
         print("has symmetry", self.has_symmetry)
@@ -342,11 +361,15 @@ class expectedMolecule:
         return c13_nmr_shifts
 
     def calc_c13_chemical_shifts_using_nmrshift2D(self) -> pd.DataFrame:
+        print("*****************************************")
+        print("calc_c13_chemical_shifts_using_nmrshift2D")
+        print("*****************************************")
+
 
         with open("mol.mol", "w") as fp:
             fp.write(Chem.MolToMolBlock(self.mol))
 
-        ret = os.system(expectedMolecule.JAVA_COMMAND)
+        ret = os.system(self.java_command)
 
         if ret == 1:
             print("NMRShift2D failed to calculate C13 chemical shifts")
@@ -370,7 +393,7 @@ class expectedMolecule:
 
 
 
-    def create_png(self) -> PIL.Image.Image:
+    def create_png(self):
         """Creates a png image from a smiles string via rdkit"""
         png = None
 
@@ -381,6 +404,21 @@ class expectedMolecule:
         rdkit_molecule.Compute2DCoords()
 
         return Draw.MolToImage(rdkit_molecule, size=(XYDIM, XYDIM))
+    
+
+    # def create_png_from_smiles(smiles_str: str) -> PIL.Image.Image:
+    #     """Creates a png image from a smiles string via rdkit"""
+    #     png = None
+    #     # rdkit_molecule = Chem.MolFromSmiles(smiles_str)
+    #     rdkit_molecule = expectedmolecule.expectedMolecule(smiles_str)
+
+    #     mol2 = Chem.AddHs(rdkit_molecule)
+    #     AllChem.EmbedMolecule(mol2, randomSeed=3)
+    #     rdkit_molecule = Chem.RemoveHs(mol2)
+
+    #     rdkit_molecule.Compute2DCoords()
+
+    #     return Draw.MolToImage(rdkit_molecule, size=(XYDIM, XYDIM))
 
     def calc_carbon_xy_positions_png(self, rdkit_molecule: Chem.Mol) -> list:
         """Returns the xy3 positions of the carbon atoms in the molecule"""
@@ -400,289 +438,26 @@ class expectedMolecule:
                 yyy.append(point.y / XYDIM)
         return idx_list, xxx, yyy
     
-# class NMRmol(rdkit.Chem.rdchem.Mol):
-#     """NMRmol is a subclass of rdkit.Chem.rdchem.Mol"""
+if __name__ == "__main__":
 
-#     def __init__(self, *args, **kwargs):
+    from matplotlib import pyplot as plt
 
-#         """
-#         The default constructor.
-#         Note:
-#             This will be rarely used, as it can only create an empty molecule.
-#         Args:
-#             *args: Arguments to be passed to the rdkit Mol constructor.
-#             **kwargs: Arguments to be passed to the rdkit Mol constructor.
-#         """
-#         super().__init__(*args, **kwargs)
+    mol = expectedMolecule("CC1(C)C[C@@]23[C@@H]4CC(=O)[C@@H]2COC(=O)[C@@H]3CC[C@@H]14")
+    # mol = expectedMolecule("COc1cc(/C=C/C=O)cc(OC)c1O")
+    # mol = expectedMolecule("CO[C@H]1[C@@H](O)[C@@H](C)O[C@H](O[C@@H]2[C@@H](O)[C@@H](O)[C@@H](C)O[C@H]2OC2=CC=CC3=C(O)C4=C5C(OC(=O)C6=C5C(OC4=O)=CC=C6C)=C23)[C@@H]1O")
+    # mol = expectedMolecule("CCCC1CC(N(C1)C)C(=O)NC(C2C(C(C(C(O2)SC)OP(=O)(O)O)O)O)C(C)Cl")
+    # mol = expectedMolecule("CC(=O)OC(C)(C)\C=C\C(=O)C(C)(O)C1C(O)CC2(C)C3CC=C4C(C=C(O)C(=O)C4(C)C)C3(C)C(=O)CC12C")
+    # mol = expectedMolecule("CNC(=O)OC1=CC=C2N(C)C3N(C)CCC3(C)C2=C1")
+    # mol = expectedMolecule("CC1=CC(=CC(=C1C2=CC=CC(=C2)COC3=CC4=C(C=C3)[C@@H](CO4)CC(=O)O)C)OCCCS(=O)(=O)C")
+    # mol = expectedMolecule("c1cc2ccc1CC2")
+    # mol = expectedMolecule("c1cc2cc(c1)CC2")
 
-#         if platform.system() == "Darwin":
-#             self.MAC_OS = True
-#             self.WINDOWS_OS = False
-#             if not os.system(
-#                 "jre/amazon-corretto-17.jdk/Contents/Home/bin/java --version"
-#             ):
-#                 self.JAVA_AVAILABLE = True
-#                 self.JAVA_COMMAND = "jre/amazon-corretto-17.jdk/Contents/Home/bin/java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
-#                 print("MAC Local JAVA is available")
-#             else:
-#                 self.JAVA_AVAILABLE = False
-#                 print("JAVA is not available")
+    plt.imshow(mol.png, aspect="auto", extent=[0, 1, 1, 0],)
+    
+    xxx = mol.molprops_df["x"]
+    yyy = mol.molprops_df["y"]
+    plt.scatter(xxx, yyy, c="red", s=50)
 
-#         elif platform.system() == "Windows":
-#             self.WINDOWS_OS = True
-#             self.MAC_OS = False
-#             # test if local windows ins installed
-#             if not os.system('"jre\\javawindows\\bin\\java -version"'):
-#                 self.JAVA_AVAILABLE = True
-#                 WINDOWS_OS = True
-#                 self.JAVA_COMMAND = '"jre\\javawindows\\bin\\java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"'
-#                 print("WINDOWS Local JAVA is available")
-#             else:
-#                 self.JAVA_AVAILABLE = False
-#                 print("JAVA is not available")
-
-#         self.dbe = self.calc_dbe()
-#         self.elements = self.init_elements_dict()
-#         self.num_carbon_atoms = self.elements.get("C", 0)
-#         self.num_hydrogen_atoms = self.elements.get("H", 0)
-#         self.png = self.create_png()
-#         self.smiles = self.create_smiles()
-#         self.has_symmetry = len(self.GetSubstructMatches(self, uniquify=False, maxMatches=3)) > 1
-
-#         # molprops = [
-#         #     [
-#         #         atom.GetIdx(),
-#         #         atom.GetNumImplicitHs(),
-#         #         atom.GetTotalNumHs(),
-#         #         atom.GetDegree(),
-#         #         atom.GetHybridization(),
-#         #         atom.GetIsAromatic(),
-#         #     ]
-#         #     for atom in self.GetAtoms()
-#         #     if "C" == atom.GetSymbol()
-#         # ]
-        
-#         molprops = [
-#             [
-#                 atom.GetIdx(),
-#                 atom.GetNumImplicitHs(),
-#                 atom.GetTotalNumHs(),
-#                 atom.GetDegree(),
-#                 atom.GetHybridization(),
-#                 atom.GetIsAromatic(),
-#             ]
-#             for atom in self.GetAtoms()
-#             if atom.GetSymbol() == "C"
-#         ]
-
-#         self.molprops_df = pd.DataFrame(
-#             data=molprops,
-#             columns=[
-#                 "idx",
-#                 "implicitHs",
-#                 "totalNumHs",
-#                 "degree",
-#                 "hybridization",
-#                 "aromatic",
-#             ],
-#         )
-#         self.molprops_df = self.molprops_df.set_index(["idx"])
-
-#         print("\nstart calculating c13 chemical shifts\n")
-#         c13_chemical_shifts_df = self.calculated_c13_chemical_shifts()
-#         print("\nfinished calculating c13 chemical shifts\n")
-
-#         # add c13 chemical shifts to molprops_df if available
-#         if isinstance(c13_chemical_shifts_df, pd.DataFrame):
-#             self.molprops_df = self.molprops_df.join(c13_chemical_shifts_df, how="left")
-
-#         self.molprops_df["c13ppm"] = self.molprops_df["mean"]
-
-#         self.molprops_df["CH2"] = False
-#         # set CH2 to True if carbon has 2 protons attached
-#         self.molprops_df.loc[self.molprops_df["totalNumHs"] == 2, "CH2"] = True
-
-#         # define quaternary carbon atoms column for totalNumHs == 0
-#         self.molprops_df["quaternary"] = False
-#         self.molprops_df["CH0"] = False
-#         self.molprops_df.loc[self.molprops_df["totalNumHs"] == 0, "quaternary"] = True
-#         self.molprops_df["CH0"] = self.molprops_df["quaternary"]
-
-
-#         # define CH3 column for totalNumHs == 3
-#         self.molprops_df["CH3"] = False
-#         self.molprops_df.loc[self.molprops_df["totalNumHs"] == 3, "CH3"] = True
-
-#         # define CH1 column for totalNumHs == 1
-#         self.molprops_df["CH1"] = False
-#         self.molprops_df.loc[self.molprops_df["totalNumHs"] == 1, "CH1"] = True
-
-#         # define CH3CH1 column where CH3 or CH1 are True
-#         self.molprops_df["CH3CH1"] = False
-#         self.molprops_df["CH3CH1"] = self.molprops_df["CH3"] | self.molprops_df["CH1"]
-
-#         # calculate number of carbons with protons attached
-#         self.num_carbon_atoms_with_protons = self.molprops_df[
-#             self.molprops_df.totalNumHs > 0
-#         ].shape[0]
-
-#         # calculate number of carbons without protons attached
-#         self.num_quaternary_carbons = self.molprops_df[
-#             self.molprops_df.totalNumHs == 0
-#         ].shape[0]
-
-#         # calculate number of carbon with two protons attached
-#         self.num_ch2_carbon_atoms = self.molprops_df[
-#             self.molprops_df.totalNumHs == 2
-#         ].shape[0]
-
-#         # calculate number of carbon with three protons attached
-#         self.num_ch3_carbon_atoms = self.molprops_df[
-#             self.molprops_df.totalNumHs == 3
-#         ].shape[0]
-
-#         # calculate number of carbon with one proton  attached
-#         self.num_ch_carbon_atoms = self.molprops_df[
-#             self.molprops_df.totalNumHs == 1
-#         ].shape[0]
-
-#     # initialize class from smiles string
-#     @classmethod
-#     def from_smiles(cls, smiles: str):
-
-#         return cls(Chem.MolFromSmiles(smiles))
-
-#     def init_elements_dict(self):
-#         return (
-#             pd.DataFrame(
-#                 [
-#                     [atom.GetIdx(), atom.GetSymbol()]
-#                     for atom in Chem.AddHs(self).GetAtoms()
-#                 ],
-#                 columns=["atom_index", "atom_symbol"],
-#             )["atom_symbol"]
-#             .value_counts()
-#             .to_dict()
-#         )
-
-#     # calculate DBE for molecule
-#     def calc_dbe(self) -> int:
-#         elements = self.init_elements_dict()
-#         if "C" in elements:
-#             dbe_value = elements["C"]
-#         if "N" in elements:
-#             dbe_value += elements["N"] / 2
-#         for e in ["H", "F", "Cl", "Br"]:
-#             if e in elements:
-#                 dbe_value -= elements[e] / 2
-
-#         return dbe_value + 1
-
-#     def return_proton_groups(self) -> dict:
-#         # create pandas dataframe with carbon atom index and number of attached protons
-#         df = pd.DataFrame(
-#             [
-#                 [atom.GetIdx(), atom.GetTotalNumHs()]
-#                 for atom in self.GetAtoms()
-#                 if atom.GetAtomicNum() == 6
-#             ],
-#             columns=["atom_index", "num_hydrogens"],
-#         )
-#         df = df["num_hydrogens"].value_counts().sort_index()
-#         return df.to_dict()
-
-#     # return dictionary of lists key is the number of protons attached to carbon, value is list of carbon atom indices
-#     def proton_groups(self) -> dict:
-#         proton_groups = {
-#             atom.GetTotalNumHs(): []
-#             for atom in self.GetAtoms()
-#             if atom.GetAtomicNum() == 6
-#         }
-#         for atom in self.GetAtoms():
-#             if atom.GetAtomicNum() == 6:
-#                 proton_groups[atom.GetTotalNumHs()].append(atom.GetIdx())
-#         return proton_groups
-
-#     def calculated_c13_chemical_shifts(self) -> pd.DataFrame:
-#         return self.calc_c13_chemical_shifts_using_nmrshift2D()
-
-#     # return dictionary of dictionarys, first key is the number of protons, second key is carbon atom index, value is calculated C13 NMR chemical shift for molecule
-#     def c13_nmr_shifts(self) -> dict:
-#         c13_nmr_shifts = {
-#             k: {i: None for i in v} for k, v in self.proton_groups().items()
-#         }
-#         print("c13_nmr_shifts", c13_nmr_shifts)
-
-#         c13ppm_df = self.calc_c13_chemical_shifts_using_nmrshift2D()
-#         if isinstance(c13ppm_df, pd.DataFrame):
-#             # reset index to atom index
-#             print("c13ppm_df.index", c13ppm_df.index)
-#             print("c13ppm_df", c13ppm_df)
-#             for v in c13_nmr_shifts.values():
-#                 for k2, v2 in v.items():
-#                     # find row in c13ppm_df with atom index k2
-#                     v[k2] = c13ppm_df.loc[k2, "mean"]
-
-#             print("c13_nmr_shifts", c13_nmr_shifts)
-#         return c13_nmr_shifts
-
-#     def calc_c13_chemical_shifts_using_nmrshift2D(self) -> pd.DataFrame:
-
-#         with open("mol.mol", "w") as fp:
-#             fp.write(Chem.MolToMolBlock(self))
-
-#         ret = os.system(self.JAVA_COMMAND)
-
-#         if ret == 1:
-#             print("NMRShift2D failed to calculate C13 chemical shifts")
-#             return False
-#         else:
-#             mol_df = pd.read_csv("mol.csv", index_col=0)
-#             mol_df.index = mol_df.index - 1
-#             return mol_df
-
-#     def num_protons_attached_to_carbons(self) -> int:
-#         return sum(k * v for k, v in self.return_proton_groups().items())
-
-#     def num_proton_groups(self) -> int:
-#         return sum(self.return_proton_groups().values())
-
-#     def aromatic_carbons(self) -> list:
-#         return [atom.GetIdx() for atom in self.GetAtoms() if atom.GetIsAromatic()]
-
-#     # return list idx of carbon atoms in molecule
-#     def carbon_idx(self) -> list:
-#         return [atom.GetIdx() for atom in self.GetAtoms() if atom.GetAtomicNum() == 6]
-
-#     def query_molprops_df(self, column_id: str, value) -> pd.DataFrame:
-#         return self.molprops_df[self.molprops_df[column_id] == value][
-#             ["implicitHs", "degree", "aromatic", "hybridization", "CH2", "c13ppm"]
-#         ]
-
-#     def create_smiles(self) -> str:
-#         """Creates a smiles string from a rdkit molecule"""
-#         return Chem.MolToSmiles(self)
-
-#     def create_png(self) -> PIL.Image.Image:
-#         """Creates a png image from a smiles string via rdkit"""
-#         png = None
-
-
-
-#         mol2 = Chem.AddHs(self)
-#         AllChem.EmbedMolecule(mol2, randomSeed=3)
-#         rdkit_molecule = Chem.RemoveHs(mol2)
-
-#         rdkit_molecule.Compute2DCoords()
-
-#         return Draw.MolToImage(rdkit_molecule, size=(XYDIM, XYDIM))
-
-# if __name__ == "__main__":
-#     mol = NMRmol.from_smiles("CCC2Cc1ccccc1C2=O")
-#     print("mol.c13_nmr_shifts()\n", mol.c13_nmr_shifts())
-#     print("mol.num_carbon_atoms", mol.num_carbon_atoms)
-#     print("mol.num_carbon_atoms_with_protons", mol.num_carbon_atoms_with_protons)
-#     print("mol.num_quaternary_carbons", mol.num_quaternary_carbons)
-#     print("mol.num_ch_carbon_atoms", mol.num_ch_carbon_atoms)
-#     print("mol.num_ch2_carbon_atoms", mol.num_ch2_carbon_atoms)
-#     print("mol.num_ch3_carbon_atoms", mol.num_ch3_carbon_atoms)
+    plt.xlim(-0.1, 1.1)
+    plt.ylim(1.1, -0.1)
+    plt.show()

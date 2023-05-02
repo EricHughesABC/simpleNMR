@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      /* Define a CSS class for highlighting the SVG rectangle */
+      .highlight {
+        fill: yellow;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <th>Column 1</th>
+          <th>Column 2</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row1">
+          <td>Row 1, Column 1</td>
+          <td>Row 1, Column 2</td>
+        </tr>
+        <tr class="row2">
+          <td>Row 2, Column 1</td>
+          <td>Row 2, Column 2</td>
+        </tr>
+        <tr class="row3">
+          <td>Row 3, Column 1</td>
+          <td>Row 3, Column 2</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <svg width="300" height="200">
+      <rect class="row1" x="50" y="50" width="100" height="50" fill="blue" />
+      <rect class="row2" x="150" y="100" width="100" height="50" fill="green" />
+      <rect class="row3" x="250" y="150" width="100" height="50" fill="red" />
+    </svg>
+
+    <script>
+      function highlightSvgOnHover(tableRowSelector, svgSelector) {
+        const tableRows = document.querySelectorAll(tableRowSelector);
+        const svgElement = document.querySelector(svgSelector);
+
+        // Get the original dimensions of the SVG element and its children
+        const originalWidth = svgElement.getAttribute("width");
+        const originalHeight = svgElement.getAttribute("height");
+        const originalRectWidth = svgElement.querySelector("rect").getAttribute("width");
+        const originalRectHeight = svgElement.querySelector("rect").getAttribute("height");
+
+        // Add event listeners to each table row
+        tableRows.forEach((row) => {
+          const rowClass = row.getAttribute("class");
+          const svgRect = svgElement.querySelector(`.${rowClass}`);
+
+          row.addEventListener("mouseenter", () => {
+            svgRect.classList.add("highlight");
+            svgRect.setAttribute("width", originalRectWidth * 2);
+            svgRect.setAttribute("height", originalRectHeight * 2);
+            svgElement.setAttribute("width", originalWidth * 2);
+            svgElement.setAttribute("height", originalHeight * 2);
+          });
+
+          row.addEventListener("mouseleave", () => {
+            svgRect.classList.remove("highlight");
+            svgRect.setAttribute("width", originalRectWidth);
+            svgRect.setAttribute("height", originalRectHeight);
+            svgElement.setAttribute("width", originalWidth);
+            svgElement.setAttribute("height", originalHeight);
+          });
+        });
+      }
+
+      highlightSvgOnHover(".row", "svg");
+    </script>
+  </body>
+</html>

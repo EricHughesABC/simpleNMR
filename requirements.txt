@@ -10,3 +10,4 @@ PyQt5
 PyYAML
 scipy
 openpyxl
+cairosvg

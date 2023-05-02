@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#customers {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: DodgerBlue;
+  color: white;
+}
+
+.flex-container {
+  display: flex;
+  background-color: DodgerBlue;
+  flex-wrap: wrap;
+}
+
+.flex-container > div {
+  background-color: #f1f1f1;
+  margin: 10px;
+  padding: 20px;
+  font-size: 30px;
+}
+</style>
+</head>
+<body>
+
+
+
+<div class="flex-container">
+  <div style="flex-grow: 1">
+    <h2>predicted carbon</h2>
+    <img src="expected_carbon_shifts.png" alt="expected carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h2>experimental carbon</h2>
+    <img src="carbon_shifts.png" alt="carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h2>experimental proton</h2>
+    <img src="proton_shifts.png" alt="carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h2>details</h2>
+    <ul>
+      <li>filename</li>
+      <li>CCCCc2ccc(S(=O)(=O)CCOc1ccccc1)cc2</li>
+    </ul>
+  </div>
+  <div style="flex-grow: 2"><table border="1" class="dataframe" id="customers">
+  <thead>
+    <tr style="text-align: right;">
+      <th>predicted</th>
+      <th>carbon</th>
+      <th>proton</th>
+      <th>predicted integral</th>
+      <th>integral</th>
+      <th>J Class</th>
+      <th>J Coupling</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>13.90</td>
+      <td>13.9</td>
+      <td>0.93</td>
+      <td></td>
+      <td>3</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>22.36</td>
+      <td>22.2</td>
+      <td>1.36</td>
+      <td></td>
+      <td>2</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>33.50</td>
+      <td>33.2</td>
+      <td>1.62</td>
+      <td></td>
+      <td>2</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>35.31</td>
+      <td>35.6</td>
+      <td>2.69</td>
+      <td></td>
+      <td>2</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>51.60</td>
+      <td>55.8</td>
+      <td>3.57</td>
+      <td></td>
+      <td>2</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>67.92</td>
+      <td>61.4</td>
+      <td>4.33</td>
+      <td></td>
+      <td>2</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>114.69</td>
+      <td>114.3</td>
+      <td>6.64</td>
+      <td></td>
+      <td>1</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>121.18</td>
+      <td>121.5</td>
+      <td>6.93</td>
+      <td></td>
+      <td>1</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>128.37</td>
+      <td>128.2</td>
+      <td>7.81</td>
+      <td></td>
+      <td>1</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>129.42</td>
+      <td>129.2</td>
+      <td>7.34</td>
+      <td></td>
+      <td>1</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>129.53</td>
+      <td>129.6</td>
+      <td>7.21</td>
+      <td></td>
+      <td>1</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>137.43</td>
+      <td>136.9</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>139.53</td>
+      <td>149.7</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>158.49</td>
+      <td>157.4</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table></div>  
+</div>
+  
+</body>
+</html>
+

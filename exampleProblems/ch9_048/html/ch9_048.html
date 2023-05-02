@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#customers {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: DodgerBlue;
+  color: white;
+}
+
+.flex-container {
+  display: flex;
+  background-color: DodgerBlue;
+  flex-wrap: wrap;
+}
+
+.flex-container > div {
+  background-color: #f1f1f1;
+  margin: 10px;
+  padding: 20px;
+  font-size: 30px;
+}
+</style>
+</head>
+<body>
+
+
+
+<div class="flex-container">
+  <div style="flex-grow: 1">
+    <h2>predicted carbon</h2>
+    <img src="predicted_carbon_shifts.png" alt="expected carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h2>experimental carbon</h2>
+    <img src="carbon_shifts.png" alt="carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h2>experimental proton</h2>
+    <img src="proton_shifts.png" alt="carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h2>details</h2>
+    <ul>
+      <li>ch9_048</li>
+      <li>CCC(C)C(N)C(=O)O</li>
+    </ul>
+  </div>
+  <div style="flex-grow: 2"><table border="1" class="dataframe" id="customers">
+  <thead>
+    <tr style="text-align: right;">
+      <th>predicted</th>
+      <th>carbon</th>
+      <th>proton</th>
+      <th>integral</th>
+      <th>J Class</th>
+      <th>J Coupling</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>11.51</td>
+      <td>14.0</td>
+      <td>0.93</td>
+      <td>3</td>
+      <td>t</td>
+      <td>[8,8]</td>
+    </tr>
+    <tr>
+      <td>15.01</td>
+      <td>18.0</td>
+      <td>1.00</td>
+      <td>3</td>
+      <td>d</td>
+      <td>[9]</td>
+    </tr>
+    <tr>
+      <td>24.85</td>
+      <td>27.5</td>
+      <td>1.45,1.25</td>
+      <td>1, 1</td>
+      <td>dt, dt</td>
+      <td>[6,8,8], [6,9,9]</td>
+    </tr>
+    <tr>
+      <td>36.23</td>
+      <td>39.0</td>
+      <td>1.97</td>
+      <td>1</td>
+      <td>dd</td>
+      <td>[6,6]</td>
+    </tr>
+    <tr>
+      <td>59.81</td>
+      <td>62.5</td>
+      <td>3.67</td>
+      <td>1</td>
+      <td>d</td>
+      <td>[5]</td>
+    </tr>
+    <tr>
+      <td>174.19</td>
+      <td>177.0</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table></div>  
+</div>
+  
+</body>
+</html>
+

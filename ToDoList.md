@@ -51,7 +51,7 @@
 
   - create a psuedo representation of 2D data that is interactive with molecule highlighting
   - develop peak picking algorithms for self contained program
-  - improve input from excel sheets: cope with  missing bits like ranges on proton data
+  - improve input from excel sheets: cope with  missing bits like ranges on proton data :: Fixed
   
   
 

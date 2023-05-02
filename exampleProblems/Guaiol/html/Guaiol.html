@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#customers {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgb(78, 75, 75);
+  color: white;
+}
+
+.flex-container {
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  background-color: #f1f1f1;
+  flex-wrap: wrap;
+}
+
+.flex-container > div {
+  background-color: white;
+  margin: 10px;
+  padding: 20px;
+  font-size: 30px;
+}
+</style>
+</head>
+<body>
+
+
+
+<div class="flex-container">
+  <div style="flex-grow: 1">
+    <h3>Predicted carbon</h3>
+    <img src="predicted_carbon_shifts.png" alt="expected carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h3>Experimental carbon</h3>
+    <img src="carbon_shifts.png" alt="carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h3>Experimental proton</h3>
+    <img src="proton_shifts.png" alt="carbon_shifts">
+  </div>
+  <div style="flex-grow: 1">
+    <h3>Details</h3>
+    <ul>
+      <li>Guaiol</li>
+      <li>OC(C)(C)C2CC1=C(CCC1C)C(C)CC2</li>
+    </ul>
+  </div>
+  <div style="flex-grow: 2"><table border="1" class="dataframe" id="customers">
+  <thead>
+    <tr style="text-align: right;">
+      <th>predicted</th>
+      <th>carbon</th>
+      <th>proton</th>
+      <th>integral</th>
+      <th>J Class</th>
+      <th>J Coupling</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>19.08</td>
+      <td>19.8</td>
+      <td>1.03</td>
+      <td>3</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>20.00</td>
+      <td>20.0</td>
+      <td>0.99</td>
+      <td>3</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>26.95</td>
+      <td>26.0</td>
+      <td>1.20</td>
+      <td>3</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>28.16</td>
+      <td>27.4</td>
+      <td>1.85,1.49</td>
+      <td>1, 1</td>
+      <td>s, s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>26.95</td>
+      <td>27.4</td>
+      <td>1.22</td>
+      <td>3</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>28.16</td>
+      <td>27.9</td>
+      <td>2.18,1.96</td>
+      <td>1, 1</td>
+      <td>s, s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>29.27</td>
+      <td>31.0</td>
+      <td>2.01,1.33</td>
+      <td>1, 1</td>
+      <td>s, s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>33.95</td>
+      <td>33.7</td>
+      <td>2.33</td>
+      <td>1</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>33.14</td>
+      <td>33.8</td>
+      <td>1.75,1.62</td>
+      <td>1, 1</td>
+      <td>s, s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>39.30</td>
+      <td>35.4</td>
+      <td>2.47,2.14</td>
+      <td>1, 1</td>
+      <td>s, s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>31.30</td>
+      <td>46.3</td>
+      <td>2.57</td>
+      <td>1</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>45.28</td>
+      <td>49.6</td>
+      <td>1.59</td>
+      <td>1</td>
+      <td>s</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>72.30</td>
+      <td>73.5</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>141.77</td>
+      <td>138.9</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>141.77</td>
+      <td>140.1</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table></div>  
+</div>
+  
+</body>
+</html>
+
