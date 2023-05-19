@@ -565,7 +565,8 @@ class MatplotlibH1C13Plot(Figure):
                 ppm = self.nmrproblem.h1.loc[atom_index, "ppm"]
                 integral = self.nmrproblem.h1.loc[atom_index, "integral"]
                 jcoupling = self.nmrproblem.h1.loc[atom_index, "jCouplingClass"]
-                annot_text = f"{highlighted_H1_lbl}: {ppm:.2f} ppm\nInt: {integral}\nJ: {jcoupling}"
+                jcouplingvals = self.nmrproblem.h1.loc[atom_index, "jCouplingVals"]
+                annot_text = f"{highlighted_H1_lbl}: {ppm:.2f} ppm\nInt: {integral}\nJ: {jcoupling}: {jcouplingvals} Hz"
                 annot.set_text(annot_text)
                 annot.xy = (x, y)
                 annot.set_visible(True)
@@ -588,9 +589,11 @@ class MatplotlibH1C13Plot(Figure):
                 integral2 = self.nmrproblem.h1.loc[atom_index2, "integral"]
                 jcoupling1 = self.nmrproblem.h1.loc[atom_index1, "jCouplingClass"]
                 jcoupling2 = self.nmrproblem.h1.loc[atom_index2, "jCouplingClass"]
+                jcoupling1vals = self.nmrproblem.h1.loc[atom_index1, "jCouplingVals"]
+                jcoupling2vals = self.nmrproblem.h1.loc[atom_index2, "jCouplingVals"]
                 annot_text = (
-                    f"{highlighted_H1_lbl1}: {ppm1:.2f} ppm\nInt: {integral1}\nJ: {jcoupling1}\n"
-                    + f"{highlighted_H1_lbl2}: {ppm2:.2f} ppm\nInt: {integral2}\nJ: {jcoupling2}"
+                    f"{highlighted_H1_lbl1}: {ppm1:.2f} ppm\nInt: {integral1}\nJ: {jcoupling1}: {jcoupling1vals} Hz\n"
+                    + f"{highlighted_H1_lbl2}: {ppm2:.2f} ppm\nInt: {integral2}\nJ: {jcoupling2}: {jcoupling2vals} Hz"
                 )
 
                 annot.set_text(annot_text)

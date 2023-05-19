@@ -399,7 +399,8 @@ if __name__ == "__main__":
                     ppm = self.nmrproblem.h1.loc[atom_index, "ppm"]
                     integral = self.nmrproblem.h1.loc[atom_index, "integral"]
                     jcoupling = self.nmrproblem.h1.loc[atom_index, "jCouplingClass"]
-                    annot_text = f"{lbl}: {ppm:.2f} ppm\nInt:{integral}\nJ: {jcoupling}"
+                    jcouplingvals = self.nmrproblem.h1.loc[atom_index, "jCouplingVals"]
+                    annot_text = f"{lbl}: {ppm:.2f} ppm\nInt:{integral}\nJ: {jcoupling}: {jcouplingvals}"
                     specplot.annot_H1.xy = (event.xdata, event.ydata)
                     specplot.annot_H1.set_text(annot_text)
                     specplot.annot_H1.set_visible(True)
