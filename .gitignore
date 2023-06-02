@@ -36,7 +36,7 @@ test_simpleNMR_D3/
 *_bckup.py
 
 # java portable runtime environments
-# jre/
+jre/
 
 # Distribution / packaging
 .Python
