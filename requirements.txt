@@ -10,4 +10,5 @@ PyQt5
 PyYAML
 scipy
 openpyxl
-cairosvg
+jinja2
+scikit-learn

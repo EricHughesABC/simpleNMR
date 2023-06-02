@@ -2629,7 +2629,7 @@ class NMRproblem:
             lll = self.cosy[self.cosy.f1H_i == hi]["f2H_i"].tolist()
             if hi in lll:
                 lll.remove(hi)
-            self.df.loc["cosy", hi] = lll
+            self.df.at["cosy", hi] = lll
 
         for ci in self.cosy.f1Cp_i.unique():
             lll = self.cosy[self.cosy.f1Cp_i == ci]["f2Cp_i"].tolist()
@@ -2639,7 +2639,7 @@ class NMRproblem:
                 lll.remove(ci)
             # add ci only if not None
             if ci:
-                self.df.loc["cosy", ci] = lll
+                self.df.at["cosy", ci] = lll
 
         self.updateHSQCHMBCgridfromExcel()
 
@@ -2819,14 +2819,14 @@ class NMRproblem:
                 H1toC13[hatom] = hatom
 
         for atom in hatoms:
-            df.loc[exptname, atom] = df.loc[catoms][
+            df.at[exptname, atom] = df.loc[catoms][
                 df.loc[catoms, atom] == marker
             ].index.tolist()
 
         for atom in catoms:
             h1list = df.loc[hatoms][df.loc[hatoms, atom] == marker].index.tolist()
             # df.loc[exptname, atom] = [H1toC13[c] for c in h1list]
-            df.loc[exptname, atom] = h1list
+            df.at[exptname, atom] = h1list
 
     def updateHSQCHMBCgridfromExcel(self):
         # hsqc = nmrproblem.hsqc
@@ -3545,21 +3545,21 @@ class NMRproblem:
 
         for i, j in enumerate(df.loc["J Hz", patoms]):
             if isinstance(j, str):
-                df.loc["J Hz", patoms[i]] = [
+                df.at["J Hz", patoms[i]] = [
                     float(k.strip()) for k in j.strip("][").split(",")
                 ]
             elif isinstance(j, (float, int)):
-                df.loc["J Hz", patoms[i]] = [
+                df.at["J Hz", patoms[i]] = [
                     float(k.strip()) for k in str(j).strip("][").split(",")
                 ]
 
         for i, j in enumerate(df.loc["J Hz", catoms]):
             if isinstance(j, str):
-                df.loc["J Hz", catoms[i]] = [
+                df.at["J Hz", catoms[i]] = [
                     float(k.strip()) for k in j.strip("][").split(",")
                 ]
             elif isinstance(j, (float, int)):
-                df.loc["J Hz", catoms[i]] = [
+                df.at["J Hz", catoms[i]] = [
                     float(k.strip()) for k in str(j).strip("][").split(",")
                 ]
 
