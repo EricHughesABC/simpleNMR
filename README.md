@@ -24,15 +24,15 @@ Sometimes the java code has been compiled for a later version and will not run. 
 
  - ```CompileJavaMacLinux.bat```
  - ```CompileJavaWindows10.bat```
- 
+
  ## PyInstaller
- 
+
  An executable of the program can be be created using pyinstaller for windows or macos.  A .spec file for creating a single executable has been created. The command to create an executable is 
- 
+
  ```pyinstaller simpleNMR_with_includes-F.spec```
- 
+
  Before running the command it is best practise to copy the following files over to a new directory and run the aboove command from there.
- 
+
  - ```about_dialog.py``` 
  - ```excelheaders.py```
  - ```moleculePlot.py```
@@ -48,11 +48,11 @@ Sometimes the java code has been compiled for a later version and will not run. 
  - ```cdk-2.7.1.jar```
  - ```predictorc```
  - ```NewTest.class```
- 
+
  In the ```jre``` folder keep only the java runtime environment that matches the operating system the pyinstaller command is run on.
- 
+
  Make sure that pyinstaller is ran from the correct python environment that simpleNMR.py works on.
-  
+
 ## Running the program
 
 The program can be run from the command line by typing 

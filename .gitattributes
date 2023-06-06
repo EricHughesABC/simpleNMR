@@ -1,0 +1,5 @@
+.jar filter=lfs diff=lfs merge=lfs -text
+.zip filter=lfs diff=lfs merge=lfs -text
+modules filter=lfs diff=lfs merge=lfs -text
+.lib filter=lfs diff=lfs merge=lfs -text
+.sym filter=lfs diff=lfs merge=lfs -text
