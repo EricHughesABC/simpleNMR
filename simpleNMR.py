@@ -95,39 +95,6 @@ XYDIM = 800
 # # set current working directory to the directory of this file
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
-# if platform.system() == "Windows":
-#     JAVA_AVAILABLE = True
-#     # test if local windows ins installed
-#     if not os.system('"jre\\javawindows\\bin\\java -version"'):
-
-#         WINDOWS_OS = True
-#         JAVA_COMMAND = '"jre\\javawindows\\bin\\java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"'
-#         print("WINDOWS Local JAVA is available")
-#     else:
-#         JAVA_AVAILABLE = False
-#         print("JAVA is not available")
-# elif platform.system() == "Linux":
-#     LINUX_OS = True
-#     if not os.system('"jre\\javalinux\\bin\\java -version"'):
-#         JAVA_AVAILABLE = True
-#         JAVA_COMMAND = '"javalinux\\bin\\java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"'
-#         print("Linux Local JAVA is available")
-#     else:
-#         JAVA_AVAILABLE = False
-#         print("JAVA is not available")
-# elif platform.system() == "Darwin":
-#     MAC_OS = True
-#     if not os.system("jre/amazon-corretto-17.jdk/Contents/Home/bin/java --version"):
-#         JAVA_AVAILABLE = True
-#         JAVA_COMMAND = "jre/amazon-corretto-17.jdk/Contents/Home/bin/java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
-#         print("MAC Local JAVA is available")
-#     else:
-#         JAVA_AVAILABLE = False
-#         print("JAVA is not available")
-
-
-# print("JAVA_COMMAND = ", JAVA_COMMAND)
-
 
 class MoleculePlotCanvas(FigureCanvasQTAgg):
     def __init__(self, fig, parent=None):
@@ -283,17 +250,10 @@ class MainWidget(QMainWindow):
             f"Molecule: {self.nmrproblem.moleculeAtomsStr} DBE: {int(self.nmrproblem.dbe)}"
         )
 
-        # hbox = QHBoxLayout()
-        # hbox.addWidget(self.moleculeCanvas)
-        # hbox.addWidget(self.spectraCanvas)
-
-        # self.centralWidget.setLayout(hbox)
-        # self.centralWidget.show()
 
     def hover_over_specplot(self, event, specplot, molplot):
 
         # just return if toolbar is active
-
         if (self.moltoolbar.mode != "") or (self.spctoolbar.mode != ""):
             # print("hover_over_specplot: toolbar mode is not empty")
             # print("self.moltoolbar.mode: ", self.moltoolbar.mode)
@@ -571,30 +531,6 @@ class MainWidget(QMainWindow):
             molplot.canvas.draw_idle()
             specplot.canvas.draw_idle()
             return
-
-        # if self.node_pick_ind is None:
-        #     print("self.node_pick_ind is None")
-        #     self.mol_nodes.node_highlighted = False
-
-        #     self.mol_nodes.set_fc(self.mol_nodes.scatter_facecolors_rgba)
-        #     self.mol_nodes.set_ec(self.mol_nodes.scatter_edgecolors_rgba)
-
-        #     self.moleculePlot.hide_hmbc_graph_networks()
-
-        #     specplot.reset_peak_overlays_eeh()
-
-        #     specplot.hide_annotation(specplot.annot_C13)
-        #     specplot.hide_annotation(specplot.annot_H1)
-
-        #     #unhighlight distributions
-        #     specplot.reset_distributions_eeh()
-
-        #     molplot.canvas.draw_idle()
-        #     specplot.canvas.draw_idle()
-
-        #     return
-        # if event.inaxes is None:
-        #     return
 
         self.node_moved = True
         x, y = event.xdata, event.ydata

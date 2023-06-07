@@ -4,21 +4,133 @@ simpleNMR is a python/QT5/matplotlib program. It runs on windows and macos. The 
 
 The program displays the data  in an interactive manner. The idea behind the program was to position it as an analysis tool between the raw data and the use of pencil and paper to analyse NMR data and commercial, complete black box solutions that can provide an answer with very little manual intervention. The software takes a high level interactive approach to display the information from the NMR experiments in order quickly check if a proposed structure is consistent with the NMR data.
 
-The screenshot below shows the main user interface of the program. It consists of two panels: THe right-hand panel shows the proton and carbon 1-D spectra of the molecule. The left-hand side panel shows an image of the proposed molecule provided by the user on top of which are placed the carbon atoms of the molecule. COSY data is shown as red links between carbon atoms.  The carbon atoms/nodes can be moved over the background molecule so that they align with the corresponding atoms in the proposed molecule. HMBC corelations are displayed on the molecule when the cursor is positioned over a carbon atom. The corresponding proton and carbon peaks are highlighted in the spectra panel.
+The screenshot below shows the main user interface of the program. It consists of two panels: The right-hand panel shows the proton and carbon 1-D spectra of the molecule. The left-hand side panel shows an image of the proposed molecule provided by the user on top of which are placed the carbon atoms of the molecule. COSY data is shown as red links between carbon atoms.  The carbon atoms/nodes can be moved over the background molecule so that they align with the corresponding atoms in the proposed molecule. HMBC corelations are displayed on the molecule when the cursor is positioned over a carbon atom. The corresponding proton and carbon peaks are highlighted in the spectra panel.
 
 Furthermore, when a peak is highlighted in the spectra panel, the peak is highlighted in red, if the peak has a corresponding carbon/proton peak it is  highlighted. HMBC correlations are shown by highlighting further peaks in different colours and showing the links in the molecule panel. Information on what the chemical shift might correspond to in terms of functional group is shown up in a pop-up.
 
+The initial positions of the carbon atom nodes over the background molecule image can be set randomly, from a previously saved session, or by using the JAVA HOSE code that can be found on [nmrshiftdb](https://nmrshiftdb.nmr.uni-koeln.de/) website which has been incorporated into the program.
+
 ![simpleNMR](Screenshot_simpleNMR.png)
 
-The initial positions of the carbon atom nodes over the background molecule image can be set randomly, from a previously saved session, or by using the JAVA HOSE code that can be found on [nmrshiftdb](https://nmrshiftdb.nmr.uni-koeln.de/) website which has been incorporated into the program.
+
 
 ## Installation
 
-The program comes with a requirements file. Due to the use of the module RDKIT, I believe the best way to install the software is to use a CONDA installation. RDKIT can be installed using pip, but requires a python version of 3.7, but I have not been able to get it to work so for now I would stick to a CONDA installation.
+There are two ways to install simpleNMR, both involve accessing the simpleNMR public github site [simpleNMR](https://github.com/EricHughesABC/simpleNMR/tree/main). 
+
+The first involves downloading a packaged executable, either for windows 10 or MacOs. The files can be found in the releases folder. [simpleNMR Release v0.0.8](https://github.com/EricHughesABC/simpleNMR/releases/tag/executables). 
+
+A python environment is  not required to use these executables as all the required modules and python interpreter come with the executable. The executable takes quite a while to start when the file is first ran. The permissions of the file have to be changed for the macOs version and instructions can be found below. 
+
+The second method requires a modern python 3.7 or later working python environment on the computer. The modules that the program uses are best installed using pip from a requirements file that is part of the github repository
+
+#### SimpleNMR executables
+
+1. **Windows 10**: [simpleNMRwin10](https://github.com/EricHughesABC/simpleNMR/releases/download/executables/simpleNMRwin.exe  "simpleNMRwin10")
+
+   
+
+2. **macOS** [simpleNMRmac](https://github.com/EricHughesABC/simpleNMR/releases/download/executables/simpleNMRmac  "simpleNMRmac")
+
+   1. **Change Permissions**: In a command line window change the permissions on the file
+
+      ```markdown
+      chmod 744 simpleNMRmac
+      ```
+
+   2. **Running for the first time**: Then, when you try to run it from the finder window (file browser) it won’t run if you just double click on it because it isn’t certified, so you need to right click on it and choose “Open” and then confirm that it is OK to run it. You only need to do that the first time you open it. After that, it is fine, though it does take a few (tens of) seconds to start up.
+
+      
+
+#### Installation from Github
+
+
+
+To clone the [simpleNMR](https://github.com/EricHughesABC/simpleNMR/tree/main) GitHub repository, follow these steps:
+
+1.  **Install github**: Intall the command line version of github on your computer [Git Guides - install git (github.com)](https://github.com/git-guides/install-git) 
+
+2. **Copy the Repository URL**: Go to the [simpleNMR](https://github.com/EricHughesABC/simpleNMR/tree/main) GitHub repository and find the "Clone" button. Click on it and copy the repository URL.
+
+3. **Open a Terminal/Command Prompt**: Open a terminal or command prompt window on your local machine.
+
+4. **Navigate to the Destination Directory**: Navigate to the directory where you want to clone the repository. You can use the `cd` command to change directories. For example, if you want to clone the repository into say "mySimpleNMR" folder, you can use the following command:
+
+   ```markdown
+   cd mySimpleNMR
+   ```
+
+5. **Clone the Repository**: In the terminal, use the `git clone` command followed by the  simpleNMR repository URL you copied in step 1. For example:
+
+   ```markdown
+   git clone <repository_url>
+   ```
+
+   Replace `<repository_url>` with the actual repository URL you copied from GitHub.
+
+   The command will create a new directory with the same name as the simpleNMR repository and clone the repository contents into that directory.
+
+6. **Wait for Cloning to Complete**: The `git clone` command will download all the repository files and history to your local machine. Wait for the cloning process to complete.
+
+7. **Repository Cloned Successfully**: Once the cloning process is finished, you will see a message indicating that the repository has been cloned successfully.
+
+#### Setup a virtual python environment
+
+To set up a Python environment using `venv`, follow these steps:
+
+1. **Install Python**: Ensure that Python is installed on your system. You can download and install the latest version of Python from the official Python website (https://www.python.org/) or from anaconda ([Free Download | Anaconda](https://www.anaconda.com/download)).
+
+2. **Create a Project Directory**: Create a new directory where you want to set up your Python environment. You can choose any name for the directory.
+
+3. **Open a Terminal/Command Prompt**: Open a terminal or command prompt window. Navigate to the project directory you created in the previous step.
+
+4. **Create a Virtual Environment**: In the terminal, use the following command to create a virtual environment using `venv`:
+
+   ```markdown
+   python3 -m venv mysimpleNMRenv
+   ```
+
+   This command will create a new directory named "mySimpleNMRenv" (you can choose a different name if you prefer) inside your project directory. The virtual environment will be created within this directory.
+
+5. **Activate the Virtual Environment**: Activate the virtual environment using the appropriate command for your operating system:
+
+   - **Windows**:
+
+     ```markdown
+     .\mysimpleNMRenv\Scripts\activate
+     ```
+
+   - **Mac/Linux**:
+
+     ```markdown
+     source mysimpleNMRenv/bin/activate
+     ```
+
+   After activation, you will notice that the terminal prompt changes to indicate that you are now working within the virtual environment.
+
+6. **Navigate to the Project Directory**: Use the `cd` command to navigate to the `simpleNMR` repository directory where your `requirements.txt` file is located. For example:
+
+   ```markdown
+   cd path/to/project/simpleNMR
+   ```
+
+7. **Install Python Packages  for simpleNMR**: With the virtual environment activated, you can now install Python packages specific to the `simpleNMR` project. Use `pip` (Python package manager) to install the packages you need from the requirements.txt file in the simpleNMR repository. For example:
+
+   ```markdown
+   pip install -r requirements.txt
+   ```
+
+8. **Deactivate the Virtual Environment**: Once you are done working with your Python environment, you can deactivate the virtual environment using the following command:
+
+   ```markdown
+   deactivate
+   ```
+
+   After deactivation, the terminal prompt will return to its original state.
 
 ### JAVA
 
-In the repo, there are JDK binaries for windows, macos and linux in the folder **jre**. The binaries were downloaded from amazon [amazon corretto](https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html). The program checks to see if java is installed by the user and if not, defaults to these binaries to run the java code.
+In the repo, there are JDK binaries for windows, macos and linux in the folder `jre`. The binaries were downloaded from amazon [amazon corretto](https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html). The program checks to see if java is installed by the user and if not, defaults to these binaries to run the java code.
 
 Sometimes the java code has been compiled for a later version and will not run. An error message will appear in the background terminal.  If this happens run the appropriate bat files to recompile the java code and restart the program simpleNMR.py
 
@@ -27,27 +139,33 @@ Sometimes the java code has been compiled for a later version and will not run. 
 
  ## PyInstaller
 
- An executable of the program can be be created using pyinstaller for windows or macos.  A .spec file for creating a single executable has been created. The command to create an executable is 
+ An executable of the program can be be created using pyinstaller for windows or macOs.  A `.spec` file for creating a single executable has been created. The command to create an executable is 
 
- ```pyinstaller simpleNMR_with_includes-F.spec```
+```markdown
+pyinstaller simpleNMR_with_includes-F.spec
+```
 
- Before running the command it is best practise to copy the following files over to a new directory and run the aboove command from there.
+ Before running the command it is best practise to copy the following files over to a new directory and run the above command from there.
 
- - ```about_dialog.py``` 
- - ```excelheaders.py```
- - ```moleculePlot.py```
- - ```nmrProblem.py```
- - ```nmrmol.py```
- - ```nx_pylab.py```
- - ```qt5_tabs_001.py```
- - ```simpleNMR.py```
- - ```spectraPlot.py```
- - ```xy3_dialog.py```
- - ```jre```
- - ```csTables```
- - ```cdk-2.7.1.jar```
- - ```predictorc```
- - ```NewTest.class```
+```markdown
+ about_dialog.py
+ excelheaders.py
+ expectedMolecule.py
+ java.py
+ moleculePlot.py
+ nmrProblem.py
+ nmrmol.py
+ nx_pylab.py
+ qt5_tabs_001.py
+ simpleNMR.py
+ spectraPlot.py
+ xy3_dialog.py
+ jre
+ csTables
+ cdk-2.7.1.jar
+ predictorc
+ NewTest.class
+```
 
  In the ```jre``` folder keep only the java runtime environment that matches the operating system the pyinstaller command is run on.
 
@@ -57,31 +175,27 @@ Sometimes the java code has been compiled for a later version and will not run. 
 
 The program can be run from the command line by typing 
 
-```python simpleNMR.py```
+```markdown
+python simpleNMR.py
+```
 
 Then an  example excel file can be opened  from the **File** dropdown menu by clicking the **open** item.
 
-A problem directory can be opened directly from the command line by starting the program with the path of the example directory on the commandline
+A problem directory can be opened directly from the command line by starting the program with the path of the example directory on the command line.
 
-```python simpleNMR.py exampleProblems\ethyleneDiamine```
-
-## Requirements
-
- - matplotlib==3.5.1
- - networkx==2.4
- - nmrglue==0.8
- - numpy==1.21.5
- - pandas==1.3.4
- - Pillow==9.2.0
- - PyQt5==5.15.6
- - PyYAML==6.0
- - rdkit==2020.09.10
- - scipy==1.7.3
+```markdown
+python simpleNMR.py exampleProblems\2-ethyl-1-indanone
+```
 
 ## Example problems
 
-There are a number of example problems in the **exampleProblems** folder and they are listed below. Some are from real data and others are taken from extracting the data from examples in the book:
+There are a number of example problems in the [exampleProblems](https://github.com/EricHughesABC/simpleNMR/tree/main/exampleProblems) folder. Some are from real data and others are taken from extracting the data from examples in the book:
 
-```Guide to NMR Spectral Interpretation A Problem-Based Approach to Determining the Structures of Small Organic Molecules. Antonio Randazzo, 2018, Loghia Publishing. ISBN: 978-88-95122-40-3```
+```markdown
+Guide to NMR Spectral Interpretation A Problem-Based Approach to Determining the Structures of Small Organic Molecules. Antonio Randazzo, 2018, Loghia Publishing. 
+ISBN: 978-88-95122-40-3
+```
+
+
 
  
