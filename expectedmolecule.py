@@ -16,37 +16,10 @@ import java
 
 XYDIM = 800
 
-# 
+
 
 
 class expectedMolecule:
-
-
-
-    # if platform.system() == "Darwin":
-    #     MAC_OS = True
-    #     WINDOWS_OS = False
-    #     if not os.system(
-    #         "jre/amazon-corretto-17.jdk/Contents/Home/bin/java --version"
-    #     ):
-    #         JAVA_AVAILABLE = True
-    #         JAVA_COMMAND = "jre/amazon-corretto-17.jdk/Contents/Home/bin/java -classpath predictorc.jar:cdk-2.7.1.jar:. NewTest mol.mol > mol.csv"
-    #     else:
-    #         JAVA_AVAILABLE = False
-
-    # elif platform.system() == "Windows":
-    #     WINDOWS_OS = True
-    #     MAC_OS = False
-    #     # test if local windows ins installed
-    #     if not os.system('"jre\\javawindows\\bin\\java -version"'):
-    #         JAVA_AVAILABLE = True
-    #         WINDOWS_OS = True
-    #         JAVA_COMMAND = '"jre\\javawindows\\bin\\java -classpath predictorc.jar;cdk-2.7.1.jar;. NewTest mol.mol > mol.csv"'
-    #     else:
-    #         JAVA_AVAILABLE = False
-
-    # print("JAVA_AVAILABLE", JAVA_AVAILABLE)
-    # print("JAVA_COMMAND", JAVA_COMMAND)
 
     def __init__(self, smiles_str):
         self.smiles_str = smiles_str

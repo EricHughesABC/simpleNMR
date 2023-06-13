@@ -40,17 +40,21 @@ The second method requires a modern python 3.7 or later working python environme
 
    2. **Running for the first time**: Then, when you try to run it from the finder window (file browser) it won’t run if you just double click on it because it isn’t certified, so you need to right click on it and choose “Open” and then confirm that it is OK to run it. You only need to do that the first time you open it. After that, it is fine, though it does take a few (tens of) seconds to start up.
 
-      
+#### Installing the exampleProblems from GitHub
+
+There are a number of example problems in the folder `exampleProblems`. To obtain this folder from the github repository download the zip or tar.gz file of the source code from the releases folder  [simpleNMR Release v0.0.8](https://github.com/EricHughesABC/simpleNMR/releases/tag/executables) and unzip the file.
 
 #### Installation from Github
 
-
-
 To clone the [simpleNMR](https://github.com/EricHughesABC/simpleNMR/tree/main) GitHub repository, follow these steps:
 
-1.  **Install github**: Intall the command line version of github on your computer [Git Guides - install git (github.com)](https://github.com/git-guides/install-git) 
+1. **Install github**: Intall the command line version of git on your computer [Git Guides - install git (github.com)](https://github.com/git-guides/install-git) 
 
-2. **Copy the Repository URL**: Go to the [simpleNMR](https://github.com/EricHughesABC/simpleNMR/tree/main) GitHub repository and find the "Clone" button. Click on it and copy the repository URL.
+2. **Copy the Repository URL**: Go to the [simpleNMR](https://github.com/EricHughesABC/simpleNMR/tree/main) GitHub repository and find the green "Code" button. Click on the red circled button to copy the repository URL. If you have not installed git on your computer, the repository can be downloaded in a zip format by clicking on the menu item circled in blue.
+
+   ![](readMePngs/cloneRepo.png)
+
+   
 
 3. **Open a Terminal/Command Prompt**: Open a terminal or command prompt window on your local machine.
 
@@ -63,10 +67,8 @@ To clone the [simpleNMR](https://github.com/EricHughesABC/simpleNMR/tree/main) G
 5. **Clone the Repository**: In the terminal, use the `git clone` command followed by the  simpleNMR repository URL you copied in step 1. For example:
 
    ```markdown
-   git clone <repository_url>
+   git clone https://github.com/EricHughesABC/simpleNMR.git
    ```
-
-   Replace `<repository_url>` with the actual repository URL you copied from GitHub.
 
    The command will create a new directory with the same name as the simpleNMR repository and clone the repository contents into that directory.
 
@@ -74,13 +76,51 @@ To clone the [simpleNMR](https://github.com/EricHughesABC/simpleNMR/tree/main) G
 
 7. **Repository Cloned Successfully**: Once the cloning process is finished, you will see a message indicating that the repository has been cloned successfully.
 
-#### Setup a virtual python environment
+#### Installing the Java runtime enviroment
+
+The repository already has the java runtime enviroments installed for windows, macOS and linux in the folder `jre`. Unfortunately, for macOS the environment is corrupted and therefore it needs to be installed manually. Follow the instructions below to install the files directly
+
+1. **Move to the jre directory**: Open a command line window and move to the `jre` directory.
+
+2. **Delete the macOS jre directory structure** Run the following command to delete the macOs java runtime directory using the following command
+
+   ```markdown
+   rm -rf amazon-corretto-17.jdk
+   ```
+
+3. **Obtain the macOs jre library**: using wget obtain the amazon correto java runtime environment
+
+   ```markdown
+   wget https://corretto.aws/downloads/latest/amazon-corretto-17-x64-macos-jdk.tar.gz
+   ```
+
+4. **Unzip the file**: unzip the contents of the file
+
+   ```markdown
+   tar -xzf amazon-corretto-17-x64-macos-jdk.tar.gz 
+   ```
+
+5. **windows file**: If needed
+
+   ```markdown
+   wget https://corretto.aws/downloads/latest/amazon-corretto-17-x64-windows-jdk.zip
+   ```
+
+6. **linux file**: if needed
+
+   ```markdown
+   wget https://corretto.aws/downloads/latest/amazon-corretto-17-aarch64-linux-jdk.tar.gz
+   ```
+
+   
+
+#### Setup a virtual python environment (venv) to run simpleNMR.py
 
 To set up a Python environment using `venv`, follow these steps:
 
 1. **Install Python**: Ensure that Python is installed on your system. You can download and install the latest version of Python from the official Python website (https://www.python.org/) or from anaconda ([Free Download | Anaconda](https://www.anaconda.com/download)).
 
-2. **Create a Project Directory**: Create a new directory where you want to set up your Python environment. You can choose any name for the directory.
+2. **Create a Project Directory**: Create a new directory where you want to set up your Python environment. You can choose any name for the directory or you can install the new virtual environment inside the simpleNMR repository directory that you have just downloaded or cloned.
 
 3. **Open a Terminal/Command Prompt**: Open a terminal or command prompt window. Navigate to the project directory you created in the previous step.
 
@@ -120,7 +160,27 @@ To set up a Python environment using `venv`, follow these steps:
    pip install -r requirements.txt
    ```
 
-8. **Deactivate the Virtual Environment**: Once you are done working with your Python environment, you can deactivate the virtual environment using the following command:
+8. **Run simpleNMR.py in the new python virtual environment**: Now you can run the simpleNMR.py file using the following command
+
+   ```markdown
+   python simpleNMR.py
+   ```
+
+   or on windows
+
+   ```markdown
+   python simpleNMR.py exampleProblems\2-ethyl-1-indanone
+   ```
+
+   On macOs
+
+   ```markdown
+   python simpleNMR.py exampleProblems/2-ethyl-1-indanone
+   ```
+
+   
+
+9. **Deactivate the Virtual Environment**: Once you are done working with your Python environment, you can deactivate the virtual environment using the following command:
 
    ```markdown
    deactivate
@@ -154,7 +214,6 @@ pyinstaller simpleNMR_with_includes-F.spec
  java.py
  moleculePlot.py
  nmrProblem.py
- nmrmol.py
  nx_pylab.py
  qt5_tabs_001.py
  simpleNMR.py

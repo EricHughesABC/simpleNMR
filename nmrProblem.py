@@ -297,169 +297,6 @@ def _extracted_from_parse_argv_(data_directory):
     msg_box.setWindowTitle("Excel File Not Found")
 
 
-# def read_smiles_file(problemdata_info: dict) -> str:
-#     """Reads the smiles file and returns the smiles string
-
-#     Args:
-#         problemdata_info (dict): parsed arguments from command line
-
-#     Returns:
-#         str: smiles string or None
-#     """
-#     smiles_str = None
-#     if isinstance(problemdata_info["smiles_fn"], str):
-#         with open(
-#             problemdata_info["smiles_fn"], "r", encoding="latin-1"
-#         ) as filepointer:
-#             smiles_str = filepointer.readline()
-
-#     return smiles_str
-
-
-# def read_png_file(problemdata_info: dict) -> PIL.Image.Image:
-#     """Reads the png file and returns the image object"""
-#     png = None
-#     if isinstance(problemdata_info["png_fn"], str):
-#         png = Image.open(problemdata_info["png_fn"])
-
-#     return png
-
-
-# def create_png_from_smiles(smiles_str: str) -> PIL.Image.Image:
-#     """Creates a png image from a smiles string via rdkit"""
-#     png = None
-#     # rdkit_molecule = Chem.MolFromSmiles(smiles_str)
-#     rdkit_molecule = expectedmolecule.expectedMolecule(smiles_str)
-
-#     mol2 = Chem.AddHs(rdkit_molecule)
-#     AllChem.EmbedMolecule(mol2, randomSeed=3)
-#     rdkit_molecule = Chem.RemoveHs(mol2)
-
-#     rdkit_molecule.Compute2DCoords()
-
-#     return Draw.MolToImage(rdkit_molecule, size=(XYDIM, XYDIM))
-
-
-# def create_png_from_expectedmolecule(rdkit_molecule: expectedmolecule.expectedMolecule) -> PIL.Image.Image:
-#     """Creates a png image from a smiles string via rdkit"""
-#     png = None
-#     # rdkit_molecule = Chem.MolFromSmiles(smiles_str)
-#     # rdkit_molecule = expectedmolecule.expectedMolecule(smiles_str)
-
-#     # mol2 = Chem.AddHs(rdkit_molecule)
-#     # AllChem.EmbedMolecule(mol2, randomSeed=3)
-#     # rdkit_molecule = Chem.RemoveHs(mol2)
-
-#     # rdkit_molecule.Compute2DCoords()
-
-#     return rdkit_molecule.png
-
-
-# def create_rdkit_molecule_from_smiles(smiles_str: str) -> nmrmol.NMRmol:
-#     """Creates a RDKIT molecule from a smiles string via rdkit
-#     save the scaled coordinates of the atoms in the molecule
-#     min x and y =0, max x and y = 1"""
-
-#     rdkit_molecule = Chem.MolFromSmiles(smiles_str)
-
-#     # molecule = nmrmol.NMRmol.from_smiles(smiles_str)
-
-#     # attempt to fix coordinates of png
-#     mol2 = Chem.AddHs(rdkit_molecule)
-#     AllChem.EmbedMolecule(mol2, randomSeed=3)
-#     rdkit_molecule = Chem.RemoveHs(mol2)
-
-#     rdkit_molecule.Compute2DCoords()
-
-#     d2d = Draw.rdMolDraw2D.MolDraw2DSVG(XYDIM, XYDIM)
-#     d2d.DrawMolecule(rdkit_molecule)
-#     d2d.FinishDrawing()
-
-#     for atom in rdkit_molecule.GetAtoms():
-#         idx = atom.GetIdx()
-#         pt = d2d.GetDrawCoords(idx)
-
-#         atom.SetDoubleProp("x", pt.x / XYDIM)
-#         atom.SetDoubleProp("y", pt.y / XYDIM)
-
-#     print("nmrmol.NMRmol(rdkit_molecule)")
-#     ret = nmrmol.NMRmol(rdkit_molecule)
-#     print("nmrmol.NMRmol(rdkit_molecule)")
-
-#     return ret
-
-# def create_rdkit_molecule_from_smiles(smiles_str: str) -> expectedmolecule.expectedMolecule:
-#     """Creates a RDKIT molecule from a smiles string via rdkit
-#     save the scaled coordinates of the atoms in the molecule
-#     min x and y =0, max x and y = 1"""
-
-#     rdkit_molecule = expectedmolecule.expectedMolecule(smiles_str)
-
-#     # molecule = nmrmol.NMRmol.from_smiles(smiles_str)
-
-#     # attempt to fix coordinates of png
-#     # mol2 = Chem.AddHs(rdkit_molecule)
-#     # AllChem.EmbedMolecule(mol2, randomSeed=3)
-#     # rdkit_molecule = Chem.RemoveHs(mol2)
-
-#     # rdkit_molecule.Compute2DCoords()
-
-#     # d2d = Draw.rdMolDraw2D.MolDraw2DSVG(XYDIM, XYDIM)
-#     # d2d.DrawMolecule(rdkit_molecule)
-#     # d2d.FinishDrawing()
-
-#     # for atom in rdkit_molecule.GetAtoms():
-#     #     idx = atom.GetIdx()
-#     #     pt = d2d.GetDrawCoords(idx)
-
-#     #     atom.SetDoubleProp("x", pt.x / XYDIM)
-#     #     atom.SetDoubleProp("y", pt.y / XYDIM)
-
-#     # print("nmrmol.NMRmol(rdkit_molecule)")
-#     # ret = nmrmol.NMRmol(rdkit_molecule)
-#     # print("nmrmol.NMRmol(rdkit_molecule)")
-
-#     return rdkit_molecule
-
-
-# def return_carbon_xy3_positions(rdkit_molecule: Chem.Mol) -> dict:
-#     """Returns the xy3 positions of the carbon atoms in the molecule"""
-
-#     d2d = Draw.rdMolDraw2D.MolDraw2DSVG(XYDIM, XYDIM)
-#     d2d.DrawMolecule(rdkit_molecule)
-#     d2d.FinishDrawing()
-#     xy3_positions = {}
-#     for atom in rdkit_molecule.GetAtoms():
-#         if atom.GetSymbol() == "C":
-#             idx = atom.GetIdx()
-#             point = d2d.GetDrawCoords(idx)
-#             xy3_positions[f"C{str(idx + 1)}"] = np.asarray(
-#                 [point.x / XYDIM, point.y / XYDIM]
-#             )
-#     return xy3_positions
-
-
-# def return_carbon_xy3_positions(rdkit_molecule: expectedmolecule.expectedMolecule) -> dict:
-#     """Returns the xy3 positions of the carbon atoms in the molecule"""
-
-#     d2d = Draw.rdMolDraw2D.MolDraw2DSVG(XYDIM, XYDIM)
-#     print("type(rdkit_molecule)", type(rdkit_molecule))
-#     if isinstance(rdkit_molecule, expectedmolecule.expectedMolecule):
-#         print("rdkit_molecule is expectedmolecule.expectedMolecule")
-#         d2d.DrawMolecule(rdkit_molecule.mol)
-#     else:
-#         d2d.DrawMolecule(rdkit_molecule)
-#     d2d.FinishDrawing()
-#     xy3_positions = {}
-#     for atom in rdkit_molecule.GetAtoms():
-#         if atom.GetSymbol() == "C":
-#             idx = atom.GetIdx()
-#             point = d2d.GetDrawCoords(idx)
-#             xy3_positions[f"C{str(idx + 1)}"] = np.asarray(
-#                 [point.x / XYDIM, point.y / XYDIM]
-#             )
-#     return xy3_positions
-
 def return_carbon_xy3_positions(rdkit_molecule: expectedmolecule.expectedMolecule) -> dict:
     """Returns the xy3 positions of the carbon atoms in the molecule"""
 
@@ -590,29 +427,6 @@ def build_molecule_graph_network(nmrproblem):
         ]
 
 
-# def build_xy3_representation_of_molecule_from_smiles(nmrproblem):
-#     """Builds the xy3 representation of the molecule from the smiles string"""
-
-#     expected_molecule = nmrproblem.expected_molecule
-#     eigen_nodes = [
-#         a.GetSymbol() + str(a.GetIdx()) for a in expected_molecule.GetAtoms()
-#     ]
-#     eigen_carbons = [s for s in eigen_nodes if "C" in s]
-
-#     e_xy3 = {}
-#     xy3 = {}
-
-#     for n, (x, y, z) in zip(
-#         eigen_nodes, expected_molecule.GetConformer().GetPositions()
-#     ):
-
-#         if "C" in n:
-#             e_xy3[n] = np.array([x, y])
-
-#     for n1, n2 in zip(eigen_carbons, nmrproblem.carbonAtoms):
-#         xy3[n2] = e_xy3[n1]
-
-#     nmrproblem.xy3 = xy3
 
 
 def build_xy3_representation_of_molecule(nmrproblem):
@@ -1083,21 +897,6 @@ class NMRproblem:
                 print("added CH0, CH1, CH2, CH3, CH3CH1 to c13")
                 print(self.c13)
 
-            # if "CH3CH" not in self.c13_df.columns:
-            #     self.add_CH0_CH1_CH2_CH3_CH3CH1_to_C13_df()
-
-            #     if "CH3CH" not in self.c13.columns:
-            #         #copy over from c13_df
-            #         self.c13["CH3CH"] = self.c13_df["CH3CH"].values
-            #         self.c13["CH0"] = self.c13_df["CH0"].values
-            #         self.c13["CH1"] = self.c13_df["CH1"].values
-            #         self.c13["CH2"] = self.c13_df["CH2"].values
-            #         self.c13["CH3"] = self.c13_df["CH3"].values
-            #         self.c13["quaternary"] = self.c13_df["quaternary"].values
-
-            # see if any CH3 in expected molecule and then try to match them by the chemical shift
-            # to the CH3CH column in c13
-            # if there are matches then update the numProtons column to 3 where there is a match
 
         if self.c13_from_hsqc and self.H1_data_missing:
 
@@ -1177,17 +976,6 @@ class NMRproblem:
                     self.c13.loc[cidx, "numProtons"] += numprotons
                     self.c13.loc[cidx, "attached_protons"] += numprotons
                     self.c13.loc[cidx, f'CH{numprotons}'] = True
-
-            # # set CH1 to false where CH3CH is true and CH3 is False in self.c13
-            # self.c13.loc[(self.c13.CH3CH) & (~self.c13.CH3), "CH1"] = False
-
-            # # set numProtons to 1 where CH1 is True in self.c13
-            # self.c13.loc[self.c13.CH1, "numProtons"] = 1
-            # self.c13.loc[self.c13.CH1, "attached_protons"] = 1
-
-            # # set numProtons to 2 where CH2 is True in self.c13
-            # self.c13.loc[self.c13.CH2, "numProtons"] = 2
-            # self.c13.loc[self.c13.CH2, "attached_protons"] = 2
 
             print("c13 after CH3 and CH1\n", self.c13)
 
@@ -2419,29 +2207,14 @@ class NMRproblem:
 
         self.hmbc.drop(self.hmbc[self.hmbc.f1_ppm_prob == 0].index, inplace=True)
         self.hmbc.drop(self.hmbc[self.hmbc.f2_ppm_prob == 0].index, inplace=True)
-        # for i in self.hmbc.index:
-        #     self.hmbc.loc[i, "f1_ppm"] = self.find_nearest(
-        #         self.c13.ppm.tolist(), self.hmbc.loc[i, "f1_ppm"]
-        #     )
-        #     self.hmbc.loc[i, "f2_ppm"] = self.find_nearest(
-        #         self.h1.ppm.tolist(), self.hmbc.loc[i, "f2_ppm"]
-        #     )
+  
 
         # HSQC
         self.hsqc = self.tidyup_ppm_values(self.hsqc, self.c13.ppm.tolist(), "f1_ppm")
 
         self.hsqc = self.tidyup_ppm_values(self.hsqc, self.h1.ppm.tolist(), "f2_ppm")
 
-        # self.hsqc.drop(self.hsqc[self.hsqc.f1_ppm_prob == 0].index, inplace=True)
-        # self.hsqc.drop(self.hsqc[self.hsqc.f2_ppm_prob == 0].index, inplace=True)
 
-        # for i in self.hsqc.index:
-        #     self.hsqc.loc[i, "f1_ppm"] = self.find_nearest(
-        #         self.c13.ppm.tolist(), self.hsqc.loc[i, "f1_ppm"]
-        #     )
-        #     self.hsqc.loc[i, "f2_ppm"] = self.find_nearest(
-        #         self.h1.ppm.tolist(), self.hsqc.loc[i, "f2_ppm"]
-        #     )
 
         # tidy up cosy H1 shifts
         self.cosy = self.tidyup_ppm_values(self.cosy, self.h1.ppm.tolist(), "f1_ppm")
@@ -2451,13 +2224,7 @@ class NMRproblem:
         # because it is likely that proton is not connected directly to carbon
         self.cosy.drop(self.cosy[self.cosy.f1_ppm_prob == 0].index, inplace=True)
         self.cosy.drop(self.cosy[self.cosy.f2_ppm_prob == 0].index, inplace=True)
-        # for i in self.cosy.index:
-        #     self.cosy.loc[i, "f1_ppm"] = self.find_nearest(
-        #         self.h1.ppm.tolist(), self.cosy.loc[i, "f1_ppm"]
-        #     )
-        #     self.cosy.loc[i, "f2_ppm"] = self.find_nearest(
-        #         self.h1.ppm.tolist(), self.cosy.loc[i, "f2_ppm"]
-        #     )
+
 
         # add index columns to h1
         self.h1["label"] = ["H" + str(i) for i in self.h1.index]
@@ -3080,18 +2847,7 @@ class NMRproblem:
 
         return True
 
-        # # turn string values to ints, floats and lists
-        # try:
-        #     #self.dfToNumbers()
-        #    # convertHSQCHMBCCOSYtoLists(self)
-        #    # convertJHzToLists(self)
 
-        #     # qdf = df
-
-        #     return True
-        # except:
-        #     df = self.df_backup.copy()
-        #     return False
 
     def createInfoDataframes(self):
         """

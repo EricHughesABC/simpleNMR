@@ -830,6 +830,12 @@ class MainWidget(QMainWindow):
         fileMenu.addSeparator()
         fileMenu.addAction(self.exitAction)
 
+        # exampleProblems menu
+        exampleProblemsMenu = menuBar.addMenu("&Example Problems")
+
+        for  action in self.exampleProblemsActions:
+            exampleProblemsMenu.addAction(action)
+
         # Edit menu
         # editMenu = menuBar.addMenu("&Edit")
         # editMenu.addAction(self.copyAction)
