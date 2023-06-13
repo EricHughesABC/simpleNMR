@@ -26,7 +26,7 @@ test_exampleproblems/
 test_simpleNMR_D3/
 
 # png, mol, mdl, smi and csv files in toplevel directory
-*.png
+#*.png
 *.mol
 *.smi
 *.csv
