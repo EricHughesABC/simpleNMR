@@ -36,7 +36,7 @@ The second method requires a modern python 3.7 or later working python environme
    1. **Change Permissions**: In a command line window change the permissions on the file
 
       ```markdown
-      chmod 744 simpleNMRmac
+      chmod 744 simpleNMRmacOs
       ```
 
    2. **Running for the first time**: Then, when you try to run it from the finder window (file browser) it won’t run if you just double click on it because it isn’t certified, so you need to right click on it and choose “Open” and then confirm that it is OK to run it. You only need to do that the first time you open it. After that, it is fine, though it does take a few (tens of) seconds to start up.
