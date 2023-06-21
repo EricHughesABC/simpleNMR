@@ -61,6 +61,7 @@ from xy3_dialog import XY3dialog
 from about_dialog import Aboutdialog
 import problemtohtml
 import java
+import exampleProblems
 
 
 
@@ -830,11 +831,15 @@ class MainWidget(QMainWindow):
         fileMenu.addSeparator()
         fileMenu.addAction(self.exitAction)
 
-        # exampleProblems menu
-        exampleProblemsMenu = menuBar.addMenu("&Example Problems")
+        # # exampleProblems menu
+        # exampleProblemsMenu = menuBar.addMenu("&Example Problems")
 
-        for  action in self.exampleProblemsActions:
-            exampleProblemsMenu.addAction(action)
+        examples_menu = menuBar.addMenu('Examples')
+        self.initExampleMenu(examples_menu)
+
+
+        # for  action in self.exampleProblemsActions:
+        #     exampleProblemsMenu.addAction(action)
 
         # Edit menu
         # editMenu = menuBar.addMenu("&Edit")
@@ -854,6 +859,87 @@ class MainWidget(QMainWindow):
         helpMenu = menuBar.addMenu("&Help")
         helpMenu.addAction(self.helpContentAction)
         helpMenu.addAction(self.aboutAction)
+
+    def initExampleMenu(self, menu):
+
+        self.exampleProblems = exampleProblems.exampleproblems_names
+
+        for actionName in self.exampleProblems:
+            qa = QAction(actionName, self)
+            menu.addAction(qa)
+            qa.triggered.connect(self.exampleProblem_selected)
+
+
+    def exampleProblem_selected(self):
+        action = self.sender()
+        exampleproblem_name = action.text()
+        print(f'Clicked: {exampleproblem_name}')
+
+        print("exampleProblems.exampleproblems_df[exampleproblem_name] = ", exampleProblems.exampleproblems_df[exampleproblem_name].keys())
+
+        self.excel_path, self.tmpdir  = exampleProblems.create_tmp_excel_file(exampleproblem_name, exampleProblems.exampleproblems_df[exampleproblem_name])
+
+        data_info = nmrProblem.parse_argv(my_argv=["simplepy", self.tmpdir.name,])
+        print("data_info = \n", data_info)
+
+        xy3_dlg = XY3dialog(
+            java_available=java.JAVA_AVAILABLE,
+            sheets_missing=nmrProblem.get_missing_sheets(data_info["excel_fn"], True),
+        )
+
+        if xy3_dlg.exec():
+            xy3_calc_method, expts_available = xy3_dlg.get_method()
+            # add "molecule" to expts_available
+            expts_available.append("molecule")
+
+            print("xy3_calc_method = ", xy3_calc_method)
+            print("expts_available = ", expts_available)
+
+            nmrproblem = nmrProblem.NMRproblem(
+                data_info,
+                java_available=java.JAVA_AVAILABLE,
+                xy3_calc_method=xy3_calc_method,
+                java_command=java.JAVA_COMMAND,
+                expts_available=expts_available,
+            )
+
+            if nmrproblem.data_complete:
+
+                nmrproblem.define_hsqc_f2integral()
+                if (nmrproblem.c13_from_hsqc) or (nmrproblem.h1_df_integral_added):
+                    # nmrproblem.df.loc["integral", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
+                    nmrproblem.df.loc[
+                        "attached protons", nmrproblem.carbonAtoms
+                    ] = nmrproblem.c13.attached_protons.values
+                    nmrproblem.df.loc[
+                        "C13 hyb", nmrproblem.carbonAtoms
+                    ] = nmrproblem.c13.attached_protons.values
+                    # do the same for nmrproblem,protonAtoms
+                    nmrproblem.df.loc[
+                        "integral", nmrproblem.protonAtoms
+                    ] = nmrproblem.h1.integral.values
+                    nmrproblem.df.loc[
+                        "attached protons", nmrproblem.protonAtoms
+                    ] = nmrproblem.h1.integral.values
+                    nmrproblem.df.loc[
+                        "C13 hyb", nmrproblem.protonAtoms
+                    ] = nmrproblem.h1.integral.values
+                else:
+                    nmrproblem.define_hsqc_f2integral()
+                    nmrproblem.define_c13_attached_protons()
+
+                nmrProblem.build_model(nmrproblem)
+                nmrProblem.build_molecule_graph_network(nmrproblem)
+                # nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
+                print("openFile, build_xy3")
+                nmrproblem.build_xy3()
+                nmrproblem.save_dataframes_in_nmrproblem_to_json()
+
+                self.initiate_windows(nmrproblem)
+        else:
+            print("xy3_dlg.exec() failed")
+
+
 
     def _createToolBars(self):
         # File toolbar
