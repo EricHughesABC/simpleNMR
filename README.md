@@ -18,7 +18,7 @@ The initial positions of the carbon atom nodes over the background molecule imag
 
 There are two ways to install simpleNMR, both involve accessing the simpleNMR public github site [simpleNMR](https://github.com/EricHughesABC/simpleNMR/tree/main). 
 
-The first involves downloading a packaged executable, either for windows 10 or MacOs. The files can be found in the releases folder. [simpleNMR Release v0.0.8](https://github.com/EricHughesABC/simpleNMR/releases/tag/executables). 
+The first involves downloading a packaged executable, either for windows 10 or MacOs. The files can be found in the releases folder. [simpleNMR Release latest](https://github.com/EricHughesABC/simpleNMR/releases). 
 
 A python environment is  not required to use these executables as all the required modules and python interpreter come with the executable. The executable takes quite a while to start when the file is first ran. The permissions of the file have to be changed for the macOs version and instructions can be found below. 
 
@@ -26,11 +26,11 @@ The second method requires a modern python 3.7 or later working python environme
 
 #### SimpleNMR executables
 
-1. **Windows 10**: [simpleNMRwin10](https://github.com/EricHughesABC/simpleNMR/releases/download/executables/simpleNMRwin.exe  "simpleNMRwin10")
+1. **Windows 10**: [simpleNMRwin10](https://github.com/EricHughesABC/simpleNMR/releases/download/verrsion_0.0.10/simpleNMRwin.exe  "simpleNMRwin10")
 
    
 
-2. **macOS** [simpleNMRmac](https://github.com/EricHughesABC/simpleNMR/releases/download/executables/simpleNMRmac  "simpleNMRmac")
+2. **macOS** [simpleNMRmac](https://github.com/EricHughesABC/simpleNMR/releases/download/verrsion_0.0.10/simpleNMRmac  "simpleNMRmac")
 
    1. **Change Permissions**: In a command line window change the permissions on the file
 
@@ -42,7 +42,7 @@ The second method requires a modern python 3.7 or later working python environme
 
 #### Installing the exampleProblems from GitHub
 
-There are a number of example problems in the folder `exampleProblems`. To obtain this folder from the github repository download the zip or tar.gz file of the source code from the releases folder  [simpleNMR Release v0.0.8](https://github.com/EricHughesABC/simpleNMR/releases/tag/executables) and unzip the file.
+There are a number of example problems in the folder `exampleProblems`. To obtain this folder from the github repository download the zip or tar.gz file of the source code from the releases folder  [simpleNMR Release v0.0.10](https://github.com/EricHughesABC/simpleNMR/releases/tag/verrsion_0.0.10) and unzip the file.
 
 #### Installation from Github
 
