@@ -1,0 +1,10 @@
+type   LIB
+status   Completed
+lock   on
+title   CARBON_01 
+exp   CARBON
+time   
+macro   return
+data   /data/p62303/Mar29180845/CARBON_01
+CPnode   CARBON_001
+tooltext   Mar29180845

@@ -1,0 +1,10 @@
+SAMPLE#: 61
+USER: service
+MACRO: cpautoQ('loc61_001','day')
+SOLVENT: dmso
+TEXT: IRB:ESB:C3 monoester methyl
+SampleDir: service
+USERDIR: /home/service/vnmrsys
+DATA: 
+STATUS: Queued
+---------------------------------------------

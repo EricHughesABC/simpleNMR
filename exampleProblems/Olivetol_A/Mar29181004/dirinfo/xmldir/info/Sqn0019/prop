@@ -1,0 +1,10 @@
+type   LIB
+status   Completed
+lock   on
+title   ja_PSYCHE_pr_03b_01 
+exp   ja_PSYCHE_pr_03b
+time   
+macro   return
+data   /data/p62303/Mar29181004/ja_PSYCHE_pr_03b_01
+CPnode   JPSYCHE_001
+tooltext   Mar29181004

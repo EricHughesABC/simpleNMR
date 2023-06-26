@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE template>
+
+<template>
+  <protocol title="Mar29181004" type="protocol" exp="grandparent" lock="off" id="tmpstudy" tooltext="service" expanded="true">
+    <action   type="LIB"  status="Completed"  lock="on"  title="PROTON_01 "  exp="PROTON"  time=""  macro="return"  data="/data/p62303/Mar29181004/PROTON_01"  CPnode="PROTON_001"  tooltext="PROTON"  id="Sqn0007"  />
+    <action   type="LIB"  status="Completed"  lock="on"  title="ja_PSYCHE_pr_03b_01 "  exp="ja_PSYCHE_pr_03b"  time=""  macro="return"  data="/data/p62303/Mar29181004/ja_PSYCHE_pr_03b_01"  CPnode="JPSYCHE_001"  tooltext="Mar29181004"  id="Sqn0019"  />
+    <action   type="LIB"  status="Completed"  lock="on"  title="PROTON_02 "  exp="PROTON"  time=""  macro="return"  data="/data/p62303/Mar29181004/PROTON_02"  CPnode="PROTON_002"  tooltext="Mar29181004"  id="Sqn0030"  />
+    <action   type="LIB"  status="Completed"  lock="on"  title="gCOSY_01 "  exp="gCOSY"  time=""  macro="return"  data="/data/p62303/Mar29181004/gCOSY_01"  CPnode="gCOSY_001"  tooltext="Mar29181004"  id="Sqn0040"  />
+    <action   type="LIB"  status="Completed"  lock="on"  title="NOESY_01 "  exp="NOESY"  time=""  macro="return"  data="/data/p62303/Mar29181004/NOESY_01"  CPnode="NOESY_001"  tooltext="Mar29181004"  id="Sqn0048"  />
+    <action   type="LIB"  status="Completed"  lock="on"  title="CARBON_01 "  exp="CARBON"  time=""  macro="return"  data="/data/p62303/Mar29181004/CARBON_01"  CPnode="CARBON_001"  tooltext="Mar29181004"  id="Sqn0054"  />
+    <action   type="LIB"  status="Completed"  lock="on"  title="gHSQCAD_01 "  exp="gHSQCAD"  time=""  macro="return"  data="/data/p62303/Mar29181004/gHSQCAD_01"  CPnode="gHSQCAD_001"  tooltext="Mar29181004"  id="Sqn0058"  />
+    <action   type="LIB"  status="Completed"  lock="on"  title="gHMBCAD_01 "  exp="gHMBCAD"  time=""  macro="return"  data="/data/p62303/Mar29181004/gHMBCAD_01"  CPnode="gHMBCAD_001"  tooltext="Mar29181004"  id="Sqn0060"  />
+  </protocol>
+</template>

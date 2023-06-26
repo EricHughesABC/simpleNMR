@@ -1,0 +1,10 @@
+type   LIB
+status   Queued
+lock   on
+title   NOESY_001 0:00
+exp   
+time   
+macro   return
+data   
+CPnode   NOESY_001
+tooltext   

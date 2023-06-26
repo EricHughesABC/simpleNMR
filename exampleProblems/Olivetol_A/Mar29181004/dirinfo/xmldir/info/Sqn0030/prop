@@ -1,0 +1,10 @@
+type   LIB
+status   Completed
+lock   on
+title   PROTON_02 
+exp   PROTON
+time   
+macro   return
+data   /data/p62303/Mar29181004/PROTON_02
+CPnode   PROTON_002
+tooltext   Mar29181004

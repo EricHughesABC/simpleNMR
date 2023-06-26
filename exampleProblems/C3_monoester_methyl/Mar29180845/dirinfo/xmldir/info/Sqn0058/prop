@@ -1,0 +1,10 @@
+type   LIB
+status   Completed
+lock   on
+title   gHSQCAD_01 
+exp   gHSQCAD
+time   
+macro   return
+data   /data/p62303/Mar29180845/gHSQCAD_01
+CPnode   gHSQCAD_001
+tooltext   Mar29180845

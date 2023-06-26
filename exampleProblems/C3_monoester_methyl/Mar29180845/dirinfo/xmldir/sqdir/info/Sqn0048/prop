@@ -1,0 +1,10 @@
+type   LIB
+status   Completed
+lock   on
+title   NOESY_01 
+exp   NOESY
+time   
+macro   return
+data   /data/p62303/Mar29180845/NOESY_01
+CPnode   NOESY_001
+tooltext   Mar29180845

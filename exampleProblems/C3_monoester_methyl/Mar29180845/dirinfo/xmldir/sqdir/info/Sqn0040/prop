@@ -1,0 +1,10 @@
+type   LIB
+status   Completed
+lock   on
+title   gCOSY_01 
+exp   gCOSY
+time   
+macro   return
+data   /data/p62303/Mar29180845/gCOSY_01
+CPnode   gCOSY_001
+tooltext   Mar29180845

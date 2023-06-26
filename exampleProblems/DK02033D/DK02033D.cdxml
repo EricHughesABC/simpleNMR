@@ -1,0 +1,1007 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE CDXML SYSTEM "http://www.cambridgesoft.com/xml/cdxml.dtd" >
+<CDXML
+ CreationProgram="ChemDraw 21.0.0.28"
+ Name="DK02033D.cdxml"
+ BoundingBox="25 13.65 480 1412.20"
+ WindowPosition="-2147483648 -1073741824"
+ WindowSize="1073741824 1073741824"
+ FractionalWidths="yes"
+ InterpretChemically="yes"
+ ShowAtomQuery="yes"
+ ShowAtomStereo="no"
+ ShowAtomEnhancedStereo="yes"
+ ShowAtomNumber="no"
+ ShowResidueID="no"
+ ShowBondQuery="yes"
+ ShowBondRxn="yes"
+ ShowBondStereo="no"
+ ShowTerminalCarbonLabels="no"
+ ShowNonTerminalCarbonLabels="no"
+ HideImplicitHydrogens="no"
+ LabelFont="3"
+ LabelSize="10"
+ LabelFace="96"
+ CaptionFont="20"
+ CaptionSize="12"
+ HashSpacing="2.70"
+ MarginWidth="2"
+ LineWidth="1"
+ BoldWidth="4"
+ BondLength="30"
+ BondSpacing="12"
+ ChainAngle="120"
+ LabelJustification="Auto"
+ CaptionJustification="Left"
+ AminoAcidTermini="HOH"
+ ShowSequenceTermini="yes"
+ ShowSequenceBonds="yes"
+ ShowSequenceUnlinkedBranches="no"
+ ResidueWrapCount="40"
+ ResidueBlockCount="10"
+ ResidueZigZag="yes"
+ NumberResidueBlocks="no"
+ PrintMargins="36 36 36 36"
+ MacPrintInfo="0003000002580258000000001A9F1298FF9CFF9C1B0312FC0367057B03E00002000002580258000000001A9F1298000100000064000000010001010100020001270F000100010000000000000000000000000002001901900000000000600000000000000000000100000000000000000000000000000000"
+ ChemPropName=""
+ ChemPropFormula="Chemical Formula: "
+ ChemPropExactMass="Exact Mass: "
+ ChemPropMolWt="Molecular Weight: "
+ ChemPropMOverZ="m/z: "
+ ChemPropAnalysis="Elemental Analysis: "
+ ChemPropBoilingPt="Boiling Point: "
+ ChemPropMeltingPt="Melting Point: "
+ ChemPropCritTemp="Critical Temp: "
+ ChemPropCritPres="Critical Pres: "
+ ChemPropCritVol="Critical Vol: "
+ ChemPropGibbs="Gibbs Energy: "
+ ChemPropLogP="Log P: "
+ ChemPropMR="MR: "
+ ChemPropHenry="Henry&apos;s Law: "
+ ChemPropEForm="Heat of Form: "
+ ChemProptPSA="tPSA: "
+ ChemPropCLogP="CLogP: "
+ ChemPropCMR="CMR: "
+ ChemPropLogS="LogS: "
+ ChemPropPKa="pKa: "
+ ChemPropID=""
+ ChemPropFragmentLabel=""
+ color="0"
+ bgcolor="1"
+ RxnAutonumberStart="1"
+ RxnAutonumberConditions="no"
+ RxnAutonumberStyle="Roman"
+ RxnAutonumberFormat="(#)"
+><colortable>
+<color r="1" g="1" b="1"/>
+<color r="0" g="0" b="0"/>
+<color r="1" g="0" b="0"/>
+<color r="1" g="1" b="0"/>
+<color r="0" g="1" b="0"/>
+<color r="0" g="1" b="1"/>
+<color r="0" g="0" b="1"/>
+<color r="1" g="0" b="1"/>
+</colortable><fonttable>
+<font id="3" charset="iso-8859-1" name="Arial"/>
+<font id="20" charset="iso-8859-1" name="Times New Roman"/>
+<font id="22" charset="iso-8859-1" name="Courier New"/>
+</fonttable><page
+ id="53"
+ BoundingBox="0 0 523.20 1539.60"
+ HeaderPosition="36"
+ FooterPosition="36"
+ PrintTrimMarks="yes"
+ HeightPages="2"
+ WidthPages="1"
+><fragment
+ id="46"
+ BoundingBox="60 58.40 299.71 231.90"
+ Z="2"
+><n
+ id="1"
+ p="100.98 159.50"
+ Z="3"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="22.1-22.5,"
+><t
+ p="91.42 158.88"
+ BoundingBox="84.12 152.12 98.72 160.77"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">22.3</s></t></objecttag></n><n
+ id="47"
+ p="126.97 174.50"
+ Z="4"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="170-170.4,"
+><t
+ p="126.94 170.10"
+ BoundingBox="117.56 163.35 136.32 172"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">170.2</s></t></objecttag></n><n
+ id="3"
+ p="126.97 204.50"
+ Z="5"
+ Element="8"
+ NumHydrogens="0"
+ NeedsClean="yes"
+ AS="N"
+><t
+ p="123.08 208.40"
+ BoundingBox="123.08 199.94 130.85 208.50"
+ LabelJustification="Left"
+><s font="3" size="10" color="0" face="96">O</s></t></n><n
+ id="4"
+ p="152.95 159.50"
+ Z="6"
+ Element="7"
+ NumHydrogens="0"
+ NeedsClean="yes"
+ AS="N"
+><t
+ p="149.34 163.40"
+ BoundingBox="149.34 155.06 156.56 163.40"
+ LabelJustification="Left"
+><s font="3" size="10" color="0" face="96">N</s></t></n><n
+ id="5"
+ p="178.93 174.50"
+ Z="7"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="54-54.4,"
+><t
+ p="178.90 185"
+ BoundingBox="171.60 178.25 186.20 186.90"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">54.2</s></t></objecttag></n><n
+ id="6"
+ p="204.91 159.50"
+ Z="8"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="167.6-168,"
+><t
+ p="204.93 170"
+ BoundingBox="195.55 163.25 214.32 171.90"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">167.8</s></t></objecttag></n><n
+ id="7"
+ p="204.91 129.50"
+ Z="9"
+ Element="8"
+ NumHydrogens="0"
+ NeedsClean="yes"
+ AS="N"
+><t
+ p="201.02 133.40"
+ BoundingBox="201.02 124.94 208.80 133.50"
+ LabelJustification="Left"
+><s font="3" size="10" color="0" face="96">O</s></t></n><n
+ id="8"
+ p="230.89 174.50"
+ Z="10"
+ Element="7"
+ NumHydrogens="0"
+ NeedsClean="yes"
+ AS="N"
+><t
+ p="227.28 178.40"
+ BoundingBox="227.28 170.06 234.50 178.40"
+ LabelJustification="Left"
+><s font="3" size="10" color="0" face="96">N</s></t></n><n
+ id="9"
+ p="230.89 204.50"
+ Z="11"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="48.4-48.8,"
+><t
+ p="221.32 211.27"
+ BoundingBox="214.02 204.52 228.62 213.17"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">48.6</s></t></objecttag></n><n
+ id="10"
+ p="256.87 219.50"
+ Z="12"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="25.2-25.6,"
+><t
+ p="256.84 230"
+ BoundingBox="249.55 223.25 264.14 231.90"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">25.4</s></t></objecttag></n><n
+ id="11"
+ p="282.85 204.50"
+ Z="13"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="24-24.4,"
+><t
+ p="292.41 211.27"
+ BoundingBox="285.12 204.52 299.71 213.17"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">24.2</s></t></objecttag></n><n
+ id="12"
+ p="282.85 174.50"
+ Z="14"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="25.2-25.6,"
+><t
+ p="292.41 173.87"
+ BoundingBox="285.12 167.12 299.71 175.77"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">25.4</s></t></objecttag></n><n
+ id="13"
+ p="256.87 159.50"
+ Z="15"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="48.4-48.8,"
+><t
+ p="256.84 155.15"
+ BoundingBox="249.55 148.40 264.14 157.05"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">48.6</s></t></objecttag></n><n
+ id="14"
+ p="152.95 129.50"
+ Z="16"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="136.3-136.7,"
+><t
+ p="152.92 125.10"
+ BoundingBox="143.54 118.35 162.31 127"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">136.5</s></t></objecttag></n><n
+ id="15"
+ p="178.93 114.50"
+ Z="17"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="116.6-117,"
+><t
+ p="190.30 121.27"
+ BoundingBox="180.91 114.52 199.68 123.17"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">116.8</s></t></objecttag></n><n
+ id="16"
+ p="178.93 84.50"
+ Z="18"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="126.7-127.1,"
+><t
+ p="190.30 83.88"
+ BoundingBox="180.91 77.12 199.68 85.77"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">126.9</s></t></objecttag></n><n
+ id="17"
+ p="152.95 69.50"
+ Z="19"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="123.9-124.3,"
+><t
+ p="152.92 65.15"
+ BoundingBox="143.54 58.40 162.31 67.05"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">124.1</s></t></objecttag></n><n
+ id="18"
+ p="126.97 84.50"
+ Z="20"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="124.7-125.1,"
+><t
+ p="115.59 83.88"
+ BoundingBox="106.21 77.12 124.98 85.77"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">124.9</s></t></objecttag></n><n
+ id="19"
+ p="126.97 114.50"
+ Z="21"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="134.3-134.7,"
+><t
+ p="138.34 113.82"
+ BoundingBox="128.95 107.07 147.72 115.72"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">134.5</s></t></objecttag></n><n
+ id="20"
+ p="100.98 129.50"
+ Z="22"
+ AS="N"
+><objecttag
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="45.5-45.9,"
+><t
+ p="101.01 140"
+ BoundingBox="93.71 133.25 108.31 141.90"
+ color="8"
+ CaptionJustification="Center"
+ Justification="Center"
+ LineHeight="auto"
+><s font="3" size="7.5" color="8" face="96">45.7</s></t></objecttag></n><n
+ id="21"
+ p="75 114.50"
+ Z="23"
+ Element="7"
+ NumHydrogens="2"
+ NeedsClean="yes"
+ AS="N"
+><t
+ p="78.61 118.40"
+ BoundingBox="60 110.06 78.61 120.60"
+ LabelJustification="Right"
+ Justification="Right"
+ LabelAlignment="Right"
+><s font="3" size="10" color="0" face="96">NH2</s></t></n><b
+ id="23"
+ Z="24"
+ B="1"
+ E="47"
+ BS="N"
+/><b
+ id="24"
+ Z="25"
+ B="47"
+ E="3"
+ Order="2"
+ BS="N"
+/><b
+ id="25"
+ Z="26"
+ B="47"
+ E="4"
+ BS="N"
+/><b
+ id="26"
+ Z="27"
+ B="4"
+ E="5"
+ BS="N"
+/><b
+ id="27"
+ Z="28"
+ B="5"
+ E="6"
+ BS="N"
+/><b
+ id="28"
+ Z="29"
+ B="6"
+ E="7"
+ Order="2"
+ BS="N"
+/><b
+ id="29"
+ Z="30"
+ B="6"
+ E="8"
+ BS="N"
+/><b
+ id="30"
+ Z="31"
+ B="8"
+ E="9"
+ BS="N"
+/><b
+ id="31"
+ Z="32"
+ B="9"
+ E="10"
+ BS="N"
+/><b
+ id="32"
+ Z="33"
+ B="10"
+ E="11"
+ BS="N"
+/><b
+ id="33"
+ Z="34"
+ B="11"
+ E="12"
+ BS="N"
+/><b
+ id="34"
+ Z="35"
+ B="12"
+ E="13"
+ BS="N"
+/><b
+ id="35"
+ Z="36"
+ B="8"
+ E="13"
+ BS="N"
+/><b
+ id="36"
+ Z="37"
+ B="4"
+ E="14"
+ BS="N"
+/><b
+ id="37"
+ Z="38"
+ B="14"
+ E="15"
+ Order="1.5"
+ BS="N"
+/><b
+ id="38"
+ Z="39"
+ B="15"
+ E="16"
+ Order="1.5"
+ BS="N"
+/><b
+ id="39"
+ Z="40"
+ B="16"
+ E="17"
+ Order="1.5"
+ BS="N"
+/><b
+ id="40"
+ Z="41"
+ B="17"
+ E="18"
+ Order="1.5"
+ BS="N"
+/><b
+ id="41"
+ Z="42"
+ B="18"
+ E="19"
+ Order="1.5"
+ BS="N"
+/><b
+ id="42"
+ Z="43"
+ B="14"
+ E="19"
+ Order="1.5"
+ BS="N"
+/><b
+ id="43"
+ Z="44"
+ B="19"
+ E="20"
+ BS="N"
+/><b
+ id="44"
+ Z="45"
+ B="20"
+ E="21"
+ BS="N"
+/><graphic
+ id="48"
+ BoundingBox="174.13 99.50 152.95 99.50"
+ Z="46"
+ GraphicType="Oval"
+ OvalType="Circle"
+ Center3D="152.95 99.50 0"
+ MajorAxisEnd3D="174.13 99.50 0"
+ MinorAxisEnd3D="152.95 120.68 0"
+/></fragment><t
+ id="2"
+ p="25 30"
+ BoundingBox="25 13.65 189.15 33.40"
+ Z="1"
+ Warning="Chemical Interpretation is not possible for this label"
+ LineHeight="auto"
+><s font="3" size="14" color="0">ChemNMR </s><s font="3" size="14" color="0" face="64">13</s><s font="3" size="14" color="0">C Estimation</s></t><t
+ id="50"
+ p="30 261.90"
+ BoundingBox="30 251.15 352.83 264.90"
+ Z="48"
+ Warning="Chemical Interpretation is not possible for this label"
+ LineHeight="auto"
+><s font="3" size="12" color="0">Estimation quality is indicated by color: </s><s font="3" size="12" color="8">good</s><s font="3" size="12" color="0">, </s><s font="3" size="12" color="9">medium</s><s font="3" size="12" color="0">, </s><s font="3" size="12" color="4">rough</s></t><t
+ id="51"
+ p="30 521.90"
+ BoundingBox="30 514.75 386.46 1412.20"
+ Z="49"
+ Warning="Chemical Interpretation is not possible for this label"
+ LineHeight="auto"
+ LineStarts="45 46 47 105 106 149 210 271 337 397 458 519 574 617 678 739 805 865 926 987 1042 1084 1132 1174 1229 1271 1319 1361 1416 1458 1506 1548 1603 1645 1693 1735 1790 1832 1880 1922 1977 2019 2067 2109 2164 2207 2268 2328 2388 2455 2516 2571 2614 2675 2735 2795 2862 2923 2978 3021 3082 3142 3203 3270 3325 3365 3405 3460 3500 3540 3607 3660 3715 3757 3817 3863 3909 3961 4007 4062 4104 4156 4202 4261 4312 4358 4404 4446 4498 4558 4604 4656 4710"
+><s font="22" size="9" color="0">Protocol of the C-13 NMR Prediction: (Lib=S)
+
+
+Node     Shift    Base + Inc.   Comment (ppm rel. to TMS)
+
+CH2 48.6              -5.8      piperidine
+                          9.1      1 alpha -C from aliphatic
+                         28.3      1 alpha -N from aliphatic
+                          0.5      1 beta -C(=O)-C from aliphatic
+                         18.8      2 beta -C from aliphatic
+                         -2.5      1 gamma -C from aliphatic
+                          0.0      1 delta -N from aliphatic
+                          0.2      general corrections
+CH2 48.6              -5.8      piperidine
+                          9.1      1 alpha -C from aliphatic
+                         28.3      1 alpha -N from aliphatic
+                          0.5      1 beta -C(=O)-C from aliphatic
+                         18.8      2 beta -C from aliphatic
+                         -2.5      1 gamma -C from aliphatic
+                          0.0      1 delta -N from aliphatic
+                          0.2      general corrections
+C   136.5            128.5      1-benzene
+                         12.3      1 -N-C(=O)-C
+                         -1.4      1 -C-N
+                         -2.9      general corrections
+C   134.5            128.5      1-benzene
+                         -8.1      1 -N-C(=O)-C
+                         13.9      1 -C-N
+                          0.2      general corrections
+CH  116.8            128.5      1-benzene
+                         -8.1      1 -N-C(=O)-C
+                         -0.2      1 -C-N
+                         -3.4      general corrections
+CH  124.9            128.5      1-benzene
+                          0.2      1 -N-C(=O)-C
+                         -1.4      1 -C-N
+                         -2.4      general corrections
+CH  126.9            128.5      1-benzene
+                          0.2      1 -N-C(=O)-C
+                         -2.0      1 -C-N
+                          0.2      general corrections
+CH  124.1            128.5      1-benzene
+                         -4.4      1 -N-C(=O)-C
+                         -0.2      1 -C-N
+                          0.2      general corrections
+CH2 25.4              -8.6      piperidine
+                         18.2      2 alpha -C from aliphatic
+                          9.4      1 beta -C from aliphatic
+                         11.3      1 beta -N from aliphatic
+                         -2.7      1 gamma -C(=O)-C from aliphatic
+                         -2.5      1 gamma -C from aliphatic
+                          0.3      general corrections
+CH2 25.4              -8.6      piperidine
+                         18.2      2 alpha -C from aliphatic
+                          9.4      1 beta -C from aliphatic
+                         11.3      1 beta -N from aliphatic
+                         -2.7      1 gamma -C(=O)-C from aliphatic
+                         -2.5      1 gamma -C from aliphatic
+                          0.3      general corrections
+CH2 24.2              -6.0      piperidine
+                         18.2      2 alpha -C from aliphatic
+                         18.8      2 beta -C from aliphatic
+                         -5.1      1 gamma -N from aliphatic
+                          0.0      1 delta -C(=O)-C from aliphatic
+                         -1.7      general corrections
+C   167.8            165.0      1-amide
+                          7.7      1 -C
+                         -4.9      general corrections
+C   170.2            165.0      1-amide
+                          7.7      1 -C
+                         -4.5      1 -1:C*C*C*C*C*C*1 from N-amide
+                         -1.5      1 -C from N-amide
+                          3.5      general corrections
+CH2 45.7              -2.3      aliphatic
+                         24.3      1 alpha -1:C*C*C*C*C*C*1
+                         28.3      1 alpha -N
+                         -5.1      1 gamma -N
+                          0.0      1 delta -C(=O)-C
+                          0.3      1 delta -C
+                          0.2      general corrections
+CH2 54.2              -2.3      aliphatic
+                         22.5      1 alpha -C(=O)-N
+                         28.3      1 alpha -N
+                          9.3      1 beta -1:C*C*C*C*C*C*1
+                          0.5      1 beta -C(=O)-C
+                         -5.0      2 gamma -C
+                          0.9      3 delta -C
+CH3 22.3              -2.3      aliphatic
+                         22.5      1 alpha -C(=O)-N
+                         -2.6      1 gamma -1:C*C*C*C*C*C*1
+                         -2.5      1 gamma -C
+                         -0.4      1 delta -C(=O)-N
+                          7.6      general corrections</s></t><spectrum
+ id="49"
+ BoundingBox="30 291.90 480 491.90"
+ Z="47"
+ XSpacing="0.1"
+ XLow="0"
+ XType="PartsPerMillion"
+ YType="Unknown"
+ Class="NMR"
+ XAxisLabel="PPM"
+>
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 1 0 0 0 0 0
+0 0 0 0 0 0 2 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 1 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 2 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+1 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 1 0 0 0 0 0 0
+0 1 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 1 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 1 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 1 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0<objecttag
+ id="1"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="25.2-25.6,"
+/><objecttag
+ id="2"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="170-170.4,"
+/><objecttag
+ id="3"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="54-54.4,"
+/><objecttag
+ id="4"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="167.6-168,"
+/><objecttag
+ id="5"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="48.4-48.8,"
+/><objecttag
+ id="6"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="22.1-22.5,"
+/><objecttag
+ id="7"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="45.5-45.9,"
+/><objecttag
+ id="8"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="126.7-127.1,"
+/><objecttag
+ id="9"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="134.3-134.7,"
+/><objecttag
+ id="10"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="25.2-25.6,"
+/><objecttag
+ id="11"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="24-24.4,"
+/><objecttag
+ id="12"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="116.6-117,"
+/><objecttag
+ id="13"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="136.3-136.7,"
+/><objecttag
+ id="14"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="48.4-48.8,"
+/><objecttag
+ id="15"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="123.9-124.3,"
+/><objecttag
+ id="16"
+ TagType="String"
+ Name="/CS/CD/assign"
+ Value="124.7-125.1,"
+/></spectrum></page></CDXML>

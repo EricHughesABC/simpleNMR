@@ -1,0 +1,10 @@
+type   LIB
+status   Completed
+lock   on
+title   gHMBCAD_01 
+exp   gHMBCAD
+time   
+macro   return
+data   /data/p62303/Mar29181004/gHMBCAD_01
+CPnode   gHMBCAD_001
+tooltext   Mar29181004

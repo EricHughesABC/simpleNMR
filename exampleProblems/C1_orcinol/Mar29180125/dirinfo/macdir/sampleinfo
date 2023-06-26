@@ -1,0 +1,10 @@
+SAMPLE#: 55
+USER: service
+MACRO: cpautoQ('loc55_001','day')
+SOLVENT: dmso
+TEXT: IRB:ESB:C1 orcinol
+SampleDir: service
+USERDIR: /home/service/vnmrsys
+DATA: 
+STATUS: Queued
+---------------------------------------------

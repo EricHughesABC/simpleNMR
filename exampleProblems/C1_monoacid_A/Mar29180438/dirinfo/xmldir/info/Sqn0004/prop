@@ -1,0 +1,10 @@
+type   LIB
+status   Queued
+lock   on
+title   CARBON_001 0:00
+exp   
+time   
+macro   return
+data   
+CPnode   CARBON_001
+tooltext   
