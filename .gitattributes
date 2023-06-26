@@ -3,3 +3,4 @@
 modules filter=lfs diff=lfs merge=lfs -text
 .lib filter=lfs diff=lfs merge=lfs -text
 .sym filter=lfs diff=lfs merge=lfs -text
+*.mnova filter=lfs diff=lfs merge=lfs -text

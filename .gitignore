@@ -18,6 +18,9 @@ cp_to_dropbox.bat
 # python test files
 test*.*
 
+# mnova files
+*.mnova
+
 # Development files notebooks
 develop/
 

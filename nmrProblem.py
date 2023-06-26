@@ -34,15 +34,13 @@ import PIL
 from PIL import Image
 from excelheaders import excel_orig_df_columns, excel_df_columns
 
-# from .simpleNMR import JAVA_COMMAND
-# from simpleNMR import JAVA_AVAILABLE
 
 from PyQt5.QtWidgets import QMessageBox
 # import nmrmol
 import expectedmolecule
 
-global JAVA_AVAILABLE
-global JAVA_COMMAND
+# global JAVA_AVAILABLE
+# global JAVA_COMMAND
 global XYDIM
 XYDIM = 800
 
@@ -960,9 +958,6 @@ class NMRproblem:
 
         elif self.c13_from_hsqc and self.H1_data_present:
             print("c13_from_hsqc and H1_data_present")
-            print(self.c13)
-            print(self.h1)
-            print(self.hsqc.f2_ppm.values)
             self.c13["CH3"] = False
             self.c13["CH1"] = False
             self.c13["numProtons"] = 0
@@ -972,13 +967,9 @@ class NMRproblem:
                 for hidx in self.h1.query("numProtons == @numprotons").index.values:
                     hppm = self.h1.loc[hidx, "ppm"]
                     cidx = self.hsqc.query("f2_ppm == @hppm").f1_i
-                    print(hppm, cidx, self.c13.loc[cidx, "ppm"])
                     self.c13.loc[cidx, "numProtons"] += numprotons
                     self.c13.loc[cidx, "attached_protons"] += numprotons
                     self.c13.loc[cidx, f'CH{numprotons}'] = True
-
-            print("c13 after CH3 and CH1\n", self.c13)
-
 
 
     def add_CH2_column_to_hsqc(self, hsqc_df):
@@ -1671,6 +1662,7 @@ class NMRproblem:
 
 
     def add_CH0_CH1_CH2_CH3_CH3CH1_to_C13(self):
+        
         # label c13 values as CH2 or not using the hsqc_df_
         self.c13['CH0'] = False
         self.c13['CH1'] = False
@@ -3506,9 +3498,16 @@ class NMRproblem:
 
 if __name__ == "__main__":
 
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
+    data_info = parse_argv()
+    sheets_missing = get_missing_sheets(data_info["excel_fn"], False)
+    print(data_info)
+
+
     h1 = r"csTables/h1_chemical_shift_table.jsn"
     c13 = r"csTables/c13_chemical_shift_table.jsn"
 
     H1df_orig, C13df_orig = read_in_cs_tables(h1, c13)
 
-    nmrproblem = NMRproblem("exampleProblems\ch9_025", "yml")
+    # nmrproblem = NMRproblem("exampleProblems\ch9_025")
