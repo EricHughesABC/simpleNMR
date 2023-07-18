@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 
 
 import nmrProblem
+import simpleNMRutils
 
 
 def createH1C13interactivePlot(nmrprblm, h1c13distlist, ax0):
@@ -528,77 +529,44 @@ class MatplotlibH1C13Plot(Figure):
         annot.xy = (x, y)
         annot.set_visible(True)
 
-    # def display_annotation_H1_from_molplot(self, lbl, annot):
-    # """display annotation for H1 from molplot"""
-    # highlighted_H1_lbls = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f2Cp_i == lbl][
-    #     "f2H_i"
-    # ]
-
-    # if not highlighted_H1_lbls.empty:
-    #     highlighted_H1_lbl = highlighted_H1_lbls.iloc[0]
-    #     atom_index = int(highlighted_H1_lbl[1:])
-    #     x = self.nmrproblem.h1.loc[atom_index, "ppm"]
-    #     y = 0.3
-    #     ppm = self.nmrproblem.h1.loc[atom_index, "ppm"]
-    #     integral = self.nmrproblem.h1.loc[atom_index, "integral"]
-    #     jcoupling = self.nmrproblem.h1.loc[atom_index, "jCouplingClass"]
-    #     annot_text = (
-    #         f"{highlighted_H1_lbl}: {ppm:.2f} ppm\nInt: {integral}\nJ: {jcoupling}"
-    #     )
-    #     annot.set_text(annot_text)
-    #     annot.xy = (x, y)
-    #     annot.set_visible(True)
-
-    def display_annotation_H1_from_molplot(self, lbl, annot):
-        """display annotation for H1 from molplot"""
-        highlighted_H1_lbls = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f2Cp_i == lbl][
+    def display_annotation_H1_from_molplot(self, lbl, annot, nmrproblem):
+        """Display annotation for H1 from molplot"""
+        highlighted_H1_lbls = nmrproblem.hsqc[nmrproblem.hsqc.f2Cp_i == lbl][
             "f2H_i"
         ]
 
-        if not highlighted_H1_lbls.empty:
-            if len(highlighted_H1_lbls) == 1:
+        def format_annotation_text(atom_index, atom_label):
+            ppm = nmrproblem.h1.loc[atom_index, "ppm"]
+            integral = nmrproblem.h1.loc[atom_index, "integral"]
+            jcoupling = nmrproblem.h1.loc[atom_index, "jCouplingClass"]
+            jcouplingvals = nmrproblem.h1.loc[atom_index, "jCouplingVals"]
+            jcouplingvals = simpleNMRutils.stringify_vals(jcouplingvals)
+            return f"{atom_label}: {ppm:.2f} ppm\nInt: {integral:.1f}\nJ: {jcoupling}: {jcouplingvals} Hz"
 
-                highlighted_H1_lbl = highlighted_H1_lbls.iloc[0]
-                atom_index = int(highlighted_H1_lbl[1:])
-                x = self.nmrproblem.h1.loc[atom_index, "ppm"]
-                y = 0.3
-                ppm = self.nmrproblem.h1.loc[atom_index, "ppm"]
-                integral = self.nmrproblem.h1.loc[atom_index, "integral"]
-                jcoupling = self.nmrproblem.h1.loc[atom_index, "jCouplingClass"]
-                jcouplingvals = self.nmrproblem.h1.loc[atom_index, "jCouplingVals"]
-                annot_text = f"{highlighted_H1_lbl}: {ppm:.2f} ppm\nInt: {integral}\nJ: {jcoupling}: {jcouplingvals} Hz"
-                annot.set_text(annot_text)
-                annot.xy = (x, y)
-                annot.set_visible(True)
+        if highlighted_H1_lbls.empty:
+            return
+        
+        x_vals = []
+        annot_text_list = []
+        for idx in highlighted_H1_lbls.index:
+            print("idx", idx)
+            print("highlighted_H1_lbls[idx]", highlighted_H1_lbls[idx])
+            atom_index = int(highlighted_H1_lbls[idx][1:])
+            atom_label = highlighted_H1_lbls[idx]
+            x = nmrproblem.h1.loc[atom_index, "ppm"]
+            x_vals.append(x)
+            y = 0.3
 
-            elif len(highlighted_H1_lbls) == 2:
-                highlighted_H1_lbl1 = highlighted_H1_lbls.iloc[0]
-                highlighted_H1_lbl2 = highlighted_H1_lbls.iloc[1]
-                atom_index1 = int(highlighted_H1_lbl1[1:])
-                atom_index2 = int(highlighted_H1_lbl2[1:])
-                x1 = self.nmrproblem.h1.loc[atom_index1, "ppm"]
-                x2 = self.nmrproblem.h1.loc[atom_index2, "ppm"]
-                x = (x1 + x2) / 2
-                y = 0.3
-                # atom_index = int(highlighted_H1_lbl[1:])
-                # x = self.nmrproblem.h1.loc[atom_index, "ppm"]
-                # y = 0.3
-                ppm1 = self.nmrproblem.h1.loc[atom_index1, "ppm"]
-                ppm2 = self.nmrproblem.h1.loc[atom_index2, "ppm"]
-                integral1 = self.nmrproblem.h1.loc[atom_index1, "integral"]
-                integral2 = self.nmrproblem.h1.loc[atom_index2, "integral"]
-                jcoupling1 = self.nmrproblem.h1.loc[atom_index1, "jCouplingClass"]
-                jcoupling2 = self.nmrproblem.h1.loc[atom_index2, "jCouplingClass"]
-                jcoupling1vals = self.nmrproblem.h1.loc[atom_index1, "jCouplingVals"]
-                jcoupling2vals = self.nmrproblem.h1.loc[atom_index2, "jCouplingVals"]
-                annot_text = (
-                    f"{highlighted_H1_lbl1}: {ppm1:.2f} ppm\nInt: {integral1}\nJ: {jcoupling1}: {jcoupling1vals} Hz\n"
-                    + f"{highlighted_H1_lbl2}: {ppm2:.2f} ppm\nInt: {integral2}\nJ: {jcoupling2}: {jcoupling2vals} Hz"
-                )
+            annot_text_list.append(format_annotation_text(atom_index, atom_label))
 
-                annot.set_text(annot_text)
-                annot.xy = (x, y)
-                annot.set_visible(True)
+        annot_text = "\n".join(annot_text_list)
+
+        x = np.mean(x_vals)
+
+        annot.set_text(annot_text)
+        annot.xy = (x, y)
+        annot.set_visible(True)
+
 
     def hide_annotation(self, annot):
         """hide annotation"""

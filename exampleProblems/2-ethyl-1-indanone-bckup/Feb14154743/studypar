@@ -1,0 +1,45 @@
+samplename 2 2 8 0 0 2 1 9 1 64
+1 "service"
+0 
+lot 2 2 8 0 0 2 1 0 1 64
+1 ""
+0 
+locdir 2 2 8 0 0 2 1 0 1 64
+1 ""
+0 
+loc_ 7 1 12 12 12 2 1 8201 1 64
+1 3 
+0 
+operator_ 2 2 128 0 0 2 1 32772 1 64
+1 "service"
+0 
+notebook 2 2 8 0 0 2 1 0 1 64
+1 ""
+0 
+page 2 2 8 0 0 2 1 0 1 64
+1 ""
+0 
+studyowner 2 2 8 0 0 2 1 0 1 64
+1 "service"
+0 
+solvent 2 2 6 0 0 2 1 11 1 64
+1 "cdcl3"
+0 
+studyid_ 2 2 8 0 0 2 1 0 1 64
+1 "tmpstudy"
+0 
+vloc_ 2 2 8 0 0 2 1 8 1 64
+1 "F1"
+0 
+studystatus 2 2 8 0 0 2 1 0 1 64
+1 "Complete"
+0 
+studypath 2 2 8 0 0 2 1 0 1 64
+1 "/data/d72002/Feb14154743"
+0 
+vrack_ 7 1 5 1 0 2 1 0 1 64
+1 1 
+0 
+vzone_ 7 1 15 1 0 2 1 0 1 64
+1 1 
+0 

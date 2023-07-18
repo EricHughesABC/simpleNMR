@@ -1,0 +1,4 @@
+//homeblue01/vsmw51/My_Documents/NMRtraining/NMRanalysis/d7/2-ethyl-1-indanone/Feb14154743/gHMBCAD_01.fid/fid
+
+//homeblue01/vsmw51/My_Documents/NMRtraining/NMRanalysis/d7/2-ethyl-1-indanone/Feb14154743/NOESY_01.fid/fid
+

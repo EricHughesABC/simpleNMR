@@ -62,7 +62,8 @@ def get_missing_sheets(excel_fname: str, qstarted: bool) -> set:
         missing_sheets = set(excel_orig_df_columns.keys()) - set(excelsheets.keys())
 
         # determine if sheets present are empty
-        empty_sheets = {key for key in excelsheets.keys() if excelsheets[key].empty}
+        print( {k:excelsheets[k].shape[0] for k in excelsheets.keys()} )
+        empty_sheets = {key for key in excelsheets.keys() if excelsheets[key].empty or (excelsheets[key].shape[0] == 0)}
         print("empty sheets:", empty_sheets)
 
         # return the union of the two sets
@@ -877,6 +878,104 @@ class NMRproblem:
 
 
 
+        # if self.c13_from_hsqc:
+
+        #     if "CH3CH" not in self.hsqc.columns:
+        #         self.add_CH2_CH3CH_to_hsqc_dataframes()
+        #         print("added CH2 and CH3CH to hsqc dataframes")
+        #         print(self.hsqc)
+
+        #     if "CH3CH" not in self.c13_df.columns:
+        #         self.add_CH0_CH1_CH2_CH3_CH3CH1_to_C13_df()
+        #         print("added CH0, CH1, CH2, CH3, CH3CH1 to c13_df")
+        #         print(self.c13_df.ppm.tolist())
+        #         print(self.hsqc.f1_ppm.tolist())
+
+        #     if "CH3CH" not in self.c13.columns:
+        #         self.add_CH0_CH1_CH2_CH3_CH3CH1_to_C13()
+        #         print("added CH0, CH1, CH2, CH3, CH3CH1 to c13")
+        #         print(self.c13)
+
+
+        # if self.c13_from_hsqc and self.H1_data_missing:
+
+        #     ch3_df = self.expected_molecule.molprops_df[
+        #         self.expected_molecule.molprops_df.CH3
+        #     ]
+        #     print("1067 ch3_df", ch3_df)
+        #     # drop duplicate rows based on c13ppm
+        #     # ch3_df = ch3_df.drop_duplicates(subset=["ppm"])
+
+        #     # sort ch3_df by ppm, lowest to highest
+        #     ch3_df = ch3_df.sort_values(by=["ppm"])
+        #     ch3ch_df = self.c13[self.c13.CH3CH].copy()
+        #     # CH3 groups expected to be below 67 ppm
+        #     ch3ch_df = ch3ch_df[ch3ch_df.ppm < 67].copy()
+
+
+        #     if ch3_df.shape[0] >= ch3ch_df.shape[0]:
+        #         self.c13.loc[ch3ch_df.index, "numProtons"] = 3
+        #     else:
+        #         for idx, ppm in zip(ch3_df.index, ch3_df.ppm):
+        #             # find the closest match in the c13 dataframe
+        #             # and update the numProtons column to 3
+        #             closest_match = ch3ch_df.iloc[
+        #                 (ch3ch_df["ppm"] - ppm).abs().argsort()[:1]
+        #             ]
+        #             self.c13.loc[closest_match.index, "numProtons"] = 3
+        #             ch3ch_df.drop(closest_match.index, inplace=True)
+
+
+        #     # update corresponding integral in h1 frame
+        #     ch3_df = self.c13[self.c13.numProtons == 3]
+        #     for idx, ppm in zip(ch3_df.index, ch3_df.ppm):
+        #         # find the closest match in the hsqc dataframe
+        #         closest_match = self.hsqc.iloc[
+        #             (self.hsqc["f1_ppm"] - ppm).abs().argsort()[:1]
+        #         ]
+        #         # update the integral in the h1 dataframe
+        #         self.h1.loc[closest_match.index, "integral"] = 3
+        #         self.h1.loc[closest_match.index, "numProtons"] = 3
+
+
+        #     # update h1 integrals for CH2 groups
+        #     ch2_df = self.hsqc[self.hsqc_df.CH2]
+
+        #     # count frequency of f1_ppm in ch2_df
+        #     ch2_df_f1_ppm = ch2_df.f1_ppm.value_counts()
+        #     # update corresponding integral in h1 frame
+        #     for idx, f1_ppm, f2_ppm in zip(ch2_df.index, ch2_df.f1_ppm, ch2_df.f2_ppm):
+
+        #         if ch2_df_f1_ppm.loc[f1_ppm] == 1:
+        #             # set the integral of f2_ppm in self.h1 to 2
+        #             self.h1.loc[self.h1.ppm == f2_ppm, "integral"] = 2
+        #             self.h1.loc[self.h1.ppm == f2_ppm, "numProtons"] = 2
+        #         else:
+        #             # set the integral of f2_ppm in self.h1 to 1
+        #             self.h1.loc[self.h1.ppm == f2_ppm, "integral"] = 1
+        #             self.h1.loc[self.h1.ppm == f2_ppm, "numProtons"] = 1
+
+        #     self.c13["attached_protons"] = self.c13["numProtons"]
+
+        # elif self.c13_from_hsqc and self.H1_data_present:
+        #     print("c13_from_hsqc and H1_data_present")
+        #     self.c13["CH3"] = False
+        #     self.c13["CH1"] = False
+        #     self.c13["numProtons"] = 0
+        #     self.c13["attached_protons"] = 0
+        #     # use integrals from h1 to set CH3s in C13
+        #     for numprotons in [3, 2, 1]:
+        #         for hidx in self.h1.query("numProtons == @numprotons").index.values:
+        #             hppm = self.h1.loc[hidx, "ppm"]
+        #             cidx = self.hsqc.query("f2_ppm == @hppm").f1_i
+        #             self.c13.loc[cidx, "numProtons"] += numprotons
+        #             self.c13.loc[cidx, "attached_protons"] += numprotons
+        #             self.c13.loc[cidx, f'CH{numprotons}'] = True
+
+        self.attempt_to_assign_integrals_to_nmrproblem()
+        
+    def attempt_to_assign_integrals_to_nmrproblem(self):
+
         if self.c13_from_hsqc:
 
             if "CH3CH" not in self.hsqc.columns:
@@ -971,6 +1070,38 @@ class NMRproblem:
                     self.c13.loc[cidx, "attached_protons"] += numprotons
                     self.c13.loc[cidx, f'CH{numprotons}'] = True
 
+
+    def initiate_df_data_complete(self):
+        self.define_hsqc_f2integral()
+        if (self.c13_from_hsqc) or (self.h1_df_integral_added):
+            # nmrproblem.df.loc["integral", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
+            self.df.loc[
+                "attached protons", self.carbonAtoms
+            ] = self.c13.attached_protons.values
+            self.df.loc[
+                "C13 hyb", self.carbonAtoms
+            ] = self.c13.attached_protons.values
+            # do the same for nmrproblem,protonAtoms
+            self.df.loc[
+                "integral", self.protonAtoms
+            ] = self.h1.integral.values
+            self.df.loc[
+                "attached protons", self.protonAtoms
+            ] = self.h1.integral.values
+
+
+            self.df.loc[
+                "C13 hyb", self.protonAtoms
+            ] = self.h1.integral.values
+        else:
+            self.define_hsqc_f2integral()
+            self.define_c13_attached_protons()
+
+        build_model(self)
+        build_molecule_graph_network(self)
+        # nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
+        self.build_xy3()
+        self.save_dataframes_in_nmrproblem_to_json()
 
     def add_CH2_column_to_hsqc(self, hsqc_df):
         hsqc_df["CH2"] = False
@@ -2413,6 +2544,581 @@ class NMRproblem:
 
         return True, "ok"
 
+    def sync_class_from_mnova_excel(self, excelFileNameDirName: str, excel_fn=None):
+        """
+        read in class parameters from excel file found in problem directory if found
+
+        Parameters
+        ----------
+        excelFileNameDirName : str
+            DESCRIPTION. name and path to directory holding excel file
+
+        Returns
+        -------
+        bool
+            DESCRIPTION. Return True if excel found and processed and message
+
+        """
+
+        if not self.load_excel_file(excelFileNameDirName, excel_fn):
+            return False, "Excel file not found"
+
+        return_error, return_message = self.tidy_up_excel_data()
+        if return_error:
+            if self.qtstarted:
+                # create qt5 warning dialog with return_message
+
+                msg_box = QMessageBox()
+                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setText(return_message)
+                msg_box.setStandardButtons(QMessageBox.Ok)
+                msg_box.exec()
+                msg_box.setWindowTitle("Error in Excel file")
+            else:
+                print(return_message)
+            return False, return_message
+
+        # check if excel file contains a molecule definition and a smiles definition if not
+        # then output an error message and return False
+        if "molecule" not in self.excelsheets:
+            if self.qtstarted:
+                # create qt5 warning dialog with return_message
+
+                msg_box = QMessageBox()
+                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setText("No molecule sheet found in excel file")
+                msg_box.setStandardButtons(QMessageBox.Ok)
+                msg_box.exec()
+                msg_box.setWindowTitle("Error in Excel file")
+            else:
+                print("No molecule sheet found in excel file")
+            return False, "No molecule sheet found in excel file"
+
+        if "smiles" not in self.excelsheets["molecule"].columns:
+            if self.qtstarted:
+                # create qt5 warning dialog with return_message
+
+                msg_box = QMessageBox()
+                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setText("No smiles column found in molecule sheet")
+                msg_box.setStandardButtons(QMessageBox.Ok)
+                msg_box.exec()
+                msg_box.setWindowTitle("Error in Excel file")
+            else:
+                print("No smiles column found in molecule sheet")
+            return False, "No smiles column found in molecule sheet"
+        else:
+            self.smiles_defined = True
+
+        # check if molecule sheet contains a valid smiles string
+        if not isinstance(self.excelsheets["molecule"].smiles.values[0], str):
+            if self.qtstarted:
+                # create qt5 warning dialog with return_message
+
+                msg_box = QMessageBox()
+                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setText("No smiles string found in molecule sheet")
+                msg_box.setStandardButtons(QMessageBox.Ok)
+                msg_box.exec()
+                msg_box.setWindowTitle("Error in Excel file")
+            else:
+                print("No smiles string found in molecule sheet")
+            return False, "No smiles string found in molecule sheet"
+        else:
+            self.smiles = self.excelsheets["molecule"].smiles.values[0]
+            # check if smiles string is valid using rdkit
+            
+            # self.expected_molecule = expectedmolecule.expectedMolecule(self.smiles)
+            if self.expected_molecule is None:
+                if self.qtstarted:
+                    # create qt5 warning dialog with return_message
+
+                    msg_box = QMessageBox()
+                    msg_box.setIcon(QMessageBox.Warning)
+                    msg_box.setText("Invalid smiles string found in molecule sheet")
+                    msg_box.setStandardButtons(QMessageBox.Ok)
+                    msg_box.exec()
+                    msg_box.setWindowTitle("Error in Excel file")
+                else:
+                    print("Invalid smiles string found in molecule sheet")
+                return False, "Invalid smiles string found in molecule sheet"
+            else:
+                self.smiles_defined = True
+
+        # finally create rdkit molecule from smiles string
+        self.dbe = self.expected_molecule.dbe
+        self.elements = self.expected_molecule.elements
+        self.png = self.expected_molecule.png
+        # reconstruct moleculeAtomsStr from elements
+        self.moleculeAtomsStr = CalcMolFormula(self.expected_molecule.mol)
+
+
+        # do basic checks on excels sheets and decide how to proceed
+        if {"H1_pureshift", "HSQC"}.issubset(self.expts_available):
+            self.pureshift_data_present = True
+            self.pureshift_data_missing = False
+        else:
+            self.pureshift_data_present = False
+            self.pureshift_data_missing = True
+
+        if {"C13_1D", "HSQC"}.issubset(self.expts_available):
+            self.C13_data_present = True
+            self.C13_data_missing = False
+        else:
+            self.C13_data_present = False
+            self.C13_data_missing = True
+
+        if {"H1_1D", "HSQC"}.issubset(self.expts_available):
+            self.H1_data_present = True
+            self.H1_data_missing = False
+        else:
+            self.H1_data_present = False
+            self.H1_data_missing = True
+
+        if {"COSY"}.issubset(self.expts_available):
+            self.COSY_data_present = True
+            self.COSY_data_missing = False
+        else:
+            self.COSY_data_present = False
+            self.COSY_data_missing = True
+        if {"HMBC"}.issubset(self.expts_available):
+            self.HMBC_data_present = True
+            self.HMBC_data_missing = False
+        else:
+            self.HMBC_data_present = False
+            self.HMBC_data_missing = True
+
+        if (
+            self.pureshift_data_missing
+            and self.H1_data_missing
+            and self.C13_data_present
+        ):
+            # use f2_ppm values in hsqc_df to define h1_df:
+            self.init_h1_and_pureshift_from_c13_hsqc_hmbc_cosy()
+            self.c13_from_hsqc = True
+
+        elif (
+            self.pureshift_data_missing
+            and self.H1_data_missing
+            and self.C13_data_missing
+        ):
+            self.c13_from_hsqc = True
+            # use f2_ppm values in hsqc_df to define h1_df:
+            self.c13_df = self.init_c13_from_hsqc_and_hmbc()
+            print("\n2183 self.c13_df\n", self.c13_df)
+            self.init_h1_and_pureshift_from_c13_hsqc_hmbc_cosy()
+
+        elif (
+            self.pureshift_data_present or self.H1_data_present
+        ) and self.C13_data_missing:
+            self.c13_df = self.init_c13_from_hsqc_and_hmbc()
+            print("\n2191 self.c13_df\n", self.c13_df)
+            self.c13_from_hsqc = True
+       
+        elif  (self.H1_data_missing and self.pureshift_data_present and self.C13_data_present):
+            self.h1_df = self.init_h1_from_pureshift()
+            self.define_hsqc_f2integral()
+            print("\nself.h1_df\n", self.h1_df)
+        else:
+            self.c13_from_hsqc = False
+
+
+        # define short views of the dataframes and tidy up column names
+        # attempt to remove solvent peaks
+        # test if hsqc_df is empty
+        if not self.hsqc_df.empty:
+            self.hsqc = self.hsqc_df[self.hsqc_df.signaltype == "Compound"][
+                ["f2_ppm", "f1_ppm", "intensity", "signaltype"]
+            ].copy()
+        if self.hsqc.empty:
+            # maybe user forgot to set type to compound so search for "" in Type column
+            self.hsqc = self.hsqc_df[self.hsqc_df.signaltype == ""][
+                ["f2_ppm", "f1_ppm", "intensity", "signaltype"]
+            ].copy()
+            self.hsqc["signaltype"] = "Compound"
+
+
+        if self.hsqc.empty:
+            if self.qtstarted:
+                # create qt5 warning dialog with return_message
+
+                msg_box = QMessageBox()
+                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setText("hsqc excel sheet is empty")
+                msg_box.setStandardButtons(QMessageBox.Ok)
+                msg_box.exec()
+                msg_box.setWindowTitle("Error in Excel file: hsqc is empty")
+            else:
+                print("hsqc is empty")
+            return False, "hsqc is empty"
+            # sys.exit()
+
+        if self.c13_df.empty:
+            if self.qtstarted:
+                # create qt5 warning dialog with return_message
+
+                msg_box = QMessageBox()
+                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setText("c13 excel sheet is empty")
+                msg_box.setStandardButtons(QMessageBox.Ok)
+                msg_box.exec()
+                msg_box.setWindowTitle("Error in Excel file: c13 is empty")
+            else:
+                print("c13 is empty")
+            return False, "c13 is empty"
+        else:
+            self.c13 = self.c13_df[self.c13_df.signaltype == "Compound"][["ppm"]].copy()
+            if self.c13.empty:
+                # maybe user forgot to set type to compound so search for "" in Type column
+                self.c13 = self.c13_df[self.c13_df.signaltype == ""][["ppm"]].copy()
+                self.c13["signaltype"] = "Compound"
+            if self.c13.empty:
+                if self.qtstarted:
+                    # create qt5 warning dialog with return_message
+
+                    msg_box = QMessageBox()
+                    msg_box.setIcon(QMessageBox.Warning)
+                    msg_box.setText("c13 excel sheet is empty")
+                    msg_box.setStandardButtons(QMessageBox.Ok)
+                    msg_box.exec()
+                    msg_box.setWindowTitle("Error in Excel file: c13 is empty")
+                else:
+                    print("c13 is empty")
+                return False, "c13 is empty"
+
+            self.c13["numProtons"] = 0
+            self.c13["attached_protons"] = 0
+            if {"CH2", "CH3CH", "quaternary"}.issubset(self.c13_df.columns):
+                self.c13["CH2"] = self.c13_df[self.c13_df.signaltype == "Compound"][
+                    "CH2"
+                ].copy()
+                self.c13["CH3CH"] = self.c13_df[self.c13_df.signaltype == "Compound"][
+                    "CH3CH"
+                ].copy()
+                self.c13["quaternary"] = self.c13_df[
+                    self.c13_df.signaltype == "Compound"
+                ]["quaternary"].copy()
+
+                # add two to numProtons for CH2
+                self.c13.loc[self.c13.CH2, "numProtons"] = 2
+                # add one to numProtons for CH3CH
+                self.c13.loc[self.c13.CH3CH, "numProtons"] = 1
+
+            self.c13.loc[:, "attached_protons"] = self.c13.numProtons
+
+        if not self.pureshift_df.empty:
+            self.h1 = self.pureshift_df[self.pureshift_df.signaltype == "Compound"][
+                ["ppm"]
+            ].copy()
+            if self.h1.empty:
+                # maybe user forgot to set type to compound so search for "" in Type column
+                self.h1 = self.pureshift_df[self.pureshift_df.signaltype == ""][
+                    ["ppm"]
+                ].copy()
+                self.h1["signaltype"] = "Compound"
+            if self.h1.empty:
+                if self.qtstarted:
+                    # create qt5 warning dialog with return_message
+
+                    msg_box = QMessageBox()
+                    msg_box.setIcon(QMessageBox.Warning)
+                    msg_box.setText("h1 excel sheet is empty")
+                    msg_box.setStandardButtons(QMessageBox.Ok)
+                    msg_box.exec()
+                    msg_box.setWindowTitle("Error in Excel file: h1 is empty")
+                else:
+                    print("h1 is empty")
+                return False, "h1 is empty"
+        elif not self.h1_df.empty:
+            self.h1 = self.h1_df[["ppm"]].copy()
+        else:
+            if self.qtstarted:
+                # create qt5 warning dialog with return_message
+
+                msg_box = QMessageBox()
+                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setText("h1_df or pureshift_df excel sheet is empty")
+                msg_box.setStandardButtons(QMessageBox.Ok)
+                msg_box.exec()
+                msg_box.setWindowTitle("Error in Excel file: h1 is empty")
+            else:
+                print("No pureshift_df or h1_df")
+                print("Program should not reach this point")
+            return False,   "No pureshift_df or h1_df"
+
+        # check if integral column was missing from h1_df, if so replace integral values by using hsqc
+        self.numCarbonGroups = self.c13.shape[0]
+        self.numProtonGroups = self.h1.shape[0]
+
+        self.symmetric_molecule = False
+        if self.elements["C"] > 0 and self.elements["C"] > self.numCarbonGroups:
+            self.symmetric_molecule = True
+
+        self.c13["attached_protons"] = 0
+        self.c13["ppmH1s"] = None
+
+        self.hsqc["f1_i"] = 0
+        self.hsqc["f2_i"] = 0
+        self.hsqc["f2p_i"] = 0
+        self.hsqc["f1C_i"] = 0
+        self.hsqc["f2H_i"] = 0
+        self.hsqc["f2Cp_i"] = 0
+        self.hsqc["f2p_ppm"] = 0
+
+        self.hmbc = self.hmbc_df[["f1_ppm", "f2_ppm", "intensity"]].copy()
+        self.hmbc["f2p_ppm"] = 0
+        self.hmbc["f1_i"] = 0
+        self.hmbc["f2_i"] = 0
+        self.hmbc["f2p_i"] = 0
+
+        self.pureshift = self.pureshift_df.copy()
+        self.cosy = self.cosy_df[["f1_ppm", "f2_ppm", "intensity"]].copy()
+        self.cosy = self.cosy.assign(f1_i=lambda x: 0)
+        self.cosy = self.cosy.assign(f1p_i=lambda x: 0)
+        self.cosy = self.cosy.assign(f2_i=lambda x: 0)
+        self.cosy = self.cosy.assign(f2p_i=lambda x: 0)
+
+        self.cosy = self.cosy.assign(f1p_ppm=lambda x: np.nan)
+        self.cosy = self.cosy.assign(f2p_ppm=lambda x: np.nan)
+
+        # f1H_i	f2H_i	f1Cp_i	f2Cp_i
+        self.cosy["f1H_i"] = ""
+        self.cosy["f2H_i"] = ""
+        self.cosy["f1Cp_i"] = ""
+        self.cosy["f2Cp_i"] = ""
+
+        self.c13["max_bonds"] = 4
+        
+        self.h1["integral"] = self.h1_df["integral"]
+        self.h1["numProtons"] = self.h1_df["numProtons"]
+        self.h1["jCouplingClass"] = self.h1_df["jCouplingClass"]
+        self.h1["jCouplingVals"] = self.h1_df["jCouplingVals"]
+        self.h1["range"] = self.h1_df["range"]
+        # tidy up chemical shift values by replacing cosy, hsqc and hmbc picked peaks with values from c13ppm and h1ppm dataframes
+
+        # HMBC
+        print("HMBC tidyup")
+        print("self.c13.ppm.tolist()\n", self.c13.ppm.tolist())
+        self.hmbc = self.tidyup_ppm_values(self.hmbc, self.c13.ppm.tolist(), "f1_ppm")
+        self.hmbc = self.tidyup_ppm_values(self.hmbc, self.h1.ppm.tolist(), "f2_ppm")
+
+        self.hmbc.drop(self.hmbc[self.hmbc.f1_ppm_prob == 0].index, inplace=True)
+        self.hmbc.drop(self.hmbc[self.hmbc.f2_ppm_prob == 0].index, inplace=True)
+  
+
+        # HSQC
+        self.hsqc = self.tidyup_ppm_values(self.hsqc, self.c13.ppm.tolist(), "f1_ppm")
+
+        self.hsqc = self.tidyup_ppm_values(self.hsqc, self.h1.ppm.tolist(), "f2_ppm")
+
+
+
+        # tidy up cosy H1 shifts
+        self.cosy = self.tidyup_ppm_values(self.cosy, self.h1.ppm.tolist(), "f1_ppm")
+        self.cosy = self.tidyup_ppm_values(self.cosy, self.h1.ppm.tolist(), "f2_ppm")
+
+        # check if any probability equals zero and remove the row
+        # because it is likely that proton is not connected directly to carbon
+        self.cosy.drop(self.cosy[self.cosy.f1_ppm_prob == 0].index, inplace=True)
+        self.cosy.drop(self.cosy[self.cosy.f2_ppm_prob == 0].index, inplace=True)
+
+
+        # add index columns to h1
+        self.h1["label"] = ["H" + str(i) for i in self.h1.index]
+        self.h1["f1H_i"] = ["H" + str(i) for i in self.h1.index]
+        self.h1["f2H_i"] = ["H" + str(i) for i in self.h1.index]
+        self.h1["f1_i"] = self.h1.index
+        self.h1["f2_i"] = self.h1.index
+
+        # add lookup dicts for dataframe h1
+        self.H1ppmH1label = dict(zip(self.h1.ppm, self.h1.label))
+        self.H1labelH1ppm = dict(zip(self.h1.label, self.h1.ppm))
+
+        self.H1indexH1label = dict(zip(self.h1.index, self.h1.label))
+        self.H1labelH1index = dict(zip(self.h1.label, self.h1.index))
+
+        self.H1ppmH1index = dict(zip(self.h1.ppm, self.h1.index))
+        self.H1indexH1ppm = dict(zip(self.h1.index, self.h1.ppm))
+
+        # add index columns to c13
+        self.c13["label"] = ["C" + str(i) for i in self.c13.index]
+        self.c13["f2C_i"] = ["C" + str(i) for i in self.c13.index]
+        self.c13["f1C_i"] = ["C" + str(i) for i in self.c13.index]
+        self.c13["f1_i"] = self.c13.index
+        self.c13["f2_i"] = self.c13.index
+
+        # add lookup dicts for dataframe c13
+        self.C13ppmC13label = dict(zip(self.c13.ppm, self.c13.label))
+        self.C13labelC13ppm = dict(zip(self.c13.label, self.c13.ppm))
+
+        self.C13indexC13label = dict(zip(self.c13.index, self.c13.label))
+        self.C13labelC13index = dict(zip(self.c13.label, self.c13.index))
+
+        self.C13ppmC13index = dict(zip(self.c13.ppm, self.c13.index))
+        self.C13indexC13ppm = dict(zip(self.h1.index, self.c13.ppm))
+
+        # open and read excel file into datframe and then process it
+        # with open(self.yamlFiles[0], 'r') as fp:
+        #    info = yaml.safe_load(fp)
+        #    self.init_variables_from_dict(info)
+
+        # add index columns to hsqc
+        for i in self.hsqc.index:
+            self.hsqc.loc[i, "f2_i"] = self.H1ppmH1index[self.hsqc.loc[i, "f2_ppm"]]
+            self.hsqc.loc[i, "f2H_i"] = self.H1ppmH1label[self.hsqc.loc[i, "f2_ppm"]]
+            self.hsqc.loc[i, "f1_i"] = self.C13ppmC13index[self.hsqc.loc[i, "f1_ppm"]]
+            self.hsqc.loc[i, "f1C_i"] = self.C13ppmC13label[self.hsqc.loc[i, "f1_ppm"]]
+            self.hsqc.loc[i, "f2Cp_i"] = self.C13ppmC13label[self.hsqc.loc[i, "f1_ppm"]]
+
+        self.hsqc["f2p_i"] = self.hsqc["f1_i"]
+        self.hsqc["f2p_ppm"] = self.hsqc["f1_ppm"]
+
+        # add lookup dicts for hsqc
+        self.hsqcH1ppmC13index = dict(zip(self.hsqc.f2_ppm, self.hsqc.f2p_i))
+        self.hsqcH1ppmC13label = dict(zip(self.hsqc.f2_ppm, self.hsqc.f2Cp_i))
+        self.hsqcH1ppmC13ppm = dict(zip(self.hsqc.f2_ppm, self.hsqc.f2p_ppm))
+
+        self.hsqcH1indexC13index = dict(zip(self.hsqc.f2_i, self.hsqc.f2p_i))
+        self.hsqcH1indexC13ppm = dict(zip(self.hsqc.f2_i, self.hsqc.f2p_ppm))
+        self.hsqcH1indexC13label = dict(zip(self.hsqc.f2_i, self.hsqc.f2Cp_i))
+
+        self.hsqcH1labelC13label = dict(zip(self.hsqc.f2H_i, self.hsqc.f1C_i))
+        self.hsqcH1labelC13index = dict(zip(self.hsqc.f2H_i, self.hsqc.f1_i))
+        self.hsqcH1labelC13ppm = dict(zip(self.hsqc.f2H_i, self.hsqc.f1_ppm))
+
+        # fill in cosy dataframe
+        for hppm in self.h1.ppm:
+            self.cosy.loc[
+                self.cosy[self.cosy.f1_ppm == hppm].index, "f1_i"
+            ] = self.H1ppmH1index.get(hppm)
+            self.cosy.loc[
+                self.cosy[self.cosy.f2_ppm == hppm].index, "f2_i"
+            ] = self.H1ppmH1index.get(hppm)
+
+            self.cosy.loc[
+                self.cosy[self.cosy.f1_ppm == hppm].index, "f1p_i"
+            ] = self.hsqcH1ppmC13index.get(hppm)
+            self.cosy.loc[
+                self.cosy[self.cosy.f2_ppm == hppm].index, "f2p_i"
+            ] = self.hsqcH1ppmC13index.get(hppm)
+
+            self.cosy.loc[
+                self.cosy[self.cosy.f1_ppm == hppm].index, "f1p_ppm"
+            ] = self.hsqcH1ppmC13ppm.get(hppm)
+            self.cosy.loc[
+                self.cosy[self.cosy.f2_ppm == hppm].index, "f2p_ppm"
+            ] = self.hsqcH1ppmC13ppm.get(hppm)
+
+            self.cosy.loc[
+                self.cosy[self.cosy.f1_ppm == hppm].index, "f1H_i"
+            ] = self.H1ppmH1label.get(hppm)
+            self.cosy.loc[
+                self.cosy[self.cosy.f2_ppm == hppm].index, "f2H_i"
+            ] = self.H1ppmH1label.get(hppm)
+
+            self.cosy.loc[
+                self.cosy[self.cosy.f1_ppm == hppm].index, "f1Cp_i"
+            ] = self.hsqcH1ppmC13label.get(hppm)
+            self.cosy.loc[
+                self.cosy[self.cosy.f2_ppm == hppm].index, "f2Cp_i"
+            ] = self.hsqcH1ppmC13label.get(hppm)
+
+        # add index columns to hmbc
+        self.hmbc["f1C_i"] = ""
+        self.hmbc["f2H_i"] = ""
+        self.hmbc["f2Cp_i"] = ""
+
+        # fill in hmbc dataframe
+        for i in self.hmbc.index:
+            self.hmbc.loc[i, "f2p_ppm"] = self.hsqcH1ppmC13ppm.get(
+                self.hmbc.loc[i, "f2_ppm"]
+            )
+            self.hmbc.loc[i, "f2p_i"] = self.hsqcH1ppmC13index.get(
+                self.hmbc.loc[i, "f2_ppm"]
+            )
+
+            self.hmbc.loc[i, "f2_i"] = self.H1ppmH1index.get(self.hmbc.loc[i, "f2_ppm"])
+            self.hmbc.loc[i, "f1_i"] = self.C13ppmC13index.get(
+                self.hmbc.loc[i, "f1_ppm"]
+            )
+
+            self.hmbc.loc[i, "f1C_i"] = self.C13ppmC13label.get(
+                self.hmbc.loc[i, "f1_ppm"]
+            )
+            self.hmbc.loc[i, "f2H_i"] = self.H1ppmH1label.get(
+                self.hmbc.loc[i, "f2_ppm"]
+            )
+            self.hmbc.loc[i, "f2Cp_i"] = self.hsqcH1ppmC13label.get(
+                self.hmbc.loc[i, "f2_ppm"]
+            )
+
+        self.create_new_nmrproblem_df()
+
+        self.df.loc["ppm", self.protonAtoms] = self.h1.ppm.values
+        self.df.loc["ppm", self.carbonAtoms] = self.c13.ppm.values
+
+        self.df.loc[self.protonAtoms, "ppm"] = self.h1.ppm.values
+        self.df.loc[self.carbonAtoms, "ppm"] = self.c13.ppm.values
+
+        if self.h1.shape[0] > 0:
+            self.df.loc["integral", self.protonAtoms] = np.round(self.h1.integral.values)
+            self.df.loc["integral", self.protonAtoms] = np.round(self.h1.integral.values)
+            self.df.loc["J type", self.protonAtoms] = self.h1.jCouplingClass.values
+            self.df.loc["J Hz", self.protonAtoms] = self.h1.jCouplingVals.values
+        else:
+            self.df.loc["integral", self.protonAtoms] = 0
+            self.df.loc["J type", self.protonAtoms] = "s"
+            self.df.loc["J Hz", self.protonAtoms] = 0.0
+
+        self.convertJHzToLists()
+
+        self.df.loc["C13 hyb", self.protonAtoms + self.carbonAtoms] = 0
+        self.df.loc["attached protons", self.protonAtoms + self.carbonAtoms] = 0
+
+        self.df.loc["C13 hyb", self.protonAtoms] = np.round(self.h1.integral.values)
+        self.df.loc["attached protons", self.protonAtoms] = np.round(
+            self.h1.integral.values
+        )
+
+        self.df.loc["C13 hyb", self.carbonAtoms] = self.c13.attached_protons.values
+        self.df.loc[
+            "attached protons", self.carbonAtoms
+        ] = self.c13.attached_protons.values
+
+        self.updatecosygridfromExcel()
+
+        # cosy = nmrproblem_excel.cosy
+        # df = nmrproblem_excel.df
+        for hi in self.cosy.f1H_i.unique():
+            lll = self.cosy[self.cosy.f1H_i == hi]["f2H_i"].tolist()
+            if hi in lll:
+                lll.remove(hi)
+            self.df.at["cosy", hi] = lll
+
+        for ci in self.cosy.f1Cp_i.unique():
+            lll = self.cosy[self.cosy.f1Cp_i == ci]["f2Cp_i"].tolist()
+            # remove None from list
+            lll = [l for l in lll if l]
+            if ci in lll:
+                lll.remove(ci)
+            # add ci only if not None
+            if ci:
+                self.df.at["cosy", ci] = lll
+
+        self.updateHSQCHMBCgridfromExcel()
+
+        self.updatelistsfromgrid("hsqc", "o")
+        self.updatelistsfromgrid("hmbc", "x")
+
+        self.update_attachedprotons_c13hyb()
+
+        print("init from excel done")
+        print("21612 self.c13\n", self.c13)
+        print("21613 self.c13_df\n", self.c13_df)
+
+        return True, "ok"
+
+
     def build_xy3(self):
 
         # start off xy3 positions from random positions just in case no other method works
@@ -3293,6 +3999,7 @@ class NMRproblem:
 
         for i, j in enumerate(df.loc["J Hz", patoms]):
             if isinstance(j, str):
+                print("convertJHzToLists", j)
                 df.at["J Hz", patoms[i]] = [
                     float(k.strip()) for k in j.strip("][").split(",")
                 ]
@@ -3498,16 +4205,97 @@ class NMRproblem:
 
 if __name__ == "__main__":
 
+    import PyQt5
+
+    from PyQt5 import QtCore
+    from PyQt5 import QtWidgets
+
+    from PyQt5.QtCore import QUrl
+    from PyQt5.QtCore import pyqtSlot
+    from PyQt5.QtCore import Qt
+
+
+    from PyQt5.QtWidgets import QWidget
+    from PyQt5.QtWidgets import QMainWindow
+    from PyQt5.QtWidgets import QApplication
+    from PyQt5.QtWidgets import QFileDialog
+    from PyQt5.QtWidgets import QMessageBox
+    from PyQt5.QtWidgets import QVBoxLayout
+    from PyQt5.QtWidgets import QHBoxLayout
+    from PyQt5.QtWidgets import QLineEdit
+    from PyQt5.QtWidgets import QPushButton
+    from PyQt5.QtWidgets import QSplitter
+    from PyQt5.QtWidgets import QMenu
+    from PyQt5.QtWidgets import QSpinBox
+    from PyQt5.QtWidgets import QLabel
+    from PyQt5.QtWidgets import QAction
+
+    from xy3_dialog import XY3dialog
+    import java
+
+    print("java.JAVA_AVAILABLE", java.JAVA_AVAILABLE)
+
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
-    data_info = parse_argv()
-    sheets_missing = get_missing_sheets(data_info["excel_fn"], False)
-    print(data_info)
+
+    app = QApplication(sys.argv)
+
+
 
 
     h1 = r"csTables/h1_chemical_shift_table.jsn"
     c13 = r"csTables/c13_chemical_shift_table.jsn"
 
     H1df_orig, C13df_orig = read_in_cs_tables(h1, c13)
+
+
+    xy3_calc_method_str = "xy3"
+
+    # check if  command line arguments are given
+    if len(sys.argv) > 1:
+
+        data_info = parse_argv()
+        print("data_info = ", data_info)
+        xy3_dlg = XY3dialog(
+            java_available=java.JAVA_AVAILABLE,
+            sheets_missing = get_missing_sheets(data_info["excel_fn"], True),
+        )
+
+        if xy3_dlg.exec_():
+            xy3_calc_method_str, expts_available = xy3_dlg.get_method()
+            # add "molecule" to the list of available experiments
+            expts_available.append("molecule")
+
+            # data_info = nmrProblem.parse_argv()
+            nmrproblem = NMRproblem(
+                data_info,
+                java_available=java.JAVA_AVAILABLE,
+                xy3_calc_method=xy3_calc_method_str,
+                java_command=java.JAVA_COMMAND,
+                expts_available=expts_available,
+            )
+
+        else:
+            # start the GUI with empty data
+            data_info = parse_argv(my_argv=[""])
+            nmrproblem = NMRproblem(
+                data_info,
+                java_available=java.JAVA_AVAILABLE,
+                xy3_calc_method=xy3_calc_method_str,
+                java_command=java.JAVA_COMMAND,
+                expts_available=[],
+            )
+
+    else:
+        data_info = parse_argv()
+        nmrproblem = NMRproblem(
+            data_info,
+            java_available=java.JAVA_AVAILABLE,
+            xy3_calc_method=xy3_calc_method_str,
+            java_command=java.JAVA_COMMAND,
+            expts_available=[],
+        )
+
+    print("nmrproblem.data_complete = ", nmrproblem.data_complete)
 
     # nmrproblem = NMRproblem("exampleProblems\ch9_025")

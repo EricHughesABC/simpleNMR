@@ -1,0 +1,604 @@
+{
+    "smiles": "COC(=O)CNC(=O)c1cccc(F)c1F",
+    "09162052.10.fid_0": {
+        "origin": "Bruker XWIN-NMR",
+        "type": "1D",
+        "subtype": "1H",
+        "experimenttype": "1D",
+        "experiment": "1D",
+        "pulsesequence": "zg",
+        "intrument": "Avance",
+        "probe": "Z168774_0002 (CPP1.1 BBO 700S3 BB-H&F-05 Z XT)",
+        "datafilename": "Y:/E72303/09162052/10/fid",
+        "comment": "PGS:SSV:SV_140\nProton.dur CDCl3 /home/nmr/localdata walkup 2",
+        "multiplets": {
+            "count": 5,
+            "normValue": 605416.2837190902,
+            "0": {
+                "delta1": 7.756850034430286,
+                "nH": 1,
+                "integralValue": 600516.7448220415,
+                "category": "ddt",
+                "jlistcount": 3,
+                "jvals": [
+                    1.7392578125,
+                    6.40966796875,
+                    8.0947265625
+                ]
+            },
+            "1": {
+                "delta1": 7.262397759528906,
+                "nH": 1,
+                "integralValue": 600059.294199642,
+                "category": "dtd",
+                "jlistcount": 3,
+                "jvals": [
+                    1.73583984375,
+                    7.93115234375,
+                    9.642578125
+                ]
+            },
+            "2": {
+                "delta1": 7.134028213787688,
+                "nH": 1,
+                "integralValue": 629127.7179384656,
+                "category": "tdd",
+                "jlistcount": 3,
+                "jvals": [
+                    1.51806640625,
+                    4.634033203125,
+                    8.0947265625
+                ]
+            },
+            "3": {
+                "delta1": 4.211708090288321,
+                "nH": 2,
+                "integralValue": 1226686.3087101358,
+                "category": "dd",
+                "jlistcount": 2,
+                "jvals": [
+                    1.1741943359375,
+                    5.0401611328125
+                ]
+            },
+            "4": {
+                "delta1": 3.7431144545172668,
+                "nH": 3,
+                "integralValue": 1786098.231159791,
+                "category": "s",
+                "jlistcount": 0,
+                "jvals": []
+            }
+        },
+        "peaks": {
+            "count": 143,
+            "0": {
+                "delta1": 7.885086863182335,
+                "delta2": 0,
+                "intensity": 25.843237507998133,
+                "type": 0
+            },
+            "1": {
+                "delta1": 7.875920501610847,
+                "delta2": 0,
+                "intensity": 29.696080943251598,
+                "type": 0
+            },
+            "5": {
+                "delta1": 7.769687454151816,
+                "delta2": 0,
+                "intensity": 2523.606268111615,
+                "type": 0
+            },
+            "6": {
+                "delta1": 7.767178229773384,
+                "delta2": 0,
+                "intensity": 5621.246482453733,
+                "type": 0
+            },
+            "7": {
+                "delta1": 7.764700099048919,
+                "delta2": 0,
+                "intensity": 2836.240765941525,
+                "type": 0
+            },
+            "8": {
+                "delta1": 7.7604599720061085,
+                "delta2": 0,
+                "intensity": 2542.6019610195917,
+                "type": 0
+            },
+            "9": {
+                "delta1": 7.7580370422673575,
+                "delta2": 0,
+                "intensity": 7760.454518949595,
+                "type": 0
+            },
+            "10": {
+                "delta1": 7.755634904249471,
+                "delta2": 0,
+                "intensity": 8220.482281788822,
+                "type": 0
+            },
+            "11": {
+                "delta1": 7.753226410782954,
+                "delta2": 0,
+                "intensity": 2937.628905721923,
+                "type": 0
+            },
+            "12": {
+                "delta1": 7.748981998594648,
+                "delta2": 0,
+                "intensity": 2819.329519738664,
+                "type": 0
+            },
+            "13": {
+                "delta1": 7.7465281260083,
+                "delta2": 0,
+                "intensity": 5429.863122122628,
+                "type": 0
+            },
+            "14": {
+                "delta1": 7.744066107419901,
+                "delta2": 0,
+                "intensity": 2727.1420623292374,
+                "type": 0
+            },
+            "16": {
+                "delta1": 7.634381301431342,
+                "delta2": 0,
+                "intensity": 43.964749873357704,
+                "type": 0
+            },
+            "17": {
+                "delta1": 7.625180013083163,
+                "delta2": 0,
+                "intensity": 28.481446269081765,
+                "type": 0
+            },
+            "18": {
+                "delta1": 7.384148696956585,
+                "delta2": 0,
+                "intensity": 41.04027397617324,
+                "type": 0
+            },
+            "21": {
+                "delta1": 7.2819703587033375,
+                "delta2": 0,
+                "intensity": 2565.1140546197666,
+                "type": 0
+            },
+            "22": {
+                "delta1": 7.279486430547002,
+                "delta2": 0,
+                "intensity": 2541.728857557847,
+                "type": 0
+            },
+            "23": {
+                "delta1": 7.274153439936498,
+                "delta2": 0,
+                "intensity": 70.1147274018293,
+                "type": 0
+            },
+            "24": {
+                "delta1": 7.2705738654527,
+                "delta2": 0,
+                "intensity": 4383.35502985645,
+                "type": 0
+            },
+            "25": {
+                "delta1": 7.2681441690329605,
+                "delta2": 0,
+                "intensity": 6760.589653594626,
+                "type": 0
+            },
+            "26": {
+                "delta1": 7.265609588680939,
+                "delta2": 0,
+                "intensity": 2561.969256694096,
+                "type": 0
+            },
+            "27": {
+                "delta1": 7.262343688686954,
+                "delta2": 0,
+                "intensity": 213.36935711510802,
+                "type": 0
+            },
+            "28": {
+                "delta1": 7.259216382302311,
+                "delta2": 0,
+                "intensity": 2892.885062901106,
+                "type": 0
+            },
+            "29": {
+                "delta1": 7.256642019454892,
+                "delta2": 0,
+                "intensity": 7479.285566249799,
+                "type": 0
+            },
+            "30": {
+                "delta1": 7.254134161903439,
+                "delta2": 0,
+                "intensity": 4011.6677980790614,
+                "type": 0
+            },
+            "31": {
+                "delta1": 7.245339012645732,
+                "delta2": 0,
+                "intensity": 3020.9054021891966,
+                "type": 0
+            },
+            "32": {
+                "delta1": 7.242861606565752,
+                "delta2": 0,
+                "intensity": 2743.080890335097,
+                "type": 0
+            },
+            "34": {
+                "delta1": 7.1574552714620285,
+                "delta2": 0,
+                "intensity": 37.06616317725559,
+                "type": 0
+            },
+            "35": {
+                "delta1": 7.150030566874066,
+                "delta2": 0,
+                "intensity": 3090.8086172659628,
+                "type": 0
+            },
+            "36": {
+                "delta1": 7.147824931014963,
+                "delta2": 0,
+                "intensity": 3261.804271266518,
+                "type": 0
+            },
+            "37": {
+                "delta1": 7.1433700541683525,
+                "delta2": 0,
+                "intensity": 3072.6318469388866,
+                "type": 0
+            },
+            "38": {
+                "delta1": 7.141199380284558,
+                "delta2": 0,
+                "intensity": 2972.474359833851,
+                "type": 0
+            },
+            "39": {
+                "delta1": 7.138420250106873,
+                "delta2": 0,
+                "intensity": 5431.405126331581,
+                "type": 0
+            },
+            "40": {
+                "delta1": 7.136252698060777,
+                "delta2": 0,
+                "intensity": 5365.364315484945,
+                "type": 0
+            },
+            "41": {
+                "delta1": 7.131862514042555,
+                "delta2": 0,
+                "intensity": 4934.775907146351,
+                "type": 0
+            },
+            "42": {
+                "delta1": 7.129634947601987,
+                "delta2": 0,
+                "intensity": 5323.736788620493,
+                "type": 0
+            },
+            "43": {
+                "delta1": 7.1268243987339766,
+                "delta2": 0,
+                "intensity": 2481.8188559426303,
+                "type": 0
+            },
+            "44": {
+                "delta1": 7.124651601740454,
+                "delta2": 0,
+                "intensity": 2614.1015487923655,
+                "type": 0
+            },
+            "45": {
+                "delta1": 7.120200788541561,
+                "delta2": 0,
+                "intensity": 2376.2097320916027,
+                "type": 0
+            },
+            "46": {
+                "delta1": 7.118066434282135,
+                "delta2": 0,
+                "intensity": 2427.3053716348973,
+                "type": 0
+            },
+            "56": {
+                "delta1": 4.315205316613035,
+                "delta2": 0,
+                "intensity": 113.73607100008465,
+                "type": 0
+            },
+            "57": {
+                "delta1": 4.30747731108385,
+                "delta2": 0,
+                "intensity": 112.04644957379244,
+                "type": 0
+            },
+            "58": {
+                "delta1": 4.216164680740185,
+                "delta2": 0,
+                "intensity": 19702.454930226726,
+                "type": 0
+            },
+            "59": {
+                "delta1": 4.214454404543057,
+                "delta2": 0,
+                "intensity": 19378.396978726953,
+                "type": 0
+            },
+            "60": {
+                "delta1": 4.2089297621454955,
+                "delta2": 0,
+                "intensity": 19457.794230097923,
+                "type": 0
+            },
+            "61": {
+                "delta1": 4.207283513724547,
+                "delta2": 0,
+                "intensity": 17870.989345516482,
+                "type": 0
+            },
+            "65": {
+                "delta1": 4.112070842284386,
+                "delta2": 0,
+                "intensity": 109.38934249775622,
+                "type": 0
+            },
+            "66": {
+                "delta1": 4.105716779274344,
+                "delta2": 0,
+                "intensity": 112.26999974020879,
+                "type": 0
+            },
+            "71": {
+                "delta1": 3.846216979056341,
+                "delta2": 0,
+                "intensity": 770.1028957278417,
+                "type": 0
+            },
+            "77": {
+                "delta1": 3.7431144545172668,
+                "delta2": 0,
+                "intensity": 152313.96239375192,
+                "type": 0
+            },
+            "87": {
+                "delta1": 3.634967792459122,
+                "delta2": 0,
+                "intensity": 787.9116865141582,
+                "type": 0
+            }
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 1
+        }
+    },
+    "09162052.11.1.1r_1": {
+        "origin": "Bruker XWIN-NMR",
+        "type": "1D",
+        "subtype": "1H",
+        "experimenttype": "1D",
+        "experiment": "1D",
+        "pulsesequence": "reset_psychetse.ptg",
+        "intrument": "Avance",
+        "probe": "Z168774_0002 (CPP1.1 BBO 700S3 BB-H&F-05 Z XT)",
+        "datafilename": "Y:/E72303/09162052/11/pdata/1/1r",
+        "comment": "PGS:SSV:SV_140\nPSYCHETSE_50Hz.dur CDCl3 /home/nmr/localdata walkup 2",
+        "multiplets": {
+            "count": 0,
+            "normValue": 1
+        },
+        "peaks": {
+            "count": 0
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 1
+        }
+    },
+    "09162052.12.ser_2": {
+        "origin": "Bruker XWIN-NMR",
+        "type": "2D",
+        "subtype": "1H1H, COSY",
+        "experimenttype": "2D-COSY",
+        "experiment": "COSY",
+        "pulsesequence": "cosygpppqf_ptype",
+        "intrument": "Avance",
+        "probe": "Z168774_0002 (CPP1.1 BBO 700S3 BB-H&F-05 Z XT)",
+        "datafilename": "Y:/E72303/09162052/12/ser",
+        "comment": "PGS:SSV:SV_140\nCOSY.dur CDCl3 /home/nmr/localdata walkup 2",
+        "multiplets": {
+            "count": 0,
+            "normValue": 1
+        },
+        "peaks": {
+            "count": 2,
+            "0": {
+                "delta1": 7.1459773023604525,
+                "delta2": 7.26234445761362,
+                "intensity": 1905.188232421875,
+                "type": 0
+            },
+            "1": {
+                "delta1": 7.13868850013862,
+                "delta2": 7.7568623429920125,
+                "intensity": 2794.67138671875,
+                "type": 0
+            }
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 1
+        }
+    },
+    "09162052.15.ser_3": {
+        "origin": "Bruker XWIN-NMR",
+        "type": "2D",
+        "subtype": "1H13C, HSQC-EDITED",
+        "experimenttype": "2D-HSQC-EDITED",
+        "experiment": "HSQC-EDITED",
+        "pulsesequence": "hsqcedetgpsisp2.3.ptg",
+        "intrument": "Avance",
+        "probe": "Z168774_0002 (CPP1.1 BBO 700S3 BB-H&F-05 Z XT)",
+        "datafilename": "Y:/E72303/09162052/15/ser",
+        "comment": "PGS:SSV:SV_140\nHSQC_ED_AD_Jcomp_SI.dur CDCl3 /home/nmr/localdata walkup 2",
+        "multiplets": {
+            "count": 0,
+            "normValue": 1
+        },
+        "peaks": {
+            "count": 5,
+            "0": {
+                "delta1": 126.36724686872789,
+                "delta2": 7.757085699815185,
+                "intensity": -595818.0625,
+                "type": 0
+            },
+            "1": {
+                "delta1": 124.50369655969315,
+                "delta2": 7.134328208123399,
+                "intensity": -586897.6875,
+                "type": 0
+            },
+            "2": {
+                "delta1": 120.5662637670726,
+                "delta2": 7.263080384391542,
+                "intensity": -563171.75,
+                "type": 0
+            },
+            "3": {
+                "delta1": 52.49669664352032,
+                "delta2": 3.7414984955716952,
+                "intensity": -997459.375,
+                "type": 0
+            },
+            "4": {
+                "delta1": 41.79328520048516,
+                "delta2": 4.209693300756468,
+                "intensity": 1502710,
+                "type": 0
+            }
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 1
+        }
+    },
+    "09162052.14.fid_4": {
+        "origin": "Bruker XWIN-NMR",
+        "type": "1D",
+        "subtype": "13C",
+        "experimenttype": "1D",
+        "experiment": "1D",
+        "pulsesequence": "zgpg30",
+        "intrument": "Avance",
+        "probe": "Z168774_0002 (CPP1.1 BBO 700S3 BB-H&F-05 Z XT)",
+        "datafilename": "Y:/E72303/09162052/14/fid",
+        "comment": "PGS:SSV:SV_140\nCarbon_50_min.dur CDCl3 /home/nmr/localdata walkup 2",
+        "multiplets": {
+            "count": 0,
+            "normValue": 1
+        },
+        "peaks": {
+            "count": 0
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 1
+        }
+    },
+    "09162052.16.ser_5": {
+        "origin": "Bruker XWIN-NMR",
+        "type": "2D",
+        "subtype": "1H13C, HMBC",
+        "experimenttype": "2D-HMBC",
+        "experiment": "HMBC",
+        "pulsesequence": "hmbcetgpl3nd.ptg",
+        "intrument": "Avance",
+        "probe": "Z168774_0002 (CPP1.1 BBO 700S3 BB-H&F-05 Z XT)",
+        "datafilename": "Y:/E72303/09162052/16/ser",
+        "comment": "PGS:SSV:SV_140\nHMBC_phase_sensitive.dur CDCl3 /home/nmr/localdata walkup 2",
+        "multiplets": {
+            "count": 0,
+            "normValue": 1
+        },
+        "peaks": {
+            "count": 10,
+            "0": {
+                "delta1": 169.86266035832972,
+                "delta2": 4.211809398741715,
+                "intensity": 1315.224609375,
+                "type": 0
+            },
+            "1": {
+                "delta1": 169.83992629093206,
+                "delta2": 3.7431748655788217,
+                "intensity": 2594.910400390625,
+                "type": 0
+            },
+            "2": {
+                "delta1": 162.34239430221433,
+                "delta2": 7.7565226615290355,
+                "intensity": 95.0263900756836,
+                "type": 0
+            },
+            "3": {
+                "delta1": 162.28294616104816,
+                "delta2": 4.211740069031119,
+                "intensity": 974.2282104492188,
+                "type": 0
+            },
+            "4": {
+                "delta1": 150.46370085975047,
+                "delta2": 7.136549187056754,
+                "intensity": 8.362102508544922,
+                "type": 0
+            },
+            "5": {
+                "delta1": 148.98596051720781,
+                "delta2": 7.2624444658024725,
+                "intensity": 4.935264587402344,
+                "type": 0
+            },
+            "6": {
+                "delta1": 148.93190730604485,
+                "delta2": 7.7565226615290355,
+                "intensity": 3.310241937637329,
+                "type": 0
+            },
+            "7": {
+                "delta1": 126.36314490009448,
+                "delta2": 7.2621855847792505,
+                "intensity": 111.53992462158203,
+                "type": 0
+            },
+            "8": {
+                "delta1": 122.47881213865196,
+                "delta2": 7.133940835564555,
+                "intensity": 178.06471252441406,
+                "type": 0
+            },
+            "9": {
+                "delta1": 120.60444383063911,
+                "delta2": 7.133940835564555,
+                "intensity": 105.92721557617188,
+                "type": 0
+            }
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 1
+        }
+    }
+}

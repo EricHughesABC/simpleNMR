@@ -1,0 +1,883 @@
+{
+    "smiles": "Oc1cc(O)cc2c1C[C@@H](O)[C@@H](c1ccc(O)c(O)c1)O2",
+    "Epicatechin_2880ug200uL_DMSOd6_nospin_Sigm_skim592_0": {
+        "origin": "JEOL Delta",
+        "type": "1D",
+        "subtype": "1H",
+        "experimenttype": "1D",
+        "experiment": "1D",
+        "pulsesequence": "single_pulse_dec",
+        "intrument": "UIC ECZ400",
+        "probe": "3448",
+        "datafilename": "/Users/dch1amk/Downloads/Epicatechin_NMRdata_400MHz_DMSOd6_Jeol/EpiCatechin_2880ug200uL_DMSOd6_1H_400MHz_Jeol.jdf",
+        "comment": "Epicatechin_2880ug200uL_DMSOd6_nospin_Sigm_skim592",
+        "multiplets": {
+            "count": 14,
+            "normValue": 2.070685857979697,
+            "0": {
+                "delta1": 2.6364889653632573,
+                "nH": 1,
+                "integralValue": 2.0706852459115908,
+                "category": "dd",
+                "jlistcount": 2,
+                "jvals": [
+                    4.4403076171875,
+                    16.3338623046875
+                ]
+            },
+            "1": {
+                "delta1": 2.414614483146166,
+                "nH": 1,
+                "integralValue": 1.9824536310406984,
+                "category": "d",
+                "jlistcount": 1,
+                "jvals": [
+                    3.31353759765625
+                ]
+            },
+            "2": {
+                "delta1": 3.9581780324292546,
+                "nH": 1,
+                "integralValue": 2.072465720179025,
+                "category": "q",
+                "jlistcount": 1,
+                "jvals": [
+                    4.87225341796875
+                ]
+            },
+            "3": {
+                "delta1": 4.621198273866956,
+                "nH": 1,
+                "integralValue": 2.1002652864335687,
+                "category": "d",
+                "jlistcount": 1,
+                "jvals": [
+                    4.6343994140625
+                ]
+            },
+            "4": {
+                "delta1": 4.690016574588374,
+                "nH": 1,
+                "integralValue": 2.0255584533333604,
+                "category": "s",
+                "jlistcount": 0,
+                "jvals": []
+            },
+            "5": {
+                "delta1": 5.672332045340772,
+                "nH": 1,
+                "integralValue": 2.0932029909818084,
+                "category": "d",
+                "jlistcount": 1,
+                "jvals": [
+                    2.28564453125
+                ]
+            },
+            "6": {
+                "delta1": 5.848437630437529,
+                "nH": 1,
+                "integralValue": 2.092121423412209,
+                "category": "d",
+                "jlistcount": 1,
+                "jvals": [
+                    2.297607421875
+                ]
+            },
+            "7": {
+                "delta1": 6.848069365944191,
+                "nH": 1,
+                "integralValue": 2.0339875498311812,
+                "category": "d",
+                "jlistcount": 1,
+                "jvals": [
+                    1.582275390625
+                ]
+            },
+            "8": {
+                "delta1": 8.676634040910542,
+                "nH": 1,
+                "integralValue": 2.1211337962049583,
+                "category": "s",
+                "jlistcount": 0,
+                "jvals": []
+            },
+            "9": {
+                "delta1": 8.761376237440597,
+                "nH": 1,
+                "integralValue": 2.00925439006096,
+                "category": "s",
+                "jlistcount": 0,
+                "jvals": []
+            },
+            "10": {
+                "delta1": 8.854935697886415,
+                "nH": 1,
+                "integralValue": 2.0965537701667927,
+                "category": "s",
+                "jlistcount": 0,
+                "jvals": []
+            },
+            "11": {
+                "delta1": 9.066437694829991,
+                "nH": 1,
+                "integralValue": 2.0977162876129114,
+                "category": "s",
+                "jlistcount": 0,
+                "jvals": []
+            },
+            "12": {
+                "delta1": 6.627956737249676,
+                "nH": 1,
+                "integralValue": 1.9798475508214324,
+                "category": "d",
+                "jlistcount": 1,
+                "jvals": [
+                    8.038818359375
+                ]
+            },
+            "13": {
+                "delta1": 6.60160517158608,
+                "nH": 1,
+                "integralValue": 2.0481319293794513,
+                "category": "dd",
+                "jlistcount": 2,
+                "jvals": [
+                    1.6783447265625,
+                    8.3497314453125
+                ]
+            }
+        },
+        "peaks": {
+            "count": 30,
+            "0": {
+                "delta1": 9.066437694829991,
+                "delta2": 0,
+                "intensity": 0.027325776007457763,
+                "type": 0
+            },
+            "1": {
+                "delta1": 8.854935697886415,
+                "delta2": 0,
+                "intensity": 0.02979141458282223,
+                "type": 0
+            },
+            "2": {
+                "delta1": 8.761376237440597,
+                "delta2": 0,
+                "intensity": 0.0192812727211176,
+                "type": 0
+            },
+            "3": {
+                "delta1": 8.676634040910542,
+                "delta2": 0,
+                "intensity": 0.018783995813296258,
+                "type": 0
+            },
+            "4": {
+                "delta1": 6.850048168442625,
+                "delta2": 0,
+                "intensity": 0.015151311819274356,
+                "type": 0
+            },
+            "5": {
+                "delta1": 6.846090563445757,
+                "delta2": 0,
+                "intensity": 0.015022986243175366,
+                "type": 0
+            },
+            "6": {
+                "delta1": 6.63801075928202,
+                "delta2": 0,
+                "intensity": 0.004154574716411346,
+                "type": 0
+            },
+            "7": {
+                "delta1": 6.617902715217331,
+                "delta2": 0,
+                "intensity": 0.02799550747302398,
+                "type": 0
+            },
+            "8": {
+                "delta1": 6.614174063101255,
+                "delta2": 0,
+                "intensity": 0.017974825920297352,
+                "type": 0
+            },
+            "9": {
+                "delta1": 6.609922073943744,
+                "delta2": 0,
+                "intensity": 0.014593173925578653,
+                "type": 0
+            },
+            "10": {
+                "delta1": 6.59323432851119,
+                "delta2": 0,
+                "intensity": 0.0021129758071477193,
+                "type": 0
+            },
+            "11": {
+                "delta1": 6.58909022078813,
+                "delta2": 0,
+                "intensity": 0.002455249576385895,
+                "type": 0
+            },
+            "12": {
+                "delta1": 5.851311299033516,
+                "delta2": 0,
+                "intensity": 0.01961610876851871,
+                "type": 0
+            },
+            "13": {
+                "delta1": 5.845563961841543,
+                "delta2": 0,
+                "intensity": 0.021255487191590657,
+                "type": 0
+            },
+            "14": {
+                "delta1": 5.675190905832957,
+                "delta2": 0,
+                "intensity": 0.021056580375900996,
+                "type": 0
+            },
+            "15": {
+                "delta1": 5.669473184848587,
+                "delta2": 0,
+                "intensity": 0.020049138307079096,
+                "type": 0
+            },
+            "16": {
+                "delta1": 4.690016574588374,
+                "delta2": 0,
+                "intensity": 0.013813775657798634,
+                "type": 0
+            },
+            "17": {
+                "delta1": 4.626994491504871,
+                "delta2": 0,
+                "intensity": 0.01420876989811916,
+                "type": 0
+            },
+            "18": {
+                "delta1": 4.615402056229041,
+                "delta2": 0,
+                "intensity": 0.014948956870555077,
+                "type": 0
+            },
+            "19": {
+                "delta1": 3.9763987991345915,
+                "delta2": 0,
+                "intensity": 0.0020333712435684145,
+                "type": 0
+            },
+            "20": {
+                "delta1": 3.963606228255346,
+                "delta2": 0,
+                "intensity": 0.005392370453901958,
+                "type": 0
+            },
+            "21": {
+                "delta1": 3.9521444600578253,
+                "delta2": 0,
+                "intensity": 0.005207491749521767,
+                "type": 0
+            },
+            "22": {
+                "delta1": 3.940562642269256,
+                "delta2": 0,
+                "intensity": 0.0019777889452818305,
+                "type": 0
+            },
+            "23": {
+                "delta1": 3.310765447821511,
+                "delta2": 0,
+                "intensity": 0.08229081410527361,
+                "type": 0
+            },
+            "24": {
+                "delta1": 2.6626512376724105,
+                "delta2": 0,
+                "intensity": 0.00330941737951602,
+                "type": 0
+            },
+            "25": {
+                "delta1": 2.651183820672465,
+                "delta2": 0,
+                "intensity": 0.0038550952157273694,
+                "type": 0
+            },
+            "26": {
+                "delta1": 2.6214336120607347,
+                "delta2": 0,
+                "intensity": 0.005627210423909931,
+                "type": 0
+            },
+            "27": {
+                "delta1": 2.610687191047419,
+                "delta2": 0,
+                "intensity": 0.004558732028107149,
+                "type": 0
+            },
+            "28": {
+                "delta1": 2.418758681121266,
+                "delta2": 0,
+                "intensity": 0.0037671506967174202,
+                "type": 0
+            },
+            "29": {
+                "delta1": 2.410470285171066,
+                "delta2": 0,
+                "intensity": 0.0035299493179308384,
+                "type": 0
+            }
+        },
+        "integrals": {
+            "count": 15,
+            "normValue": 2.070685857979697,
+            "0": {
+                "integralValue": 2.0706852459115908,
+                "rangeMin1": 2.5813823197626324,
+                "rangeMin2": 0,
+                "rangeMax1": 2.6841106761498867,
+                "rangeMax2": 0
+            },
+            "1": {
+                "integralValue": 1.9824536310406984,
+                "rangeMin1": 2.3858442069151717,
+                "rangeMin2": 0,
+                "rangeMax1": 2.4542116992694463,
+                "rangeMax2": 0
+            },
+            "2": {
+                "integralValue": 4.62624665270414,
+                "rangeMin1": 3.259738359679151,
+                "rangeMin2": 0,
+                "rangeMax1": 3.356002335943027,
+                "rangeMax2": 0
+            },
+            "3": {
+                "integralValue": 2.072465720179025,
+                "rangeMin1": 3.8943675365298924,
+                "rangeMin2": 0,
+                "rangeMax1": 4.03163283601727,
+                "rangeMax2": 0
+            },
+            "4": {
+                "integralValue": 2.1002652864335687,
+                "rangeMin1": 4.577128701512571,
+                "rangeMin2": 0,
+                "rangeMax1": 4.657348681732467,
+                "rangeMax2": 0
+            },
+            "5": {
+                "integralValue": 2.0255584533333604,
+                "rangeMin1": 4.657348681732467,
+                "rangeMin2": 0,
+                "rangeMax1": 4.730437997043929,
+                "rangeMax2": 0
+            },
+            "6": {
+                "integralValue": 2.0932029909818084,
+                "rangeMin1": 5.634249774188102,
+                "rangeMin2": 0,
+                "rangeMax1": 5.7180350868622165,
+                "rangeMax2": 0
+            },
+            "7": {
+                "integralValue": 2.092121423412209,
+                "rangeMin1": 5.8018203995363296,
+                "rangeMin2": 0,
+                "rangeMax1": 5.898084375800204,
+                "rangeMax2": 0
+            },
+            "8": {
+                "integralValue": 2.0339875498311812,
+                "rangeMin1": 6.801896152944379,
+                "rangeMin2": 0,
+                "rangeMax1": 6.899942795435364,
+                "rangeMax2": 0
+            },
+            "9": {
+                "integralValue": 2.1211337962049583,
+                "rangeMin1": 8.625563703276702,
+                "rangeMin2": 0,
+                "rangeMax1": 8.718262347086362,
+                "rangeMax2": 0
+            },
+            "10": {
+                "integralValue": 2.00925439006096,
+                "rangeMin1": 8.73430634313034,
+                "rangeMin2": 0,
+                "rangeMax1": 8.803830325987585,
+                "rangeMax2": 0
+            },
+            "11": {
+                "integralValue": 2.0965537701667927,
+                "rangeMin1": 8.819874322031565,
+                "rangeMin2": 0,
+                "rangeMax1": 8.894746303570138,
+                "rangeMax2": 0
+            },
+            "12": {
+                "integralValue": 2.0977162876129114,
+                "rangeMin1": 9.007054275877993,
+                "rangeMin2": 0,
+                "rangeMax1": 9.131840911775612,
+                "rangeMax2": 0
+            },
+            "13": {
+                "integralValue": 1.9798475508214324,
+                "rangeMin1": 6.615918096674771,
+                "rangeMin2": 0,
+                "rangeMax1": 6.6587807100401335,
+                "rangeMax2": 0
+            },
+            "14": {
+                "integralValue": 2.0481319293794513,
+                "rangeMin1": 6.574416201194024,
+                "rangeMin2": 0,
+                "rangeMax1": 6.615918096674771,
+                "rangeMax2": 0
+            }
+        }
+    },
+    "Epicatechin_2880ug200uL_DMSOd6_nospin_Sigm_skim592_1": {
+        "origin": "JEOL Delta",
+        "type": "1D",
+        "subtype": "13C",
+        "experimenttype": "1D",
+        "experiment": "1D",
+        "pulsesequence": "carbon.jxp",
+        "intrument": "UIC ECZ400",
+        "probe": "3448",
+        "datafilename": "/Users/dch1amk/Downloads/Epicatechin_NMRdata_400MHz_DMSOd6_Jeol/EpiCatechin_2880ug200uL_DMSOd6_13C_400MHz_Jeol.jdf",
+        "comment": "Epicatechin_2880ug200uL_DMSOd6_nospin_Sigm_skim592",
+        "multiplets": {
+            "count": 0,
+            "normValue": 1
+        },
+        "peaks": {
+            "count": 15,
+            "0": {
+                "delta1": 157.06580488949365,
+                "delta2": 0,
+                "intensity": 0.00010571461235803644,
+                "type": 0
+            },
+            "1": {
+                "delta1": 156.76634306642518,
+                "delta2": 0,
+                "intensity": 0.00011154107731269338,
+                "type": 0
+            },
+            "2": {
+                "delta1": 156.316547711705,
+                "delta2": 0,
+                "intensity": 0.00008647332188054926,
+                "type": 0
+            },
+            "3": {
+                "delta1": 145.0325812869049,
+                "delta2": 0,
+                "intensity": 0.00011147972449135739,
+                "type": 0
+            },
+            "4": {
+                "delta1": 144.97855236338077,
+                "delta2": 0,
+                "intensity": 0.00010663959263393474,
+                "type": 0
+            },
+            "5": {
+                "delta1": 131.14417158835215,
+                "delta2": 0,
+                "intensity": 0.00009494181325506934,
+                "type": 0
+            },
+            "6": {
+                "delta1": 118.48035259872812,
+                "delta2": 0,
+                "intensity": 0.00011242949376812706,
+                "type": 0
+            },
+            "7": {
+                "delta1": 115.42009889689135,
+                "delta2": 0,
+                "intensity": 0.00011713276560536982,
+                "type": 0
+            },
+            "8": {
+                "delta1": 115.2799902989753,
+                "delta2": 0,
+                "intensity": 0.00011953866170919588,
+                "type": 0
+            },
+            "9": {
+                "delta1": 99.00677751471856,
+                "delta2": 0,
+                "intensity": 0.00009634622847815885,
+                "type": 0
+            },
+            "10": {
+                "delta1": 95.57583913065575,
+                "delta2": 0,
+                "intensity": 0.00008118683134436682,
+                "type": 0
+            },
+            "11": {
+                "delta1": 94.59892638526124,
+                "delta2": 0,
+                "intensity": 0.00010203524875580023,
+                "type": 0
+            },
+            "12": {
+                "delta1": 78.58352909627934,
+                "delta2": 0,
+                "intensity": 0.00011353357694299552,
+                "type": 0
+            },
+            "13": {
+                "delta1": 65.43416959685803,
+                "delta2": 0,
+                "intensity": 0.0001045695152403704,
+                "type": 0
+            },
+            "14": {
+                "delta1": 28.743470621432756,
+                "delta2": 0,
+                "intensity": 0.00007948356822119487,
+                "type": 0
+            }
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 1
+        }
+    },
+    "Epicatechin_2880ug200uL_DMSOd6_nospin_Sigm_skim592_2": {
+        "origin": "JEOL Delta",
+        "type": "2D",
+        "subtype": "1H1H, COSY",
+        "experimenttype": "2D-COSY",
+        "experiment": "COSY",
+        "pulsesequence": "cosy.jxp",
+        "intrument": "UIC ECZ400",
+        "probe": "3448",
+        "datafilename": "/Users/dch1amk/Downloads/Epicatechin_NMRdata_400MHz_DMSOd6_Jeol/EpiCatechin_2880ug200uL_DMSOd6_COSY_400MHz_Jeol.jdf",
+        "comment": "Epicatechin_2880ug200uL_DMSOd6_nospin_Sigm_skim592",
+        "multiplets": {
+            "count": 0,
+            "normValue": 1
+        },
+        "peaks": {
+            "count": 9,
+            "0": {
+                "delta1": 8.762491407153734,
+                "delta2": 8.855293440518185,
+                "intensity": 0.001513653784058988,
+                "type": 0
+            },
+            "1": {
+                "delta1": 8.676836489631395,
+                "delta2": 8.761153347452527,
+                "intensity": 0.0035001945216208696,
+                "type": 0
+            },
+            "2": {
+                "delta1": 5.672574154858925,
+                "delta2": 5.849886308778916,
+                "intensity": 0.0019420090829953551,
+                "type": 0
+            },
+            "3": {
+                "delta1": 4.62241169869927,
+                "delta2": 4.690943758142899,
+                "intensity": 0.0033948137424886227,
+                "type": 0
+            },
+            "4": {
+                "delta1": 3.9583987701078622,
+                "delta2": 4.62231985961251,
+                "intensity": 0.0017090372275561094,
+                "type": 0
+            },
+            "5": {
+                "delta1": 3.9568473380317153,
+                "delta2": 4.690943758142899,
+                "intensity": 0.0007465923554264009,
+                "type": 0
+            },
+            "6": {
+                "delta1": 2.6373855371562573,
+                "delta2": 3.9609303415727037,
+                "intensity": 0.00028883302002213895,
+                "type": 0
+            },
+            "7": {
+                "delta1": 2.4480387746373475,
+                "delta2": 3.9609303415727037,
+                "intensity": 0.0002489374310243875,
+                "type": 0
+            },
+            "8": {
+                "delta1": 2.4426943095662508,
+                "delta2": 2.6395447448956513,
+                "intensity": 0.0015209579141810536,
+                "type": 0
+            }
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 1
+        }
+    },
+    "Epicatechin_2880ug200uL_DMSOd6_nospin_Sigm_skim592_3": {
+        "origin": "JEOL Delta",
+        "type": "2D",
+        "subtype": "1H13C, HSQC",
+        "experimenttype": "2D-HSQC",
+        "experiment": "HSQC",
+        "pulsesequence": "hsqcad_auto.jxp",
+        "intrument": "UIC ECZ400",
+        "probe": "3448",
+        "datafilename": "/Users/dch1amk/Downloads/Epicatechin_NMRdata_400MHz_DMSOd6_Jeol/EpiCatechin_2880ug200uL_DMSOd6_HSQC_400MHz_Jeol.jdf",
+        "comment": "Epicatechin_2880ug200uL_DMSOd6_nospin_Sigm_skim592",
+        "multiplets": {
+            "count": 0,
+            "normValue": 1
+        },
+        "peaks": {
+            "count": 9,
+            "0": {
+                "delta1": 118.48645741505469,
+                "delta2": 6.600771407420833,
+                "intensity": 0.00048298737965524197,
+                "type": 0
+            },
+            "1": {
+                "delta1": 115.43034091434058,
+                "delta2": 6.84822996375243,
+                "intensity": 0.000626457273028791,
+                "type": 0
+            },
+            "2": {
+                "delta1": 115.34961606736903,
+                "delta2": 6.625816481124108,
+                "intensity": 0.0001068072160705924,
+                "type": 0
+            },
+            "3": {
+                "delta1": 95.5812324982285,
+                "delta2": 5.84929805077443,
+                "intensity": 0.0004106953274458647,
+                "type": 0
+            },
+            "4": {
+                "delta1": 94.62326417533478,
+                "delta2": 5.672008632669876,
+                "intensity": 0.0005022407276555896,
+                "type": 0
+            },
+            "5": {
+                "delta1": 78.6027726477928,
+                "delta2": 4.690350558350228,
+                "intensity": 0.0006612278521060944,
+                "type": 0
+            },
+            "6": {
+                "delta1": 65.45618608893203,
+                "delta2": 3.9598524930120274,
+                "intensity": 0.000347081630025059,
+                "type": 0
+            },
+            "7": {
+                "delta1": 28.753378202967717,
+                "delta2": 2.636381569434311,
+                "intensity": -0.00003679560904856771,
+                "type": 0
+            },
+            "8": {
+                "delta1": 28.753378202967717,
+                "delta2": 2.440997158570897,
+                "intensity": -0.00004166453436482698,
+                "type": 0
+            }
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 1
+        }
+    },
+    "Epicatechin_2880ug200uL_DMSOd6_nospin_Sigm_skim592_4": {
+        "origin": "JEOL Delta",
+        "type": "2D",
+        "subtype": "1H13C, Unknown",
+        "experimenttype": "Unknown",
+        "experiment": "Unknown",
+        "pulsesequence": "ghmbcad_auto.jxp",
+        "intrument": "UIC ECZ400",
+        "probe": "3448",
+        "datafilename": "/Users/dch1amk/Downloads/Epicatechin_NMRdata_400MHz_DMSOd6_Jeol/EpiCatechin_2880ug200uL_DMSOd6_HMBC_400MHz_Jeol.jdf",
+        "comment": "Epicatechin_2880ug200uL_DMSOd6_nospin_Sigm_skim592",
+        "multiplets": {
+            "count": 0,
+            "normValue": 1
+        },
+        "peaks": {
+            "count": 25,
+            "0": {
+                "delta1": 157.07552638669003,
+                "delta2": 9.067486249916593,
+                "intensity": 0.00009309320012107491,
+                "type": 0
+            },
+            "1": {
+                "delta1": 156.77293340007446,
+                "delta2": 8.85812747899124,
+                "intensity": 0.0000954295537667349,
+                "type": 0
+            },
+            "2": {
+                "delta1": 145.14358874621453,
+                "delta2": 8.675633026812212,
+                "intensity": 0.00022035540314391255,
+                "type": 0
+            },
+            "3": {
+                "delta1": 145.14358874621453,
+                "delta2": 6.853161004011821,
+                "intensity": 0.00020125987066421658,
+                "type": 0
+            },
+            "4": {
+                "delta1": 144.99009052809316,
+                "delta2": 8.758724456423169,
+                "intensity": 0.00026139075635001063,
+                "type": 0
+            },
+            "5": {
+                "delta1": 131.17525089716975,
+                "delta2": 4.694630310340439,
+                "intensity": 0.00009605277591617778,
+                "type": 0
+            },
+            "6": {
+                "delta1": 118.5116479021566,
+                "delta2": 6.853161004011821,
+                "intensity": 0.00009741876419866458,
+                "type": 0
+            },
+            "7": {
+                "delta1": 118.5116479021566,
+                "delta2": 4.694630310340439,
+                "intensity": 0.00007324419129872695,
+                "type": 0
+            },
+            "8": {
+                "delta1": 115.44168353972918,
+                "delta2": 8.762417408850323,
+                "intensity": 0.00010961860971292481,
+                "type": 0
+            },
+            "9": {
+                "delta1": 115.44168353972918,
+                "delta2": 8.675633026812212,
+                "intensity": 0.0000939786114031449,
+                "type": 0
+            },
+            "10": {
+                "delta1": 115.28818532160781,
+                "delta2": 4.694630310340439,
+                "intensity": 0.00007388019002974033,
+                "type": 0
+            },
+            "11": {
+                "delta1": 99.05231737521754,
+                "delta2": 2.6349610950681206,
+                "intensity": 0.00004153305053478107,
+                "type": 0
+            },
+            "12": {
+                "delta1": 99.05231737521754,
+                "delta2": 2.4343658610710373,
+                "intensity": 0.00004276106847100891,
+                "type": 0
+            },
+            "13": {
+                "delta1": 99.01737420074242,
+                "delta2": 9.070778936517668,
+                "intensity": 0.00025129126152023673,
+                "type": 0
+            },
+            "14": {
+                "delta1": 99.01737420074242,
+                "delta2": 5.850524420039572,
+                "intensity": 0.00010319596185581759,
+                "type": 0
+            },
+            "15": {
+                "delta1": 99.01737420074242,
+                "delta2": 5.671416227322613,
+                "intensity": 0.000056125212722690776,
+                "type": 0
+            },
+            "16": {
+                "delta1": 95.71716251113297,
+                "delta2": 9.067085984090507,
+                "intensity": 0.000029982795240357518,
+                "type": 0
+            },
+            "17": {
+                "delta1": 95.71716251113297,
+                "delta2": 8.854741219529169,
+                "intensity": 0.00011397505295462906,
+                "type": 0
+            },
+            "18": {
+                "delta1": 95.71716251113297,
+                "delta2": 5.671416227322613,
+                "intensity": 0.00007487813127227128,
+                "type": 0
+            },
+            "19": {
+                "delta1": 94.71942409334406,
+                "delta2": 8.854741219529169,
+                "intensity": 0.00014705692592542619,
+                "type": 0
+            },
+            "20": {
+                "delta1": 94.71942409334406,
+                "delta2": 5.846831467612418,
+                "intensity": 0.00009268301801057532,
+                "type": 0
+            },
+            "21": {
+                "delta1": 78.60211119060011,
+                "delta2": 6.849468051584668,
+                "intensity": 0.00011562303552636877,
+                "type": 0
+            },
+            "22": {
+                "delta1": 78.60211119060011,
+                "delta2": 4.622617738010941,
+                "intensity": 0.00011216786515433341,
+                "type": 0
+            },
+            "23": {
+                "delta1": 65.47801354122284,
+                "delta2": 4.622617738010941,
+                "intensity": 0.00007322218880290166,
+                "type": 0
+            },
+            "24": {
+                "delta1": 28.791939410215075,
+                "delta2": 4.622617738010941,
+                "intensity": 0.00004153551708441228,
+                "type": 0
+            }
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 1
+        }
+    }
+}

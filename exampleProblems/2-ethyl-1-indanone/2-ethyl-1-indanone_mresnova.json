@@ -1,0 +1,542 @@
+{
+    "smiles": "CCC1C(=O)c2ccccc2C1",
+    "PROTON_01_0": {
+        "origin": "Varian",
+        "type": "1D",
+        "subtype": "1H",
+        "experimenttype": "1D",
+        "experiment": "1D",
+        "pulsesequence": "s2pul",
+        "intrument": "vnmrs",
+        "probe": "OneNMR_MR1101W049",
+        "datafilename": "C:/Users/vsmw51/OneDrive - Durham University/projects/programming/2022/python/python/rdkit37/projects/simpleNMRexampleData/2-ethyl-1-indanone/Feb14154743/PROTON_01.fid/fid",
+        "comment": "NMR:EH: 2-ethyl-1-indanone\n",
+        "multiplets": {
+            "count": 0,
+            "normValue": 3633.2780778688157
+        },
+        "peaks": {
+            "count": 0
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 3633.2780778688157
+        }
+    },
+    "ja_PSYCHE_pr_03b_01_1": {
+        "origin": "Varian",
+        "type": "1D",
+        "subtype": "1H",
+        "experimenttype": "1D",
+        "experiment": "1D",
+        "pulsesequence": "ja_PSYCHE_pr_03b",
+        "intrument": "vnmrs",
+        "probe": "OneNMR_MR1101W049",
+        "datafilename": "C:/Users/vsmw51/OneDrive - Durham University/projects/programming/2022/python/python/rdkit37/projects/simpleNMRexampleData/2-ethyl-1-indanone/Feb14154743/ja_PSYCHE_pr_03b_01.fid/fid",
+        "comment": "\n",
+        "multiplets": {
+            "count": 0,
+            "normValue": 9.525229602586478
+        },
+        "peaks": {
+            "count": 0
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 9.525229602586478
+        }
+    },
+    "CARBON_01_2": {
+        "origin": "Varian",
+        "type": "1D",
+        "subtype": "13C",
+        "experimenttype": "1D",
+        "experiment": "1D",
+        "pulsesequence": "s2pul",
+        "intrument": "vnmrs",
+        "probe": "OneNMR_MR1101W049",
+        "datafilename": "C:/Users/vsmw51/OneDrive - Durham University/projects/programming/2022/python/python/rdkit37/projects/simpleNMRexampleData/2-ethyl-1-indanone/Feb14154743/CARBON_01.fid/fid",
+        "comment": "NMR:EH: 2-ethyl-1-indanone\n",
+        "multiplets": {
+            "count": 0,
+            "normValue": 1
+        },
+        "peaks": {
+            "count": 14,
+            "0": {
+                "delta1": 208.9336573688492,
+                "delta2": 0,
+                "intensity": 381.34842739924517,
+                "type": 0
+            },
+            "1": {
+                "delta1": 153.81003763999124,
+                "delta2": 0,
+                "intensity": 737.2143370064695,
+                "type": 0
+            },
+            "2": {
+                "delta1": 136.95488045755414,
+                "delta2": 0,
+                "intensity": 542.3864653859198,
+                "type": 0
+            },
+            "3": {
+                "delta1": 134.58844801742052,
+                "delta2": 0,
+                "intensity": 2086.501280496142,
+                "type": 0
+            },
+            "4": {
+                "delta1": 127.27435085023643,
+                "delta2": 0,
+                "intensity": 2093.5077437970353,
+                "type": 0
+            },
+            "5": {
+                "delta1": 126.52283881260489,
+                "delta2": 0,
+                "intensity": 2023.3961355381903,
+                "type": 0
+            },
+            "6": {
+                "delta1": 123.81658198308445,
+                "delta2": 0,
+                "intensity": 1945.5135079672195,
+                "type": 0
+            },
+            "10": {
+                "delta1": 48.742704263014964,
+                "delta2": 0,
+                "intensity": 2002.1614589386431,
+                "type": 0
+            },
+            "11": {
+                "delta1": 32.31753922066989,
+                "delta2": 0,
+                "intensity": 2194.0613917295677,
+                "type": 0
+            },
+            "12": {
+                "delta1": 24.452727025830033,
+                "delta2": 0,
+                "intensity": 2280.3574091872656,
+                "type": 0
+            },
+            "13": {
+                "delta1": 11.581700324077513,
+                "delta2": 0,
+                "intensity": 2246.6535035821234,
+                "type": 0
+            }
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 1
+        }
+    },
+    "gCOSY_01_3": {
+        "origin": "Varian",
+        "type": "2D",
+        "subtype": "1H1H, COSY",
+        "experimenttype": "2D-COSY",
+        "experiment": "COSY",
+        "pulsesequence": "gCOSY",
+        "intrument": "vnmrs",
+        "probe": "OneNMR_MR1101W049",
+        "datafilename": "C:/Users/vsmw51/OneDrive - Durham University/projects/programming/2022/python/python/rdkit37/projects/simpleNMRexampleData/2-ethyl-1-indanone/Feb14154743/gCOSY_01.fid/fid",
+        "comment": "NMR:EH: 2-ethyl-1-indanone\n",
+        "multiplets": {
+            "count": 0,
+            "normValue": 1
+        },
+        "peaks": {
+            "count": 7,
+            "0": {
+                "delta1": 7.447310850078518,
+                "delta2": 7.566996222976494,
+                "intensity": 1.5741643905639648,
+                "type": 0
+            },
+            "1": {
+                "delta1": 7.350210639609407,
+                "delta2": 7.566996222976494,
+                "intensity": 0.22078126668930054,
+                "type": 0
+            },
+            "2": {
+                "delta1": 7.348695182836063,
+                "delta2": 7.738852447011336,
+                "intensity": 0.813481867313385,
+                "type": 0
+            },
+            "3": {
+                "delta1": 2.6067434001168692,
+                "delta2": 3.3100116837948526,
+                "intensity": 0.05913177505135536,
+                "type": 0
+            },
+            "4": {
+                "delta1": 2.605891541783929,
+                "delta2": 1.9655678556446423,
+                "intensity": 0.3139396905899048,
+                "type": 0
+            },
+            "5": {
+                "delta1": 1.9644883173015417,
+                "delta2": 1.965097083513452,
+                "intensity": 0.10042902082204819,
+                "type": 0
+            },
+            "6": {
+                "delta1": 1.0013260681721468,
+                "delta2": 1.9654771646261555,
+                "intensity": 0.8830317854881287,
+                "type": 0
+            }
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 1
+        }
+    },
+    "gHMBCAD_01_4": {
+        "origin": "Varian",
+        "type": "2D",
+        "subtype": "1H13C, HMBC",
+        "experimenttype": "2D-HMBC",
+        "experiment": "HMBC",
+        "pulsesequence": "gHMBCAD",
+        "intrument": "vnmrs",
+        "probe": "OneNMR_MR1101W049",
+        "datafilename": "C:/Users/vsmw51/OneDrive - Durham University/projects/programming/2022/python/python/rdkit37/projects/simpleNMRexampleData/2-ethyl-1-indanone/Feb14154743/gHMBCAD_01.fid/fid",
+        "comment": "NMR:EH: 2-ethyl-1-indanone\n",
+        "multiplets": {
+            "count": 0,
+            "normValue": 1
+        },
+        "peaks": {
+            "count": 35,
+            "0": {
+                "delta1": 209.0903490562938,
+                "delta2": 2.606521544280026,
+                "intensity": 0.03120999038219452,
+                "type": 0
+            },
+            "1": {
+                "delta1": 209.04664704084186,
+                "delta2": 1.9664578909957575,
+                "intensity": 0.015629716217517853,
+                "type": 0
+            },
+            "2": {
+                "delta1": 208.96392453666678,
+                "delta2": 7.737701346272939,
+                "intensity": 0.01698123849928379,
+                "type": 0
+            },
+            "3": {
+                "delta1": 208.93685067940675,
+                "delta2": 1.53236041616988,
+                "intensity": 0.027445733547210693,
+                "type": 0
+            },
+            "4": {
+                "delta1": 208.93294489855043,
+                "delta2": 3.3077032543221345,
+                "intensity": 0.07332679629325867,
+                "type": 0
+            },
+            "5": {
+                "delta1": 153.92068186182186,
+                "delta2": 7.56654632869329,
+                "intensity": 0.029676347970962524,
+                "type": 0
+            },
+            "6": {
+                "delta1": 153.86548136176975,
+                "delta2": 3.309760172323564,
+                "intensity": 0.06188980117440224,
+                "type": 0
+            },
+            "7": {
+                "delta1": 153.85704629554562,
+                "delta2": 2.8136980444921673,
+                "intensity": 0.013786622323095798,
+                "type": 0
+            },
+            "8": {
+                "delta1": 153.7633380356303,
+                "delta2": 2.606162450172059,
+                "intensity": 0.025241481140255928,
+                "type": 0
+            },
+            "9": {
+                "delta1": 153.73707900491192,
+                "delta2": 7.739059485744913,
+                "intensity": 0.016122838482260704,
+                "type": 0
+            },
+            "10": {
+                "delta1": 137.0915113735215,
+                "delta2": 7.347454590227726,
+                "intensity": 0.029953550547361374,
+                "type": 0
+            },
+            "11": {
+                "delta1": 137.02322127476296,
+                "delta2": 2.812467814677838,
+                "intensity": 0.007866300642490387,
+                "type": 0
+            },
+            "12": {
+                "delta1": 137.01137246643438,
+                "delta2": 7.44956698976257,
+                "intensity": 0.0150699932128191,
+                "type": 0
+            },
+            "13": {
+                "delta1": 136.92683556782046,
+                "delta2": 3.3099008306533784,
+                "intensity": 0.023663479834794998,
+                "type": 0
+            },
+            "14": {
+                "delta1": 134.6606311918781,
+                "delta2": 7.448393284020789,
+                "intensity": 0.052583836019039154,
+                "type": 0
+            },
+            "15": {
+                "delta1": 134.55377931576191,
+                "delta2": 7.739081072734923,
+                "intensity": 0.032382190227508545,
+                "type": 0
+            },
+            "16": {
+                "delta1": 134.55193435461354,
+                "delta2": 2.812467814677838,
+                "intensity": 0.0025472778361290693,
+                "type": 0
+            },
+            "17": {
+                "delta1": 127.25966743585052,
+                "delta2": 7.448954187158241,
+                "intensity": 0.018465211614966393,
+                "type": 0
+            },
+            "18": {
+                "delta1": 126.58566828260241,
+                "delta2": 2.8128368836221362,
+                "intensity": 0.0034356494434177876,
+                "type": 0
+            },
+            "19": {
+                "delta1": 126.55938228324163,
+                "delta2": 3.3099008306533784,
+                "intensity": 0.017547104507684708,
+                "type": 0
+            },
+            "20": {
+                "delta1": 123.78845279705558,
+                "delta2": 7.56654632869329,
+                "intensity": 0.0313577800989151,
+                "type": 0
+            },
+            "21": {
+                "delta1": 48.793580669309584,
+                "delta2": 1.9664605747472712,
+                "intensity": 0.01629587635397911,
+                "type": 0
+            },
+            "22": {
+                "delta1": 48.78647067176841,
+                "delta2": 2.8131091792942864,
+                "intensity": 0.014704572036862373,
+                "type": 0
+            },
+            "23": {
+                "delta1": 48.777708044699686,
+                "delta2": 3.310479993153229,
+                "intensity": 0.042668428272008896,
+                "type": 0
+            },
+            "24": {
+                "delta1": 48.77003817892794,
+                "delta2": 1.0026751772753337,
+                "intensity": 0.28839799761772156,
+                "type": 0
+            },
+            "25": {
+                "delta1": 32.343069997661686,
+                "delta2": 7.450009008259263,
+                "intensity": 0.013902444392442703,
+                "type": 0
+            },
+            "26": {
+                "delta1": 32.32271055986736,
+                "delta2": 2.6065113761092618,
+                "intensity": 0.0395892933011055,
+                "type": 0
+            },
+            "27": {
+                "delta1": 32.12927507067344,
+                "delta2": 1.9668695430368999,
+                "intensity": 0.0381791926920414,
+                "type": 0
+            },
+            "28": {
+                "delta1": 24.689510825106034,
+                "delta2": 1.0018915984656656,
+                "intensity": 0.1361498087644577,
+                "type": 0
+            },
+            "29": {
+                "delta1": 24.497905953083905,
+                "delta2": 2.8131091792942864,
+                "intensity": 0.020387567579746246,
+                "type": 0
+            },
+            "30": {
+                "delta1": 24.451907066156505,
+                "delta2": 3.3087066889163563,
+                "intensity": 0.019092919304966927,
+                "type": 0
+            },
+            "31": {
+                "delta1": 24.4177333924053,
+                "delta2": 2.606833314250037,
+                "intensity": 0.04327566176652908,
+                "type": 0
+            },
+            "32": {
+                "delta1": 11.648154891120399,
+                "delta2": 2.6066723451796494,
+                "intensity": 0.018245380371809006,
+                "type": 0
+            },
+            "33": {
+                "delta1": 11.629971991556397,
+                "delta2": 1.964279410535918,
+                "intensity": 0.007152247242629528,
+                "type": 0
+            },
+            "34": {
+                "delta1": 11.563439432735487,
+                "delta2": 1.5320590488123573,
+                "intensity": 0.017034124583005905,
+                "type": 0
+            }
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 1
+        }
+    },
+    "gHSQCAD_01_5": {
+        "origin": "Varian",
+        "type": "2D",
+        "subtype": "1H13C, HSQC-EDITED",
+        "experimenttype": "2D-HSQC-EDITED",
+        "experiment": "HSQC-EDITED",
+        "pulsesequence": "gHSQCAD",
+        "intrument": "vnmrs",
+        "probe": "OneNMR_MR1101W049",
+        "datafilename": "C:/Users/vsmw51/OneDrive - Durham University/projects/programming/2022/python/python/rdkit37/projects/simpleNMRexampleData/2-ethyl-1-indanone/Feb14154743/gHSQCAD_01.fid/fid",
+        "comment": "NMR:EH: 2-ethyl-1-indanone\n",
+        "multiplets": {
+            "count": 0,
+            "normValue": 1
+        },
+        "peaks": {
+            "count": 10,
+            "0": {
+                "delta1": 134.5965624357195,
+                "delta2": 7.567158389420261,
+                "intensity": 0.46807897090911865,
+                "type": 0
+            },
+            "1": {
+                "delta1": 127.26955890842112,
+                "delta2": 7.352275399932183,
+                "intensity": 0.7418267726898193,
+                "type": 0
+            },
+            "2": {
+                "delta1": 126.51616080561416,
+                "delta2": 7.448374359487117,
+                "intensity": 0.5304826498031616,
+                "type": 0
+            },
+            "3": {
+                "delta1": 123.83373239562019,
+                "delta2": 7.737564351158939,
+                "intensity": 0.49176454544067383,
+                "type": 0
+            },
+            "4": {
+                "delta1": 48.752603844474116,
+                "delta2": 2.6068485122731215,
+                "intensity": 0.5183935165405273,
+                "type": 0
+            },
+            "5": {
+                "delta1": 32.322754807934245,
+                "delta2": 3.30748707389514,
+                "intensity": -0.28794199228286743,
+                "type": 0
+            },
+            "6": {
+                "delta1": 32.322754807934245,
+                "delta2": 2.8129514569772476,
+                "intensity": -0.0055849552154541016,
+                "type": 0
+            },
+            "7": {
+                "delta1": 24.463333198806463,
+                "delta2": 1.5329735246297016,
+                "intensity": -0.2256830930709839,
+                "type": 0
+            },
+            "8": {
+                "delta1": 24.42621553029936,
+                "delta2": 1.9645176822939707,
+                "intensity": -0.4160599112510681,
+                "type": 0
+            },
+            "9": {
+                "delta1": 11.590135716281154,
+                "delta2": 1.001844729650673,
+                "intensity": 1.6846600770950317,
+                "type": 0
+            }
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 1.5500383973121643
+        }
+    },
+    "NOESY_01_6": {
+        "origin": "Varian",
+        "type": "2D",
+        "subtype": "1H1H, NOESY",
+        "experimenttype": "2D-NOESY",
+        "experiment": "NOESY",
+        "pulsesequence": "NOESY",
+        "intrument": "vnmrs",
+        "probe": "OneNMR_MR1101W049",
+        "datafilename": "C:/Users/vsmw51/OneDrive - Durham University/projects/programming/2022/python/python/rdkit37/projects/simpleNMRexampleData/2-ethyl-1-indanone/Feb14154743/NOESY_01.fid/fid",
+        "comment": "NMR:EH: 2-ethyl-1-indanone\n",
+        "multiplets": {
+            "count": 0,
+            "normValue": 1
+        },
+        "peaks": {
+            "count": 0
+        },
+        "integrals": {
+            "count": 0,
+            "normValue": 1
+        }
+    }
+}

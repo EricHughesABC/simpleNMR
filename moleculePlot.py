@@ -27,6 +27,7 @@ from PyQt5.QtWidgets import (
 # from PyQt5.QtCore import pyqtSlot
 import nmrProblem
 import nx_pylab
+import simpleNMRutils
 from spectraPlot import MatplotlibH1C13Plot
 
 PLOTLINECOLORS = ("blue", "orange", "green", "red", "purple")
@@ -178,6 +179,7 @@ class MatplotlibMoleculePlot(Figure):
                 node_color="w",
                 edgecolors=["r"] + hmbc_graphs[node]["colors"],
                 node_size=500,
+                linewidths=4,
                 picker=False,
             )
 
@@ -186,7 +188,8 @@ class MatplotlibMoleculePlot(Figure):
             hmbc_graph_plots[node]["hmbc_edges"] = nx_pylab.draw_networkx_edges(
                 hmbc_graphs[node]["graph"],
                 hmbc_graphs[node]["xy"],
-                edge_color=hmbc_graphs[node]["colors"],
+                # edge_color=hmbc_graphs[node]["colors"],
+                edge_color="grey",
                 width=5,
                 ax=ax,
                 label=node + "_edge",
@@ -397,10 +400,11 @@ if __name__ == "__main__":
                     # set the annotation to the peak
                     atom_index = int(lbl[1:])
                     ppm = self.nmrproblem.h1.loc[atom_index, "ppm"]
-                    integral = self.nmrproblem.h1.loc[atom_index, "integral"]
+                    integral = float(self.nmrproblem.h1.loc[atom_index, "integral"])
                     jcoupling = self.nmrproblem.h1.loc[atom_index, "jCouplingClass"]
                     jcouplingvals = self.nmrproblem.h1.loc[atom_index, "jCouplingVals"]
-                    annot_text = f"{lbl}: {ppm:.2f} ppm\nInt:{integral}\nJ: {jcoupling}: {jcouplingvals}"
+                    annot_text = f"{lbl}: {ppm:.2f} ppm\nInt:{integral:.1f}\nJ: {jcoupling}: {jcouplingvals}"
+                    print("annot_text", annot_text)
                     specplot.annot_H1.xy = (event.xdata, event.ydata)
                     specplot.annot_H1.set_text(annot_text)
                     specplot.annot_H1.set_visible(True)
@@ -500,7 +504,7 @@ if __name__ == "__main__":
             specplot.display_annotation_C13_from_molplot(lbl, specplot.annot_C13)
 
             # annotate H1 peaks in graph x1
-            specplot.display_annotation_H1_from_molplot(lbl, specplot.annot_H1)
+            specplot.display_annotation_H1_from_molplot(lbl, specplot.annot_H1, self.nmrproblem)
 
             # annotate distributions
             hpks = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f1C_i == lbl][
@@ -722,7 +726,7 @@ if __name__ == "__main__":
                 specplot.display_annotation_C13_from_molplot(lbl, specplot.annot_C13)
 
                 # annotate H1 peaks in graph x1
-                specplot.display_annotation_H1_from_molplot(lbl, specplot.annot_H1)
+                specplot.display_annotation_H1_from_molplot(lbl, specplot.annot_H1, self.nmrproblem)
 
                 # annotate distributions
                 hpks = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f1C_i == lbl][
