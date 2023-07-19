@@ -258,8 +258,15 @@ ISBN: 978-88-95122-40-3
 
 ## Synchronization from MestReNova
 
-In the latest version of the program users of MestReNova can now peak pick and then synchronize with the program using a two-click process.
+In the latest version of the program (no executable version as yet, still testing) users of MestReNova can now peak pick and then synchronize with the program using a two-click process.
 A small ECMA script `simpleNMR.qs` has to be installed into MestreNova for everything to work.
+
+### Installing the simpleNMR.qs script into MestReNova
+
+The easiest way to do this is to to cut and paste  the simpleNMR.qs script into the MestreNova script editor and then save the file in the default MestreNova script location.
+The MestreNova script editor can be open from the tools menu.
+
+To install the script so that it has its own menu item and menu bar, the following procedure must be performed.
 
 
 
