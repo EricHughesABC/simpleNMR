@@ -27,11 +27,11 @@ The second method requires a modern Python 3.7 or later working Python environme
 #### SimpleNMR executables
 
 1. **Windows 10**: [simpleNMRwin10](https://github.com/EricHughesABC/simpleNMR/releases/download/verrsion_0.0.10/simpleNMRwin10.exe
-  "simpleNMRwin10")
+    "simpleNMRwin10")
 
-   
+
 2. **macOS** [simpleNMRmac](https://github.com/EricHughesABC/simpleNMR/releases/download/verrsion_0.0.10/simpleNMRmacOs
-  "simpleNMRmac")
+    "simpleNMRmac")
 
    1. **Change Permissions**: In a command line window change the permissions on the file
 
@@ -266,9 +266,32 @@ A small ECMA script `simpleNMR.qs` has to be installed into MestreNova for every
 The easiest way to do this is to to cut and paste  the simpleNMR.qs script into the MestreNova script editor and then save the file in the default MestreNova script location.
 The MestreNova script editor can be open from the tools menu.
 
-To install the script so that it has its own menu item and menu bar, the following procedure must be performed.
+To install the script so that it has its own menu item and menu bar, the following procedure must be performed:
+
+1. Open the Customize dialog
+
+![mnova_script1](readMePngs/mnova_script1.png)
 
 
 
+2.  Create a new simpleNMR menu item by clicking on the new tab button and then renaming the newpage and the new group  items to simpleNMR
 
- 
+   ![mnova_options_newtab](readMePngs/mnova_options_newtab.png)
+
+3. Find the simpleNMR.qs script the all commands list and then click on add to transfer it to the Customize Ribbon list
+
+   ![mnova_options_add](readMePngs/mnova_options_add.png)
+
+4. Close the dialog and restart  MestReNova for simpleNMR to appear under its own menu item and ribbon.
+
+   ![mnova_options_add_2](readMePngs/mnova_options_add_2.png)
+
+   
+
+5. If everything works after restarting MestReNova
+
+   ![mnova_simpleNMR](readMePngs/mnova_simpleNMR.png)
+
+6.  The icon will not be displayed as this requires copying the image simpleNMRlogo.png to the same directory where the script has been installed and changing the first line in the script to the same directory.
+
+   ![mnova_simpleNMR_2](readMePngs/mnova_simpleNMR_2.png)
