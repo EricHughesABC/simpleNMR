@@ -292,6 +292,6 @@ To install the script so that it has its own menu item and menu bar, the followi
 
    ![mnova_simpleNMR](readMePngs/mnova_simpleNMR.png)
 
-6.  The icon will not be displayed as this requires copying the image simpleNMRlogo.png to the same directory where the script has been installed and changing the first line in the script to the same directory.
+6.  The icon will not be displayed as this requires copying the image `simpleNMRlogo.png` to the same directory where the script has been installed and changing the first line in the script to the same directory.
 
    ![mnova_simpleNMR_2](readMePngs/mnova_simpleNMR_2.png)

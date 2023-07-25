@@ -66,6 +66,7 @@ import exampleProblems
 from smiles_dialog import SmilesDialog
 
 import simpleNMRutils
+import mnovautils
 
 
 
@@ -528,16 +529,6 @@ class MainWidget(QMainWindow):
         self.node_moved = False
 
     def motion_notify_callback(self, event, specplot, molplot):
-        print("motion notify callback")
-        print(dir(event))
-        print("event.button", event.button)
-        print("event.key", event.key)
-        print("event.dblclick", event.dblclick)
-        print("event.inaxes", event.inaxes)
-        print("event.name", event.name)
-        print("event.guiEvent", event.guiEvent)
-        print("event.canvas", event.canvas)
-        print("dir(event.canvas)", dir(event.canvas))
 
         if (self.moltoolbar.mode != "") or (self.spctoolbar.mode != ""):
             # print("motion notify callback")
@@ -1111,193 +1102,157 @@ class MainWidget(QMainWindow):
         # Logic for creating a new file goes here...
         # self.csideWidget.setText("<b>File > New</b> clicked")
 
-    # def newFromMresNova(self):
-    #     folderpath = QFileDialog.getExistingDirectory(
-    #         self, "Select/Create New Problem Folder"
-    #     )
 
-    #     folderpath = pathlib.Path(folderpath)
-    #     _, excel_fn = os.path.split(folderpath)
-    #     excel_fn = excel_fn + ".xlsx"
-    #     json_mnova_fn = "mnova.json"
 
-    #     dlg = EditDataFrameDialog(self.nmrproblem)
+    # def return_nonempty_mnova_datasets( self, data: dict)->dict:
+    #     # remove datasets where multipliticy counts is zero and peaks counts is zero and integrals counts is zero
 
-    #     if dlg.exec():
-    #         # self.write_excel_file_from_mresnova_df_dict(pathlib.Path(folderpath, excel_fn))
-    #         writer = pd.ExcelWriter(
-    #             os.path.join(folderpath, excel_fn), engine="xlsxwriter"
-    #         )
-    #         for sheetname, df in nmrProblem.new_dataframes.items():
-    #             df.to_excel(writer, sheet_name=sheetname)
-    #         writer.save()
-
-    #         workingdir, fn = os.path.split(folderpath)
-    #         data_info = nmrProblem.parse_argv([fn, workingdir, fn])
-
-    #         # get method for caculating XY3 data
-    #         xy3_dlg = XY3dialog(
-    #             java_available=java.JAVA_AVAILABLE,
-    #             sheets_missing=nmrProblem.get_missing_sheets(data_info["excel_fn"], True),
-    #         )
-
-    #         if xy3_dlg.exec():
-    #             xy3_calc_method, expts_available = xy3_dlg.get_method()
-    #             # add "molecule" to expts_available
-    #             expts_available.append("molecule")
-
+    #     dicts_to_keep = {}
+    #     for k, v in data.items():
+    #         if isinstance(v, dict):
+    #             if( v['multiplets']["count"] > 0) or (v['peaks']["count"] > 0) or (v['integrals']["count"] > 0):
+    #                 dicts_to_keep[k] = v
     #         else:
-    #             return
-    #         # Create new problem
-    #         # nmrproblem = TestExcelSimpleNMR(
-    #         print("line 1080: nmrproblem")
-    #         self.nmrproblem = nmrProblem.NMRproblem(
-    #             data_info,
-    #             java_available=java.JAVA_AVAILABLE,
-    #             xy3_calc_method=xy3_calc_method,
-    #             java_command=java.JAVA_COMMAND,
-    #             expts_available=expts_available,
-    #         )
+    #             dicts_to_keep[k] = v  # must be smiles string, maybe need to check for this at some point
 
-    #         if self.nmrproblem.data_complete:
-    #             self.nmrproblem.initiate_df_data_complete()
-    #             self.initiate_windows(self.nmrproblem)
-    #     else:
-    #         print("Cancel!")
+    #     return dicts_to_keep
 
-    def read_in_mesrenova_json(self, fn):
-        """Read in the JSON file exported from MestReNova."""
+    # def read_in_mesrenova_json(self, fn):
+    #     """Read in the JSON file exported from MestReNova."""
 
-        with open(fn, 'r') as file:
-            data = json.load(file)
+    #     with open(fn, 'r') as file:
+    #         data_orig = json.load(file)
 
-        # Identify the technique keys present in the JSON data
-        technique_keys = {}
-        for key in data:
-            if isinstance(data[key], dict):
+    #     data = self.return_nonempty_mnova_datasets(data_orig)
+    #     print("kept datasets = ", data.keys())
+
+    #     # Identify the technique keys present in the JSON data
+    #     technique_keys = {}
+    #     for key in data:
+    #         if isinstance(data[key], dict):
 
                 
-                subtype = data[key].get('subtype', '')
-                pulse_sequence = data[key].get('pulsesequence', '')
+    #             subtype = data[key].get('subtype', '')
+    #             pulse_sequence = data[key].get('pulsesequence', '')
 
-                if subtype.lower().find('hsqc') != -1 and data[key].get('type', '').lower() == '2d':
-                    technique_keys[key] = 'HSQC'
-                elif subtype.lower().find('hmbc') != -1 and data[key].get('type', '').lower() == '2d':
-                    technique_keys[key] = 'HMBC'
-                elif subtype.lower().find('cosy') != -1 and data[key].get('type', '').lower() == '2d':
-                    technique_keys[key] = 'COSY'
-                elif subtype.lower().find('13c') != -1 and data[key].get('type', '').lower() == '1d':
-                    technique_keys[key] = 'C13_1D'
-                elif subtype.lower().find('1h') != -1 and data[key].get('type', '').lower() == '1d' and "psyche" in data[key].get('pulsesequence', '').lower():
-                    technique_keys[key] ='H1_pureshift'
-                elif subtype.lower().find('1h') != -1 and data[key].get('type', '').lower() == '1d':
-                    technique_keys[key] ='H1_1D'
-                elif subtype.lower().find('1h') != -1 and data[key].get('type', '').lower() == '2d':
-                    technique_keys[key] ='NOESY'
+    #             if subtype.lower().find('hsqc') != -1 and data[key].get('type', '').lower() == '2d':
+    #                 technique_keys[key] = 'HSQC'
+    #             elif subtype.lower().find('hmbc') != -1 and data[key].get('type', '').lower() == '2d':
+    #                 technique_keys[key] = 'HMBC'
+    #             elif subtype.lower().find('cosy') != -1 and data[key].get('type', '').lower() == '2d':
+    #                 technique_keys[key] = 'COSY'
+    #             elif subtype.lower().find('13c') != -1 and data[key].get('type', '').lower() == '1d':
+    #                 technique_keys[key] = 'C13_1D'
+    #             elif subtype.lower().find('1h') != -1 and data[key].get('type', '').lower() == '1d' and "psyche" in data[key].get('pulsesequence', '').lower():
+    #                 technique_keys[key] ='H1_pureshift'
+    #             elif subtype.lower().find('1h') != -1 and data[key].get('type', '').lower() == '1d':
+    #                 technique_keys[key] ='H1_1D'
+    #             elif subtype.lower().find('1h') != -1 and data[key].get('type', '').lower() == '2d':
+    #                 technique_keys[key] ='NOESY'
 
-                if  pulse_sequence.lower().find('hmbc') != -1 and data[key].get('type', '').lower() == '2d':
-                    technique_keys[key] = 'HMBC'
-
-
+    #             if  pulse_sequence.lower().find('hmbc') != -1 and data[key].get('type', '').lower() == '2d':
+    #                 technique_keys[key] = 'HMBC'
 
 
-        for k, v in technique_keys.items():
-            data[v] = data[k]
-            del data[k]
 
-        return data
+
+    #     for k, v in technique_keys.items():
+    #         data[v] = data[k]
+    #         del data[k]
+
+    #     return data
     
-    def get_2D_dataframe_from_json(self, json_data, technique):
-        """
-        Returns a pandas dataframe from the json_data dictionary for the specified technique.
-        """
-        df_data = []
-        for i in range(json_data[technique]["peaks"]["count"]):
-            df_data.append([json_data[technique]["peaks"][str(i)]["delta2"], 
-                            json_data[technique]["peaks"][str(i)]["delta1"], 
-                            json_data[technique]["peaks"][str(i)]["intensity"], 
-                            json_data[technique]["peaks"][str(i)]["type"]])
+    # def get_2D_dataframe_from_json(self, json_data, technique):
+    #     """
+    #     Returns a pandas dataframe from the json_data dictionary for the specified technique.
+    #     """
+    #     df_data = []
+    #     for i in range(json_data[technique]["peaks"]["count"]):
+    #         df_data.append([json_data[technique]["peaks"][str(i)]["delta2"], 
+    #                         json_data[technique]["peaks"][str(i)]["delta1"], 
+    #                         json_data[technique]["peaks"][str(i)]["intensity"], 
+    #                         json_data[technique]["peaks"][str(i)]["type"]])
 
-        df = pd.DataFrame(df_data, columns=["f2 (ppm)", "f1 (ppm)", "Intensity", "Type"])
+    #     df = pd.DataFrame(df_data, columns=["f2 (ppm)", "f1 (ppm)", "Intensity", "Type"])
 
-        # sort the dataframe by f2 (ppm), descending order, reset the index and start the index at 1
-        df = df.sort_values(by=["f2 (ppm)"], ascending=False).reset_index(drop=True)
-        df.index += 1
+    #     # sort the dataframe by f2 (ppm), descending order, reset the index and start the index at 1
+    #     df = df.sort_values(by=["f2 (ppm)"], ascending=False).reset_index(drop=True)
+    #     df.index += 1
 
-        return df
+    #     return df
     
     # def get_c13_1d_dataframe_from_json(json_data, technique):
-    def get_1d_dataframe_from_json( self, json_data, technique):
-        df_data = []
-        if json_data[technique]["multiplets"]["count"] == 0:
-            # find peaks from  from peaks key
-            for i in range(json_data[technique]["peaks"]["count"]):
-                if str(i) in json_data[technique]["peaks"]:
-                    df_data.append([json_data[technique]["peaks"][str(i)]["delta1"], 
-                                    json_data[technique]["peaks"][str(i)]["intensity"],
-                                    json_data[technique]["peaks"][str(i)]["type"]])
+    # def get_1d_dataframe_from_json( self, json_data, technique):
+    #     df_data = []
+    #     if json_data[technique]["multiplets"]["count"] == 0:
+    #         # find peaks from  from peaks key
+    #         for i in range(json_data[technique]["peaks"]["count"]):
+    #             if str(i) in json_data[technique]["peaks"]:
+    #                 df_data.append([json_data[technique]["peaks"][str(i)]["delta1"], 
+    #                                 json_data[technique]["peaks"][str(i)]["intensity"],
+    #                                 json_data[technique]["peaks"][str(i)]["type"]])
                     
-            df = pd.DataFrame(df_data, columns=["ppm",  "Intensity", "Type"])
+    #         df = pd.DataFrame(df_data, columns=["ppm",  "Intensity", "Type"])
 
-        else:
-            # find peaks from  from multiplets key
-            # Name	Shift	Range	H's	Integral	Class	J's	Method
+    #     else:
+    #         # find peaks from  from multiplets key
+    #         # Name	Shift	Range	H's	Integral	Class	J's	Method
 
-            count = json_data[technique]["multiplets"]["count"]
-            normValue = json_data[technique]["multiplets"]["normValue"]
-            for i in [str(i) for i in range(count)]:
-                if str(i) in json_data[technique]["multiplets"]:
-                    row = [json_data[technique]["multiplets"][i]["delta1"], 
-                                    json_data[technique]["multiplets"][i]["integralValue"],
-                                    json_data[technique]["multiplets"][i]["nH"],
-                                    json_data[technique]["multiplets"][i]["category"]]
+    #         count = json_data[technique]["multiplets"]["count"]
+    #         normValue = json_data[technique]["multiplets"]["normValue"]
+    #         for i in [str(i) for i in range(count)]:
+    #             if str(i) in json_data[technique]["multiplets"]:
+    #                 row = [json_data[technique]["multiplets"][i]["delta1"], 
+    #                                 json_data[technique]["multiplets"][i]["integralValue"],
+    #                                 json_data[technique]["multiplets"][i]["nH"],
+    #                                 json_data[technique]["multiplets"][i]["category"]]
                     
-                    # create a string from the list of J values and add it to df_data
-                    j_values = json_data[technique]["multiplets"][i]["jvals"]
-                    j_string = ", ".join([f"{j:1.3}" for j in j_values])
-                    j_string = f"{j_string}"
-                    row.append(j_string)
-                    df_data.append(row)
+    #                 # create a string from the list of J values and add it to df_data
+    #                 j_values = json_data[technique]["multiplets"][i]["jvals"]
+    #                 j_string = ", ".join([f"{j:1.3}" for j in j_values])
+    #                 j_string = f"{j_string}"
+    #                 row.append(j_string)
+    #                 df_data.append(row)
 
             
-            df = pd.DataFrame(df_data, columns=["ppm", "Integral",  "H's", "Class", "J's"])
-            df["Integral"] = df["Integral"] / normValue
+    #         df = pd.DataFrame(df_data, columns=["ppm", "Integral",  "H's", "Class", "J's"])
+    #         df["Integral"] = df["Integral"] / normValue
 
-        # sort the dataframe by f2 (ppm), descending order, reset the index and start the index at 1
-        df = df.sort_values(by=["ppm"], ascending=False).reset_index(drop=True)
-        df.index += 1
+    #     # sort the dataframe by f2 (ppm), descending order, reset the index and start the index at 1
+    #     df = df.sort_values(by=["ppm"], ascending=False).reset_index(drop=True)
+    #     df.index += 1
 
-        return df
+    #     return df
     
-    def create_dataframes_from_mresnova_json(self, data):
-        """
-        Returns a dictionary of pandas dataframes for each technique in the data dictionary.
-        """
-        dataframes = {}
-        for k, v in data.items():
-            if k in ["H1_1D", "C13_1D", "HSQC", "HMBC", "COSY", "NOESY", "H1_pureshift"]:
-                if v["type"].lower() == "2d":
-                    df = self.get_2D_dataframe_from_json(data, k)
-                    dataframes[k] = df
-                elif v["type"].lower() == "1d":
-                    df = self.get_1d_dataframe_from_json(data, k)
-                    dataframes[k] = df
-            elif k in ["smiles"]:
-                dataframes["molecule"]  = pd.DataFrame([data["smiles"]], columns=["smiles"])
+    # def create_dataframes_from_mresnova_json(self, data):
+    #     """
+    #     Returns a dictionary of pandas dataframes for each technique in the data dictionary.
+    #     """
+    #     dataframes = {}
+    #     for k, v in data.items():
+    #         if k in ["H1_1D", "C13_1D", "HSQC", "HMBC", "COSY", "NOESY", "H1_pureshift"]:
+    #             if v["type"].lower() == "2d":
+    #                 df = self.get_2D_dataframe_from_json(data, k)
+    #                 dataframes[k] = df
+    #             elif v["type"].lower() == "1d":
+    #                 df = self.get_1d_dataframe_from_json(data, k)
+    #                 dataframes[k] = df
+    #         elif k in ["smiles"]:
+    #             dataframes["molecule"]  = pd.DataFrame([data["smiles"]], columns=["smiles"])
 
-        return dataframes
+    #     return dataframes
 
-    def write_excel_file_from_mresnova_df_dict(self, df_frames:dict, excel_path: pathlib.Path)->bool:
+    # def write_excel_file_from_mresnova_df_dict(self, df_frames:dict, excel_path: pathlib.Path)->bool:
 
-        # check if path is valid
-        if not excel_path.parent.exists():
-            return False
-        else:
-            with pd.ExcelWriter(excel_path) as writer:
-                # check if path is valid
-                for k, df in df_frames.items():
-                    df.to_excel(writer, sheet_name=k)
-            return True
+    #     # check if path is valid
+    #     if not excel_path.parent.exists():
+    #         return False
+    #     else:
+    #         with pd.ExcelWriter(excel_path) as writer:
+    #             # check if path is valid
+    #             for k, df in df_frames.items():
+    #                 df.to_excel(writer, sheet_name=k)
+    #         return True
 
 
     def newFromMresNova(self):
@@ -1315,7 +1270,7 @@ class MainWidget(QMainWindow):
             return
         
         # read in json file
-        data = self.read_in_mesrenova_json(jsonfilepath)
+        data = mnovautils.read_in_mesrenova_json(jsonfilepath)
         print(data.keys())
 
         # check if json file contains a molecule ask user to add one if not
@@ -1364,7 +1319,7 @@ class MainWidget(QMainWindow):
                 print("Cancel!")
                 return
 
-        dataframes = self.create_dataframes_from_mresnova_json(data)
+        dataframes = mnovautils.create_dataframes_from_mresnova_json(data)
 
         # save dataframes to excel file
 
@@ -1377,7 +1332,7 @@ class MainWidget(QMainWindow):
         excel_path = folderpath / excel_fn
         print("excel_path", excel_path)
 
-        if not self.write_excel_file_from_mresnova_df_dict(dataframes, excel_path):
+        if not mnovautils.write_excel_file_from_mresnova_df_dict(dataframes, excel_path):
             return
 
 
@@ -1605,7 +1560,10 @@ class MainWidget(QMainWindow):
 
         
         # read in json file
-        data = self.read_in_mesrenova_json(jsonfilepath)
+        data = mnovautils.read_in_mesrenova_json(jsonfilepath)
+
+        print("data.keys()", data.keys())
+        print("self.nmrproblem.expts_available", self.nmrproblem.expts_available)
 
         # check that the json file contains a smiles string
         if "smiles" not in data.keys():
@@ -1626,7 +1584,6 @@ class MainWidget(QMainWindow):
             # table_widget = MyTabWidget(dlg, self.nmrproblem)
             if dlg.exec():
                 print("Success!", dlg.get_smiles_string())
-                print(dir(dlg))
                 smilesStr = dlg.get_smiles_string()
                 # check if smiles string is valid
                 mol = Chem.MolFromSmiles(smilesStr)
@@ -1651,7 +1608,7 @@ class MainWidget(QMainWindow):
             self.warning_dialog("HSQC data not in json file", "HSQC data not in json file", self.nmrproblem.qtstarted)
             return
         
-        dataframes = self.create_dataframes_from_mresnova_json(data)
+        dataframes = mnovautils.create_dataframes_from_mresnova_json(data)
 
         # check that the HSQC dataframe is not empty
         if dataframes["HSQC"].empty:
@@ -1692,6 +1649,8 @@ class MainWidget(QMainWindow):
                 return
         
         # save dataframes to excel file
+        print("dataframes.keys()", dataframes.keys())
+        print("self.nmrproblem.expts_available", self.nmrproblem.expts_available)
 
         # create a new excel file based on the json file parent folder name
         excel_fn = jsonfilepath.parent.name + ".xlsx"
@@ -1703,7 +1662,7 @@ class MainWidget(QMainWindow):
         print("excel_path", excel_path)
 
         # save the dataframes to the excel file
-        if not self.write_excel_file_from_mresnova_df_dict(dataframes, excel_path):
+        if not mnovautils.write_excel_file_from_mresnova_df_dict(dataframes, excel_path):
             self.warning_dialog("could not save excel file", "could not save excel file", self.nmrproblem.qtstarted)
             return
         # with pd.ExcelWriter(excel_path) as writer:
