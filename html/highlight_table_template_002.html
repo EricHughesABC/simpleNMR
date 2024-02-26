@@ -121,7 +121,7 @@
   const rows = document.querySelectorAll('tbody tr');
 
   function highlightAtom() {
-    const atomNumberCell = this.getElementsByTagName('td')[0];
+    const atomNumberCell = this.getElementsByTagName('td')[1];
     if (atomNumberCell && atomNumberCell.textContent) {
       const atomNumber = atomNumberCell.textContent;
       const atomClass = `atom-${atomNumber}`;

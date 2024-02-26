@@ -117,10 +117,10 @@ def draw(G, pos=None, ax=None, **kwds):
     if "with_labels" not in kwds:
         kwds["with_labels"] = "labels" in kwds
 
-    draw_networkx(G, pos=pos, ax=ax, **kwds)
+    return_list = draw_networkx(G, pos=pos, ax=ax, **kwds)
     ax.set_axis_off()
     plt.draw_if_interactive()
-    return
+    return return_list
 
 
 def draw_networkx(G, pos=None, arrows=None, with_labels=True, **kwds):
@@ -321,6 +321,10 @@ def draw_networkx(G, pos=None, arrows=None, with_labels=True, **kwds):
         "verticalalignment",
     )
 
+    nodes_collection = None
+    edges_collection = None
+    labels_collection = None
+
     valid_kwds = valid_node_kwds + valid_edge_kwds + valid_label_kwds
 
     if any([k not in valid_kwds for k in kwds]):
@@ -334,11 +338,13 @@ def draw_networkx(G, pos=None, arrows=None, with_labels=True, **kwds):
     if pos is None:
         pos = nx.drawing.spring_layout(G)  # default to spring layout
 
-    draw_networkx_nodes(G, pos, **node_kwds)
-    draw_networkx_edges(G, pos, arrows=arrows, **edge_kwds)
+    nodes_collection = draw_networkx_nodes(G, pos, **node_kwds)
+    edges_collection = draw_networkx_edges(G, pos, arrows=arrows, **edge_kwds)
     if with_labels:
-        draw_networkx_labels(G, pos, **label_kwds)
+        labels_collection = draw_networkx_labels(G, pos, **label_kwds)
     plt.draw_if_interactive()
+
+    return nodes_collection, edges_collection, labels_collection
 
 
 def draw_networkx_nodes(

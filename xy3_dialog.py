@@ -24,30 +24,6 @@ class XY3dialog(QDialog):
         self.create_layout()
         self.create_connections()
 
-    # def create_widgets(self):
-    #     # QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
-    #     QBtn = QDialogButtonBox.Ok
-
-    #     self.buttonBox = QDialogButtonBox(QBtn)
-
-    #     self.use_xy3 = QRadioButton("Use saved carbon coordinates")
-    #     self.use_xy3.setChecked(True)
-    #     self.use_xy3.method = "xy3"
-
-    #     self.use_c13ppm_predictor = QRadioButton(
-    #         "Use NMRshiftDB2 C13 PPM Predictor for coordinates"
-    #     )
-    #     if not self.java_available:
-    #         self.use_c13ppm_predictor.setCheckable(False)
-    #         font = self.use_c13ppm_predictor.font()
-    #         font.setItalic(True)
-    #         font.setStrikeOut(True)
-    #         self.use_c13ppm_predictor.setFont(font)
-    #     self.use_c13ppm_predictor.method = "c13ppm"
-    #     self.use_random_positions = QRadioButton(
-    #         "Use Random Positions for initial carbon coordinates"
-    #     )
-    #     self.use_random_positions.method = "random"
 
     def create_widgets(self):
         QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
@@ -60,6 +36,7 @@ class XY3dialog(QDialog):
         self.checkboxes["C13_1D"] = QCheckBox("C13 1D")
         self.checkboxes["H1_pureshift"] = QCheckBox("H1 Pure Shift")
         self.checkboxes["HSQC"] = QCheckBox("HSQC")
+        self.checkboxes["HSQC_CH"] = QCheckBox("HSQC_CH")
         self.checkboxes["HMBC"] = QCheckBox("HMBC")
         self.checkboxes["COSY"] = QCheckBox("COSY")
         self.checkboxes["NOESY"] = QCheckBox("NOESY")
@@ -74,7 +51,7 @@ class XY3dialog(QDialog):
 
         # disable the boxes where the sheets are missing
         print("sheets missing: ", self.sheets_missing)
-        
+
         for key in self.sheets_missing:
             self.checkboxes[key].setEnabled(False)
             self.checkboxes[key].setChecked(False)
@@ -90,7 +67,6 @@ class XY3dialog(QDialog):
             )
             # set the HSQC checkbox text to red
             self.checkboxes["HSQC"].setStyleSheet("color: red")
-
 
             # set the okay button to disabled
             self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
@@ -142,7 +118,7 @@ class XY3dialog(QDialog):
             layout_H1.addWidget(self.checkboxes[key])
         for key in ["COSY", "HMBC", "NOESY"]:
             layout_H2.addWidget(self.checkboxes[key])
-        for key in ["HSQC"]:
+        for key in ["HSQC", "HSQC_CH"]:
             layout_H3.addWidget(self.checkboxes[key])
 
         # add an explanatory text for the checkboxes

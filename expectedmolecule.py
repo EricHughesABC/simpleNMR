@@ -9,18 +9,52 @@ import rdkit
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem import Draw
-import PIL
+
+import functools
+# from decorators import count_calls
+
+
 
 import java
+from  cacheUtils import cache
 
 
 XYDIM = 800
 
+# def cache(func):
+#     """Keep a cache of previous function calls"""
+#     @functools.wraps(func)
+#     def wrapper_cache(*args, **kwargs):
+#         cache_key = args + tuple(kwargs.items())
+#         if cache_key not in wrapper_cache.cache:
+#             print("cache miss")
+#             wrapper_cache.cache[cache_key] = func(*args, **kwargs)
+#         else:
+#             print("cache hit")
+#         return wrapper_cache.cache[cache_key]
+#     wrapper_cache.cache = dict()
+#     return wrapper_cache
 
 
+@cache
+def calc_c13_chemical_shifts_using_nmrshift2D(smiles_str:str) -> pd.DataFrame:
+
+    mol = Chem.MolFromSmiles(smiles_str)
+    with open("mol.mol", "w") as fp:
+        fp.write(Chem.MolToMolBlock(mol))
+
+    ret = os.system(java.JAVA_COMMAND)
+
+    if ret == 1:
+        print("NMRShift2D failed to calculate C13 chemical shifts")
+        return False
+    else:
+        mol_df = pd.read_csv("mol.csv", index_col=0)
+        mol_df.index = mol_df.index - 1
+        return mol_df
+    
 
 class expectedMolecule:
-
     def __init__(self, smiles_str):
         self.smiles_str = smiles_str
         self.mol = Chem.MolFromSmiles(smiles_str)
@@ -101,10 +135,11 @@ class expectedMolecule:
         ring_atoms = self.GetRingSystems()
 
         # create sets of carbon atoms in rings store them in molprops_df column aromatic_rings
-        for ring_idx, ring  in enumerate(ring_atoms):
-            carbon_atoms_in_ring = [i for i in ring if self.mol.GetAtomWithIdx(i).GetSymbol() == "C"]
-            self.molprops_df.loc[carbon_atoms_in_ring, "ring_idx"] = ring_idx 
-
+        for ring_idx, ring in enumerate(ring_atoms):
+            carbon_atoms_in_ring = [
+                i for i in ring if self.mol.GetAtomWithIdx(i).GetSymbol() == "C"
+            ]
+            self.molprops_df.loc[carbon_atoms_in_ring, "ring_idx"] = ring_idx
 
         # set the ring size for each carbon atom
         for ring in ring_atoms:
@@ -113,7 +148,10 @@ class expectedMolecule:
                 if self.mol.GetAtomWithIdx(atom).GetSymbol() == "C":
                     self.molprops_df.loc[atom, "ring_size"] = len(ring)
 
-        self.has_symmetry = len(self.mol.GetSubstructMatches(self.mol, uniquify=False, maxMatches=3)) > 1
+        self.has_symmetry = (
+            len(self.mol.GetSubstructMatches(self.mol, uniquify=False, maxMatches=3))
+            > 1
+        )
         print("has symmetry", self.has_symmetry)
 
         idx_list, xxx, yyy = self.calc_carbon_xy_positions_png(self.mol)
@@ -121,7 +159,6 @@ class expectedMolecule:
         self.molprops_df["y"] = 0
         self.molprops_df.loc[idx_list, "x"] = xxx
         self.molprops_df.loc[idx_list, "y"] = yyy
-
 
         self.molprops_df["symmetry_idx1"] = -1
         self.molprops_df["symmetry_idx2"] = -1
@@ -132,19 +169,33 @@ class expectedMolecule:
             for ppm in ring_df.ppm.unique():
                 ring_df_ppm = ring_df[ring_df.ppm == ppm]
                 if len(ring_df_ppm) == 2:
-                    self.molprops_df.loc[ring_df_ppm.index[0], "symmetry_idx1"] = ring_df_ppm.index[1]
-                    self.molprops_df.loc[ring_df_ppm.index[1], "symmetry_idx1"] = ring_df_ppm.index[0]
+                    self.molprops_df.loc[
+                        ring_df_ppm.index[0], "symmetry_idx1"
+                    ] = ring_df_ppm.index[1]
+                    self.molprops_df.loc[
+                        ring_df_ppm.index[1], "symmetry_idx1"
+                    ] = ring_df_ppm.index[0]
                 elif len(ring_df_ppm) == 4 and ring_idx > -1:
-                    self.molprops_df.loc[ring_df_ppm.index[0], "symmetry_idx1"] = ring_df_ppm.index[3]
-                    self.molprops_df.loc[ring_df_ppm.index[1], "symmetry_idx1"] = ring_df_ppm.index[2]
-                    self.molprops_df.loc[ring_df_ppm.index[2], "symmetry_idx1"] = ring_df_ppm.index[1]
-                    self.molprops_df.loc[ring_df_ppm.index[3], "symmetry_idx1"] = ring_df_ppm.index[0]
-
-
+                    self.molprops_df.loc[
+                        ring_df_ppm.index[0], "symmetry_idx1"
+                    ] = ring_df_ppm.index[3]
+                    self.molprops_df.loc[
+                        ring_df_ppm.index[1], "symmetry_idx1"
+                    ] = ring_df_ppm.index[2]
+                    self.molprops_df.loc[
+                        ring_df_ppm.index[2], "symmetry_idx1"
+                    ] = ring_df_ppm.index[1]
+                    self.molprops_df.loc[
+                        ring_df_ppm.index[3], "symmetry_idx1"
+                    ] = ring_df_ppm.index[0]
 
         # calculate number of carbons without protons attached
-        self.num_quaternary_carbons = self.molprops_df[self.molprops_df.quaternary].shape[0]
-        self.num_CH0_carbon_atoms = self.molprops_df[self.molprops_df.quaternary].shape[0]
+        self.num_quaternary_carbons = self.molprops_df[
+            self.molprops_df.quaternary
+        ].shape[0]
+        self.num_CH0_carbon_atoms = self.molprops_df[self.molprops_df.quaternary].shape[
+            0
+        ]
 
         # calculate number of carbon with two protons attached
         self.num_CH2_carbon_atoms = self.molprops_df[self.molprops_df.CH2].shape[0]
@@ -156,42 +207,69 @@ class expectedMolecule:
         self.num_CH1_carbon_atoms = self.molprops_df[self.molprops_df.CH1].shape[0]
 
         # calculate number of carbons with protons attached
-        self.num_carbon_atoms_with_protons = self.num_CH2_carbon_atoms  + self.num_CH3_carbon_atoms + self.num_CH1_carbon_atoms
+        self.num_carbon_atoms_with_protons = (
+            self.num_CH2_carbon_atoms
+            + self.num_CH3_carbon_atoms
+            + self.num_CH1_carbon_atoms
+        )
 
         # check if there are aromatic rings that map symmetrically to each other
-        self.mapped_symmetric_aromatic_rings = self.map_symmetric_aromatic_rings(self.molprops_df)
+        self.mapped_symmetric_aromatic_rings = self.map_symmetric_aromatic_rings(
+            self.molprops_df
+        )
 
         # create reduced  molprops_df based on symmetry of NMR ppm values
-        self.sym_molprops_df = self.molprops_df.drop_duplicates(subset=['ppm', 'aromatic'], inplace=False)
+        self.sym_molprops_df = self.molprops_df.drop_duplicates(
+            subset=["ppm", "aromatic"], inplace=False
+        )
 
         # molecule has hose-code symmetry if there are less rows in sym_molprops_df than in molprops_df
-        self.has_hose_code_symmetry = self.sym_molprops_df.shape[0] < self.molprops_df.shape[0]
+        self.has_hose_code_symmetry = (
+            self.sym_molprops_df.shape[0] < self.molprops_df.shape[0]
+        )
 
         # calculate number of aromatic carbon atoms in sym_molprops_df
-        self.num_sym_aromatic_carbon_atoms = self.sym_molprops_df[self.sym_molprops_df.aromatic].shape[0]
-        self.num_sym_CH0_carbon_atoms = self.sym_molprops_df[self.sym_molprops_df.aromatic].shape[0]
+        self.num_sym_aromatic_carbon_atoms = self.sym_molprops_df[
+            self.sym_molprops_df.aromatic
+        ].shape[0]
+        self.num_sym_CH0_carbon_atoms = self.sym_molprops_df[
+            self.sym_molprops_df.aromatic
+        ].shape[0]
 
         # calculate the number of quaternary carbon atoms in sym_molprops_df
-        self.num_sym_quaternary_carbons = self.sym_molprops_df[self.sym_molprops_df.quaternary].shape[0]
+        self.num_sym_quaternary_carbons = self.sym_molprops_df[
+            self.sym_molprops_df.quaternary
+        ].shape[0]
 
         # calculate the number of carbon atoms with two protons attached in sym_molprops_df
-        self.num_sym_CH2_carbon_atoms = self.sym_molprops_df[self.sym_molprops_df.CH2].shape[0]
+        self.num_sym_CH2_carbon_atoms = self.sym_molprops_df[
+            self.sym_molprops_df.CH2
+        ].shape[0]
 
         # calculate the number of carbon atoms with three protons attached in sym_molprops_df
-        self.num_sym_CH3_carbon_atoms = self.sym_molprops_df[self.sym_molprops_df.CH3].shape[0]
+        self.num_sym_CH3_carbon_atoms = self.sym_molprops_df[
+            self.sym_molprops_df.CH3
+        ].shape[0]
 
         # calculate the number of carbon atoms with one proton attached in sym_molprops_df
-        self.num_sym_CH1_carbon_atoms = self.sym_molprops_df[self.sym_molprops_df.CH1].shape[0]
+        self.num_sym_CH1_carbon_atoms = self.sym_molprops_df[
+            self.sym_molprops_df.CH1
+        ].shape[0]
 
         # calculate the number of carbon atoms with protons attached in sym_molprops_df
-        self.num_sym_carbon_atoms_with_protons = self.num_sym_CH2_carbon_atoms  + self.num_sym_CH3_carbon_atoms + self.num_sym_CH1_carbon_atoms
+        self.num_sym_carbon_atoms_with_protons = (
+            self.num_sym_CH2_carbon_atoms
+            + self.num_sym_CH3_carbon_atoms
+            + self.num_sym_CH1_carbon_atoms
+        )
 
         # calculate number of carbon atoms in sym_molprops_df
         self.num_sym_carbon_atoms = self.sym_molprops_df.shape[0]
-        
 
         # calculate number of aromatic rings
-        self.num_aromatic_rings = rdkit.Chem.rdMolDescriptors.CalcNumAromaticRings(self.mol)
+        self.num_aromatic_rings = rdkit.Chem.rdMolDescriptors.CalcNumAromaticRings(
+            self.mol
+        )
 
         # calculate number of all rings
         self.num_rings = rdkit.Chem.rdMolDescriptors.CalcNumRings(self.mol)
@@ -215,31 +293,30 @@ class expectedMolecule:
         # if there are more than one aromatic ring then map the aromatic rings to the symmetry pairs
         # first get the symmetry pairs
         symmetry_pairs = []
-        for x, y in np.array(np.triu_indices(df.ring_idx.max()+1, k=1)).T:
+        for x, y in np.array(np.triu_indices(df.ring_idx.max() + 1, k=1)).T:
             s1 = df.query("ring_idx == @x")["ppm"].to_list()
             s2 = df.query("ring_idx == @y")["ppm"].to_list()
             s1.sort()
             s2.sort()
             if s1 == s2:
-                symmetry_pairs.append((x, y)) 
+                symmetry_pairs.append((x, y))
 
         return symmetry_pairs
 
-
-    def GetRingSystems(self, includeSpiro=False): 
+    def GetRingSystems(self, includeSpiro=False):
         ri = self.mol.GetRingInfo()
         systems = []
         for ring in ri.AtomRings():
-            ringAts = set(ring) 
+            ringAts = set(ring)
             nSystems = []
             for system in systems:
-                nInCommon = len(ringAts.intersection(system)) 
-                if nInCommon and (includeSpiro or nInCommon>1):
-                    ringAts = ringAts.union(system) 
+                nInCommon = len(ringAts.intersection(system))
+                if nInCommon and (includeSpiro or nInCommon > 1):
+                    ringAts = ringAts.union(system)
                 else:
-                    nSystems.append(system) 
+                    nSystems.append(system)
             nSystems.append(ringAts)
-            systems = nSystems 
+            systems = nSystems
         return systems
 
     def _repr_png_(self):
@@ -283,7 +360,7 @@ class expectedMolecule:
 
     def GetConformer(self):
         return self.mol.GetConformer()
-        
+
     def init_elements_dict(self):
         return (
             pd.DataFrame(
@@ -308,11 +385,14 @@ class expectedMolecule:
             if e in elements:
                 dbe_value -= elements[e] / 2
 
-        return dbe_value + 1  
+        return dbe_value + 1
+
+    # def calculated_c13_chemical_shifts(self) -> pd.DataFrame:
+    #     return self.calc_c13_chemical_shifts_using_nmrshift2D()
 
     def calculated_c13_chemical_shifts(self) -> pd.DataFrame:
-        return self.calc_c13_chemical_shifts_using_nmrshift2D()
-
+        return calc_c13_chemical_shifts_using_nmrshift2D(self.smiles_str)
+    
     # return dictionary of dictionarys, first key is the number of protons, second key is carbon atom index, value is calculated C13 NMR chemical shift for molecule
     def c13_nmr_shifts(self) -> dict:
         c13_nmr_shifts = {
@@ -320,7 +400,7 @@ class expectedMolecule:
         }
         print("c13_nmr_shifts", c13_nmr_shifts)
 
-        c13ppm_df = self.calc_c13_chemical_shifts_using_nmrshift2D()
+        c13ppm_df = calc_c13_chemical_shifts_using_nmrshift2D(self.smiles_str)
         if isinstance(c13ppm_df, pd.DataFrame):
             # reset index to atom index
             print("c13ppm_df.index", c13ppm_df.index)
@@ -333,24 +413,24 @@ class expectedMolecule:
             print("c13_nmr_shifts", c13_nmr_shifts)
         return c13_nmr_shifts
 
-    def calc_c13_chemical_shifts_using_nmrshift2D(self) -> pd.DataFrame:
-        print("*****************************************")
-        print("calc_c13_chemical_shifts_using_nmrshift2D")
-        print("*****************************************")
+    # @cache
+    # def calc_c13_chemical_shifts_using_nmrshift2D(self) -> pd.DataFrame:
+    #     print("*****************************************")
+    #     print("calc_c13_chemical_shifts_using_nmrshift2D")
+    #     print("*****************************************")
 
+    #     with open("mol.mol", "w") as fp:
+    #         fp.write(Chem.MolToMolBlock(self.mol))
 
-        with open("mol.mol", "w") as fp:
-            fp.write(Chem.MolToMolBlock(self.mol))
+    #     ret = os.system(self.java_command)
 
-        ret = os.system(self.java_command)
-
-        if ret == 1:
-            print("NMRShift2D failed to calculate C13 chemical shifts")
-            return False
-        else:
-            mol_df = pd.read_csv("mol.csv", index_col=0)
-            mol_df.index = mol_df.index - 1
-            return mol_df      
+    #     if ret == 1:
+    #         print("NMRShift2D failed to calculate C13 chemical shifts")
+    #         return False
+    #     else:
+    #         mol_df = pd.read_csv("mol.csv", index_col=0)
+    #         mol_df.index = mol_df.index - 1
+    #         return mol_df
 
     # return dictionary of lists key is the number of protons attached to carbon, value is list of carbon atom indices
     def proton_groups(self) -> dict:
@@ -364,8 +444,6 @@ class expectedMolecule:
                 proton_groups[atom.GetTotalNumHs()].append(atom.GetIdx())
         return proton_groups
 
-
-
     def create_png(self):
         """Creates a png image from a smiles string via rdkit"""
         png = None
@@ -377,7 +455,6 @@ class expectedMolecule:
         rdkit_molecule.Compute2DCoords()
 
         return Draw.MolToImage(rdkit_molecule, size=(XYDIM, XYDIM))
-    
 
     # def create_png_from_smiles(smiles_str: str) -> PIL.Image.Image:
     #     """Creates a png image from a smiles string via rdkit"""
@@ -411,6 +488,25 @@ class expectedMolecule:
                 yyy.append(point.y / XYDIM)
         return idx_list, xxx, yyy
     
+    def calc_allatom_xy_positions_png(self) -> list:
+        """Returns the xy3 positions of all heavy atoms in the molecule"""
+
+        d2d = Draw.rdMolDraw2D.MolDraw2DSVG(XYDIM, XYDIM)
+        d2d.DrawMolecule(self.mol)
+        d2d.FinishDrawing()
+        idx_list = []
+        xxx = []
+        yyy = []
+        for atom in self.mol.GetAtoms():
+            
+            idx = atom.GetIdx()
+            point = d2d.GetDrawCoords(idx)
+            idx_list.append(idx)
+            xxx.append(point.x / XYDIM)
+            yyy.append(point.y / XYDIM)
+        return idx_list, xxx, yyy
+
+
 if __name__ == "__main__":
 
     from matplotlib import pyplot as plt
@@ -425,8 +521,14 @@ if __name__ == "__main__":
     # mol = expectedMolecule("c1cc2ccc1CC2")
     # mol = expectedMolecule("c1cc2cc(c1)CC2")
 
-    plt.imshow(mol.png, aspect="auto", extent=[0, 1, 1, 0],)
-    
+    print(mol.molprops_df)
+
+    plt.imshow(
+        mol.png,
+        aspect="auto",
+        extent=[0, 1, 1, 0],
+    )
+
     xxx = mol.molprops_df["x"]
     yyy = mol.molprops_df["y"]
     plt.scatter(xxx, yyy, c="red", s=50)

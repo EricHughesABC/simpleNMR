@@ -21,6 +21,9 @@ test*.*
 # mnova files
 *.mnova
 
+# backup excel files
+exampleProblems/*/excel_backup/*.xlsx
+
 # Development files notebooks
 develop/
 

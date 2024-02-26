@@ -263,7 +263,9 @@ class MatplotlibMoleculePlot(Figure):
         # scatterplt = self.mol_nodes
         mol_nodes.scatter_facecolors_rgba = mol_nodes.get_facecolors()
         mol_nodes.scatter_edgecolors_rgba = mol_nodes.get_edgecolors()
-        mol_nodes.my_labels = [f"C{n+1}" for n in range(len(nmrprblm.nx_graph_molecule.nodes))]
+        mol_nodes.my_labels = [
+            f"C{n+1}" for n in range(len(nmrprblm.nx_graph_molecule.nodes))
+        ]
         mol_nodes.node_highlighted = False
 
         mol_labels = nx_pylab.draw_networkx_labels(
@@ -504,7 +506,9 @@ if __name__ == "__main__":
             specplot.display_annotation_C13_from_molplot(lbl, specplot.annot_C13)
 
             # annotate H1 peaks in graph x1
-            specplot.display_annotation_H1_from_molplot(lbl, specplot.annot_H1, self.nmrproblem)
+            specplot.display_annotation_H1_from_molplot(
+                lbl, specplot.annot_H1, self.nmrproblem
+            )
 
             # annotate distributions
             hpks = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f1C_i == lbl][
@@ -726,7 +730,9 @@ if __name__ == "__main__":
                 specplot.display_annotation_C13_from_molplot(lbl, specplot.annot_C13)
 
                 # annotate H1 peaks in graph x1
-                specplot.display_annotation_H1_from_molplot(lbl, specplot.annot_H1, self.nmrproblem)
+                specplot.display_annotation_H1_from_molplot(
+                    lbl, specplot.annot_H1, self.nmrproblem
+                )
 
                 # annotate distributions
                 hpks = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f1C_i == lbl][

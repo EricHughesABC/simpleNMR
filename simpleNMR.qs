@@ -7,25 +7,22 @@ function simpleNMR(){
     return Object.keys(obj).length === 0;
   }  
   
-function splitPathAndFilename(path) {
-  var separatorIndex = path.lastIndexOf('/');
-  var directoryPath = path.substring(0, separatorIndex);
-  var filename = path.substring(separatorIndex + 1);
+  function splitPathAndFilename(path) {
+    var separatorIndex = path.lastIndexOf('/');
+    var directoryPath = path.substring(0, separatorIndex);
+    var filename = path.substring(separatorIndex + 1);
 
-  var dotIndex = filename.lastIndexOf('.');
-  var name = filename.substring(0, dotIndex);
-  var extension = filename.substring(dotIndex + 1);
+    var dotIndex = filename.lastIndexOf('.');
+    var name = filename.substring(0, dotIndex);
+    var extension = filename.substring(dotIndex + 1);
 
-  return {
-    directoryPath: directoryPath,
-    filename: filename,
-    name: name,
-    extension: extension
-  };
-}  
-
-
-
+    return {
+      directoryPath: directoryPath,
+      filename: filename,
+      name: name,
+      extension: extension
+    };
+  }  
 
 	function getActiveMolecule(aDocWin, aMolPlugin) {
 		var molec = aMolPlugin.activeMolecule();
@@ -118,6 +115,7 @@ function splitPathAndFilename(path) {
           for( q=0; q<jlist.count; q++){
             jvalslist.push(jlist.at(q));
           }
+          print("jlist.count", jlist.count, jvalslist);
           spectra[spectitle]["multiplets"][m]["jvals"] = jvalslist;          
         }
         
@@ -151,6 +149,7 @@ function splitPathAndFilename(path) {
           spectra[spectitle]["integrals"][p]["rangeMin2"] = integral.rangeMin(2);
           spectra[spectitle]["integrals"][p]["rangeMax1"] = integral.rangeMax(1);
           spectra[spectitle]["integrals"][p]["rangeMax2"] = integral.rangeMax(2);
+          spectra[spectitle]["integrals"][p]["type"] = integral.type;
           
         }
       }        

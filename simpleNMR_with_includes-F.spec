@@ -8,7 +8,7 @@ a = Analysis(
     ['simpleNMR.py'],
     pathex=[],
     binaries=[],
-    datas=[('cdk-2.7.1.jar', '.'), ('NewTest.class', '.'), ('predictorc.jar', '.'), ('cstables/*', 'csTables'), ('html/results_summary_template.html', 'html'), ('html/w3.css', 'html')],
+    datas=[('cdk-2.7.1.jar', '.'), ('NewTest.class', '.'), ('predictorc.jar', '.'), ('cstables/*', 'csTables'), ('html/results_summary_template_2.html', 'html'), ('html/w3.css', 'html')],
     hiddenimports=["sklearn.utils._typedefs", "sklearn.neighbors._partition_nodes", "sklearn.utils._weight_vector"],
     hookspath=[],
     hooksconfig={},

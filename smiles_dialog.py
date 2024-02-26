@@ -8,9 +8,8 @@ from PyQt5.QtWidgets import (
     QDialog,
     QDialogButtonBox,
     QLabel,
-    QLineEdit
+    QLineEdit,
 )
-
 
 
 import rdkit
@@ -18,8 +17,8 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem import Draw
 
-class SmilesDialog(QDialog):
 
+class SmilesDialog(QDialog):
     def __init__(self, smilesStr="", smilesPNG=None):
         self.smilesStr = smilesStr
         super().__init__()
@@ -47,7 +46,6 @@ class SmilesDialog(QDialog):
             # self.smiles_png.setPixmap(smilesPNG.toqpixmap())
             self.smiles_png.setPixmap(smilesPNG.toqpixmap().scaled(300, 200))
 
-
     def create_layout(self):
         # layout = QVBoxLayout()
         # layout.addWidget(self.use_xy3)
@@ -68,17 +66,15 @@ class SmilesDialog(QDialog):
 
     def get_smiles_string(self):
         return self.smiles_entry.text()
-    
+
+
 if __name__ == "__main__":
 
     import numpy as np
     import PIL
 
-    from PyQt5.QtWidgets import (
-        QMainWindow,
-        QApplication
-    )
-    
+    from PyQt5.QtWidgets import QMainWindow, QApplication
+
     # from PyQt5.QtGui import QPixmap, QImage
 
     class MainWindow(QMainWindow):

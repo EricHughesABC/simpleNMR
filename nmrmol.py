@@ -13,6 +13,7 @@ import java
 
 XYDIM = 800
 
+
 class NMRmol(rdkit.Chem.rdchem.Mol):
     """NMRmol is a subclass of rdkit.Chem.rdchem.Mol"""
 
@@ -63,7 +64,9 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
         self.num_hydrogen_atoms = self.elements.get("H", 0)
         self.png = self.create_png()
         self.smiles = self.create_smiles()
-        self.has_symmetry = len(self.GetSubstructMatches(self, uniquify=False, maxMatches=3)) > 1
+        self.has_symmetry = (
+            len(self.GetSubstructMatches(self, uniquify=False, maxMatches=3)) > 1
+        )
 
         # molprops = [
         #     [
@@ -77,7 +80,7 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
         #     for atom in self.GetAtoms()
         #     if "C" == atom.GetSymbol()
         # ]
-        
+
         molprops = [
             [
                 atom.GetIdx(),
@@ -123,7 +126,6 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
         self.molprops_df["CH0"] = False
         self.molprops_df.loc[self.molprops_df["totalNumHs"] == 0, "quaternary"] = True
         self.molprops_df["CH0"] = self.molprops_df["quaternary"]
-
 
         # define CH3 column for totalNumHs == 3
         self.molprops_df["CH3"] = False
@@ -283,8 +285,6 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
         """Creates a png image from a smiles string via rdkit"""
         png = None
 
-
-
         mol2 = Chem.AddHs(self)
         AllChem.EmbedMolecule(mol2, randomSeed=3)
         rdkit_molecule = Chem.RemoveHs(mol2)
@@ -386,7 +386,7 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
 #         # create sets of carbon atoms in rings store them in molprops_df column aromatic_rings
 #         for ring_idx, ring  in enumerate(ring_atoms):
 #             carbon_atoms_in_ring = [i for i in ring if self.mol.GetAtomWithIdx(i).GetSymbol() == "C"]
-#             self.molprops_df.loc[carbon_atoms_in_ring, "ring_idx"] = ring_idx 
+#             self.molprops_df.loc[carbon_atoms_in_ring, "ring_idx"] = ring_idx
 
 
 #         # set the ring size for each carbon atom
@@ -424,7 +424,6 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
 #                     self.molprops_df.loc[ring_df_ppm.index[1], "symmetry_idx1"] = ring_df_ppm.index[2]
 #                     self.molprops_df.loc[ring_df_ppm.index[2], "symmetry_idx1"] = ring_df_ppm.index[1]
 #                     self.molprops_df.loc[ring_df_ppm.index[3], "symmetry_idx1"] = ring_df_ppm.index[0]
-
 
 
 #         # calculate number of carbons without protons attached
@@ -471,7 +470,7 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
 
 #         # calculate number of carbon atoms in sym_molprops_df
 #         self.num_sym_carbon_atoms = self.sym_molprops_df.shape[0]
-        
+
 
 #         # calculate number of aromatic rings
 #         self.num_aromatic_rings = rdkit.Chem.rdMolDescriptors.CalcNumAromaticRings(self.mol)
@@ -504,25 +503,25 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
 #             s1.sort()
 #             s2.sort()
 #             if s1 == s2:
-#                 symmetry_pairs.append((x, y)) 
+#                 symmetry_pairs.append((x, y))
 
 #         return symmetry_pairs
 
 
-#     def GetRingSystems(self, includeSpiro=False): 
+#     def GetRingSystems(self, includeSpiro=False):
 #         ri = self.mol.GetRingInfo()
 #         systems = []
 #         for ring in ri.AtomRings():
-#             ringAts = set(ring) 
+#             ringAts = set(ring)
 #             nSystems = []
 #             for system in systems:
-#                 nInCommon = len(ringAts.intersection(system)) 
+#                 nInCommon = len(ringAts.intersection(system))
 #                 if nInCommon and (includeSpiro or nInCommon>1):
-#                     ringAts = ringAts.union(system) 
+#                     ringAts = ringAts.union(system)
 #                 else:
-#                     nSystems.append(system) 
+#                     nSystems.append(system)
 #             nSystems.append(ringAts)
-#             systems = nSystems 
+#             systems = nSystems
 #         return systems
 
 #     def _repr_png_(self):
@@ -566,7 +565,7 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
 
 #     def GetConformer(self):
 #         return self.mol.GetConformer()
-        
+
 #     def init_elements_dict(self):
 #         return (
 #             pd.DataFrame(
@@ -591,7 +590,7 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
 #             if e in elements:
 #                 dbe_value -= elements[e] / 2
 
-#         return dbe_value + 1  
+#         return dbe_value + 1
 
 #     def calculated_c13_chemical_shifts(self) -> pd.DataFrame:
 #         return self.calc_c13_chemical_shifts_using_nmrshift2D()
@@ -629,7 +628,7 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
 #         else:
 #             mol_df = pd.read_csv("mol.csv", index_col=0)
 #             mol_df.index = mol_df.index - 1
-#             return mol_df      
+#             return mol_df
 
 #     # return dictionary of lists key is the number of protons attached to carbon, value is list of carbon atom indices
 #     def proton_groups(self) -> dict:
@@ -642,7 +641,6 @@ class NMRmol(rdkit.Chem.rdchem.Mol):
 #             if atom.GetAtomicNum() == 6:
 #                 proton_groups[atom.GetTotalNumHs()].append(atom.GetIdx())
 #         return proton_groups
-
 
 
 #     def create_png(self) -> PIL.Image.Image:

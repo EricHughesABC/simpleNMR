@@ -47,7 +47,9 @@ from rdkit.Chem import Draw
 # import nx_pylab
 import numpy as np
 import pandas as pd
+from inspect import currentframe, getframeinfo
 
+pd.options.mode.chained_assignment = "raise"
 from PIL import Image
 import platform
 
@@ -67,7 +69,7 @@ from smiles_dialog import SmilesDialog
 
 import simpleNMRutils
 import mnovautils
-
+from qtutils import warning_dialog
 
 
 PLOTLINECOLORS = ("blue", "orange", "green", "red", "purple")
@@ -85,18 +87,16 @@ WHITE = (1.0, 1.0, 1.0, 1.0)
 # JAVA_COMMAND = "Undefined"
 
 # Test what system we are running on
-global WINDOWS_OS
-global LINUX_OS
-global MAC_OS
+# global WINDOWS_OS
+# global LINUX_OS
+# global MAC_OS
 
-WINDOWS_OS = False
-LINUX_OS = False
-MAC_OS = False
+# WINDOWS_OS = False
+# LINUX_OS = False
+# MAC_OS = False
 
-global XYDIM
-XYDIM = 800
-
-# print("platform.system", platform.system())
+# global XYDIM
+# XYDIM = 800
 
 # # set current working directory to the directory of this file
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -263,10 +263,7 @@ class MainWidget(QMainWindow):
         # self.spectraPlot.canvas.draw_idle()
         # self.moleculePlot.canvas.draw_idle()
 
-
     def hover_over_specplot(self, event, specplot, molplot):
-
-        print("hover_over_specplot: event: ")
 
         # just return if toolbar is active
         if (self.moltoolbar.mode != "") or (self.spctoolbar.mode != ""):
@@ -284,10 +281,8 @@ class MainWidget(QMainWindow):
             in_plot_label.append(k)
             in_plot_index.append(c13plots_index)
 
-        print("in_plot: ", in_plot)
         if any(in_plot):
             lbl = in_plot_label[in_plot.index(True)]
-            print("lbl: ", lbl)
 
             # if lbl != self.highlighted_peak_lbl:
             # highlight new peak
@@ -299,19 +294,12 @@ class MainWidget(QMainWindow):
             if "H" in lbl:
                 # set the annotation to the peak
                 atom_index = int(lbl[1:])
-                print(
-                    "Hover over SpecPlot\n",
-                    "atom_index: ",
-                    atom_index,
-                    self.nmrproblem.h1.loc[atom_index, "ppm"],
-                )
                 ppm = self.nmrproblem.h1.loc[atom_index, "ppm"]
                 integral = float(self.nmrproblem.h1.loc[atom_index, "integral"])
                 jcoupling = self.nmrproblem.h1.loc[atom_index, "jCouplingClass"]
                 jcouplingvals = self.nmrproblem.h1.loc[atom_index, "jCouplingVals"]
-                jcouplingvals =simpleNMRutils.stringify_vals(jcouplingvals)
+                jcouplingvals = simpleNMRutils.stringify_vals(jcouplingvals)
                 annot_text = f"{lbl}: {ppm:.2f} ppm\nInt:{integral:.1f}\nJ: {jcoupling}: {jcouplingvals} Hz"
-                print("annot_text: ", annot_text)
                 specplot.annot_H1.xy = (event.xdata, event.ydata)
                 specplot.annot_H1.set_text(annot_text)
                 specplot.annot_H1.set_visible(True)
@@ -363,7 +351,6 @@ class MainWidget(QMainWindow):
             self.moleculePlot.ax.set_title(title_str)
         else:
             # unhilight old peak
-            print("No peak found in specplot hover event")
             if self.highlighted_peak_lbl is not None:
                 self.mol_nodes.set_fc(self.mol_nodes.scatter_facecolors_rgba)
                 self.mol_nodes.set_ec(self.mol_nodes.scatter_edgecolors_rgba)
@@ -381,26 +368,6 @@ class MainWidget(QMainWindow):
                 # uddate specplot canvas
                 specplot.canvas.draw_idle()
                 molplot.canvas.draw_idle()
-
-    # def stringify_jcouplingvals(self, jcouplingvals)->str:
-    #     if isinstance(jcouplingvals, str):
-    #         jcouplingvals = jcouplingvals.split(", ")
-    #     elif isinstance(jcouplingvals, (int, float)):
-    #         jcouplingvals = [jcouplingvals]
-    #     jcouplingvals = set(jcouplingvals)
-    #         # rejoin the set into a string
-    #     print("jcouplingvals", jcouplingvals,type(jcouplingvals))
-    #     return ", ".join([f"{i}" for i in jcouplingvals])
-    
-    # def stringify_vals(self, vals, separator=", ") -> str:
-    #     if not is_iterable(vals):
-    #         vals_set = {vals}
-    #     elif isinstance(vals, str):
-    #         vals_set = {x.strip() for x in vals.split(",")}
-    #     else:
-    #         vals_set = set(vals)
-    #         # rejoin the set into a string
-    #     return separator.join([f"{str(v)}" for v in vals_set])
 
     def update_molplot_highlights(self, molplot, specplot, lbl):
 
@@ -435,8 +402,9 @@ class MainWidget(QMainWindow):
         specplot.display_annotation_C13_from_molplot(lbl, specplot.annot_C13)
 
         # annotate H1 peaks in graph x1
-        specplot.display_annotation_H1_from_molplot(lbl, specplot.annot_H1, self.nmrproblem)
-
+        specplot.display_annotation_H1_from_molplot(
+            lbl, specplot.annot_H1, self.nmrproblem
+        )
 
         # annotate distributions
         hpks = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f1C_i == lbl]["f2H_i"].values
@@ -502,9 +470,6 @@ class MainWidget(QMainWindow):
     def button_release_molecule(self, event, molplot, specplot):
 
         if (self.moltoolbar.mode != "") or (self.spctoolbar.mode != ""):
-            # print("button release molecule")
-            # print("self.moltoolbar.mode: ", self.moltoolbar.mode)
-            # print("self.spctoolbar.mode: ", self.spctoolbar.mode)
             return
 
         self.mol_nodes.set_fc(self.mol_nodes.scatter_facecolors_rgba)
@@ -531,29 +496,20 @@ class MainWidget(QMainWindow):
     def motion_notify_callback(self, event, specplot, molplot):
 
         if (self.moltoolbar.mode != "") or (self.spctoolbar.mode != ""):
-            # print("motion notify callback")
-            # print("self.moltoolbar.mode: ", self.moltoolbar.mode)
-            # print("self.spctoolbar.mode: ", self.spctoolbar.mode)
             return
-        
-
 
         self.hover_over_molecule(
             event, event_name="motion_notify_event", molplot=molplot, specplot=specplot
         )
 
-
-
         if not hasattr(self, "label_id"):
-            print("not hasattr(self, 'label_id')")
+            # print("not hasattr(self, 'label_id')")
             return
-        else:
-            print("self.label_id: ", self.label_id)
+        # else:
+        # print("self.label_id: ", self.label_id)
 
-        in_node, node_index = self.mol_nodes.contains(event)
+        in_node, _ = self.mol_nodes.contains(event)
         if (not in_node) and (event.button != 1):
-
-            print("(not in_node)  and (event.button != 1)")
 
             self.mol_nodes.node_highlighted = False
 
@@ -573,17 +529,15 @@ class MainWidget(QMainWindow):
             molplot.canvas.draw_idle()
             specplot.canvas.draw_idle()
             return
-        
-                
+
         if event.button != 1:
-            print("event.button != 1, return")
+            # print("event.button != 1, return")
             return
 
         self.node_moved = True
         x, y = event.xdata, event.ydata
-        # print("x, y: ", x, y)
 
-        # if x or y is None: return
+        # if x or y is None: return mouse beyond plotting area
         if x is None:
             return
         if y is None:
@@ -665,7 +619,7 @@ class MainWidget(QMainWindow):
         self.moved_y = y
 
     def hover_over_molecule(self, event, event_name, molplot, specplot):
-        # print("hover_over_molecule")
+
         self.mol_nodes = molplot.mol_nodes
         self.mol_labels = molplot.mol_labels
 
@@ -677,7 +631,6 @@ class MainWidget(QMainWindow):
 
         if in_node:
 
-            # print("in_node", in_node)
             self.mol_nodes.node_highlighted = True
 
             ind = node_index["ind"][0]
@@ -743,7 +696,9 @@ class MainWidget(QMainWindow):
             specplot.display_annotation_C13_from_molplot(lbl, specplot.annot_C13)
 
             # annotate H1 peaks in graph x1
-            specplot.display_annotation_H1_from_molplot(lbl, specplot.annot_H1, self.nmrproblem)
+            specplot.display_annotation_H1_from_molplot(
+                lbl, specplot.annot_H1, self.nmrproblem
+            )
 
             # annotate distributions
             hpks = self.nmrproblem.hsqc[self.nmrproblem.hsqc.f1C_i == lbl][
@@ -755,7 +710,6 @@ class MainWidget(QMainWindow):
             molplot.canvas.draw_idle()
             specplot.canvas.draw_idle()
         else:
-            # print("in_node", in_node)
             # if self.mol_nodes.node_highlighted:
             self.mol_nodes.node_highlighted = False
 
@@ -778,6 +732,11 @@ class MainWidget(QMainWindow):
     def pick_molecule(self, event, event_name, specplot, molplot):
         global JAVA_AVAILABLE
         in_node, node_index = self.moleculePlot.mol_nodes.contains(event.mouseevent)
+        print("in_node: ", in_node)
+        print("node_index: ", node_index)   
+        print("event_name: ", event_name)
+        print("event.mouseevent: ", event.mouseevent)
+        print(dir(event))
 
         if in_node:
             self.node_picked = True
@@ -791,6 +750,7 @@ class MainWidget(QMainWindow):
 
         # find label id
         self.label_id = list(self.moleculePlot.mol_labels.keys())[self.node_pick_ind]
+        print("self.label_id: ", self.label_id, self.node_pick_ind, f"C{self.node_pick_ind+1}")
 
         # hide all highlights before dragging node
         if self.mol_nodes.node_highlighted:
@@ -880,9 +840,8 @@ class MainWidget(QMainWindow):
         # # exampleProblems menu
         # exampleProblemsMenu = menuBar.addMenu("&Example Problems")
 
-        examples_menu = menuBar.addMenu('Examples')
+        examples_menu = menuBar.addMenu("Examples")
         self.initExampleMenu(examples_menu)
-
 
         # for  action in self.exampleProblemsActions:
         #     exampleProblemsMenu.addAction(action)
@@ -915,18 +874,19 @@ class MainWidget(QMainWindow):
             menu.addAction(qa)
             qa.triggered.connect(self.exampleProblem_selected)
 
-
     def exampleProblem_selected(self):
         action = self.sender()
         exampleproblem_name = action.text()
-        print(f'Clicked: {exampleproblem_name}')
 
-        print("exampleProblems.exampleproblems_df[exampleproblem_name] = ", exampleProblems.exampleproblems_df[exampleproblem_name].keys())
-
-        self.excel_path, self.tmpdir  = exampleProblems.create_tmp_excel_file(exampleproblem_name, exampleProblems.exampleproblems_df[exampleproblem_name])
-
-        data_info = nmrProblem.parse_argv(my_argv=["simplepy", self.tmpdir.name,])
-        print("data_info = \n", data_info)
+        self.excel_path, self.tmpdir = exampleProblems.create_tmp_excel_file(
+            exampleproblem_name, exampleProblems.exampleproblems_df[exampleproblem_name]
+        )
+        data_info = nmrProblem.parse_argv(
+            my_argv=[
+                "simplepy",
+                self.tmpdir.name,
+            ]
+        )
 
         xy3_dlg = XY3dialog(
             java_available=java.JAVA_AVAILABLE,
@@ -937,9 +897,6 @@ class MainWidget(QMainWindow):
             xy3_calc_method, expts_available = xy3_dlg.get_method()
             # add "molecule" to expts_available
             expts_available.append("molecule")
-
-            print("xy3_calc_method = ", xy3_calc_method)
-            print("expts_available = ", expts_available)
 
             self.nmrproblem = nmrProblem.NMRproblem(
                 data_info,
@@ -954,8 +911,6 @@ class MainWidget(QMainWindow):
                 self.initiate_windows(self.nmrproblem)
         else:
             print("xy3_dlg.exec() failed")
-
-
 
     def _createToolBars(self):
         # File toolbar
@@ -1102,159 +1057,6 @@ class MainWidget(QMainWindow):
         # Logic for creating a new file goes here...
         # self.csideWidget.setText("<b>File > New</b> clicked")
 
-
-
-    # def return_nonempty_mnova_datasets( self, data: dict)->dict:
-    #     # remove datasets where multipliticy counts is zero and peaks counts is zero and integrals counts is zero
-
-    #     dicts_to_keep = {}
-    #     for k, v in data.items():
-    #         if isinstance(v, dict):
-    #             if( v['multiplets']["count"] > 0) or (v['peaks']["count"] > 0) or (v['integrals']["count"] > 0):
-    #                 dicts_to_keep[k] = v
-    #         else:
-    #             dicts_to_keep[k] = v  # must be smiles string, maybe need to check for this at some point
-
-    #     return dicts_to_keep
-
-    # def read_in_mesrenova_json(self, fn):
-    #     """Read in the JSON file exported from MestReNova."""
-
-    #     with open(fn, 'r') as file:
-    #         data_orig = json.load(file)
-
-    #     data = self.return_nonempty_mnova_datasets(data_orig)
-    #     print("kept datasets = ", data.keys())
-
-    #     # Identify the technique keys present in the JSON data
-    #     technique_keys = {}
-    #     for key in data:
-    #         if isinstance(data[key], dict):
-
-                
-    #             subtype = data[key].get('subtype', '')
-    #             pulse_sequence = data[key].get('pulsesequence', '')
-
-    #             if subtype.lower().find('hsqc') != -1 and data[key].get('type', '').lower() == '2d':
-    #                 technique_keys[key] = 'HSQC'
-    #             elif subtype.lower().find('hmbc') != -1 and data[key].get('type', '').lower() == '2d':
-    #                 technique_keys[key] = 'HMBC'
-    #             elif subtype.lower().find('cosy') != -1 and data[key].get('type', '').lower() == '2d':
-    #                 technique_keys[key] = 'COSY'
-    #             elif subtype.lower().find('13c') != -1 and data[key].get('type', '').lower() == '1d':
-    #                 technique_keys[key] = 'C13_1D'
-    #             elif subtype.lower().find('1h') != -1 and data[key].get('type', '').lower() == '1d' and "psyche" in data[key].get('pulsesequence', '').lower():
-    #                 technique_keys[key] ='H1_pureshift'
-    #             elif subtype.lower().find('1h') != -1 and data[key].get('type', '').lower() == '1d':
-    #                 technique_keys[key] ='H1_1D'
-    #             elif subtype.lower().find('1h') != -1 and data[key].get('type', '').lower() == '2d':
-    #                 technique_keys[key] ='NOESY'
-
-    #             if  pulse_sequence.lower().find('hmbc') != -1 and data[key].get('type', '').lower() == '2d':
-    #                 technique_keys[key] = 'HMBC'
-
-
-
-
-    #     for k, v in technique_keys.items():
-    #         data[v] = data[k]
-    #         del data[k]
-
-    #     return data
-    
-    # def get_2D_dataframe_from_json(self, json_data, technique):
-    #     """
-    #     Returns a pandas dataframe from the json_data dictionary for the specified technique.
-    #     """
-    #     df_data = []
-    #     for i in range(json_data[technique]["peaks"]["count"]):
-    #         df_data.append([json_data[technique]["peaks"][str(i)]["delta2"], 
-    #                         json_data[technique]["peaks"][str(i)]["delta1"], 
-    #                         json_data[technique]["peaks"][str(i)]["intensity"], 
-    #                         json_data[technique]["peaks"][str(i)]["type"]])
-
-    #     df = pd.DataFrame(df_data, columns=["f2 (ppm)", "f1 (ppm)", "Intensity", "Type"])
-
-    #     # sort the dataframe by f2 (ppm), descending order, reset the index and start the index at 1
-    #     df = df.sort_values(by=["f2 (ppm)"], ascending=False).reset_index(drop=True)
-    #     df.index += 1
-
-    #     return df
-    
-    # def get_c13_1d_dataframe_from_json(json_data, technique):
-    # def get_1d_dataframe_from_json( self, json_data, technique):
-    #     df_data = []
-    #     if json_data[technique]["multiplets"]["count"] == 0:
-    #         # find peaks from  from peaks key
-    #         for i in range(json_data[technique]["peaks"]["count"]):
-    #             if str(i) in json_data[technique]["peaks"]:
-    #                 df_data.append([json_data[technique]["peaks"][str(i)]["delta1"], 
-    #                                 json_data[technique]["peaks"][str(i)]["intensity"],
-    #                                 json_data[technique]["peaks"][str(i)]["type"]])
-                    
-    #         df = pd.DataFrame(df_data, columns=["ppm",  "Intensity", "Type"])
-
-    #     else:
-    #         # find peaks from  from multiplets key
-    #         # Name	Shift	Range	H's	Integral	Class	J's	Method
-
-    #         count = json_data[technique]["multiplets"]["count"]
-    #         normValue = json_data[technique]["multiplets"]["normValue"]
-    #         for i in [str(i) for i in range(count)]:
-    #             if str(i) in json_data[technique]["multiplets"]:
-    #                 row = [json_data[technique]["multiplets"][i]["delta1"], 
-    #                                 json_data[technique]["multiplets"][i]["integralValue"],
-    #                                 json_data[technique]["multiplets"][i]["nH"],
-    #                                 json_data[technique]["multiplets"][i]["category"]]
-                    
-    #                 # create a string from the list of J values and add it to df_data
-    #                 j_values = json_data[technique]["multiplets"][i]["jvals"]
-    #                 j_string = ", ".join([f"{j:1.3}" for j in j_values])
-    #                 j_string = f"{j_string}"
-    #                 row.append(j_string)
-    #                 df_data.append(row)
-
-            
-    #         df = pd.DataFrame(df_data, columns=["ppm", "Integral",  "H's", "Class", "J's"])
-    #         df["Integral"] = df["Integral"] / normValue
-
-    #     # sort the dataframe by f2 (ppm), descending order, reset the index and start the index at 1
-    #     df = df.sort_values(by=["ppm"], ascending=False).reset_index(drop=True)
-    #     df.index += 1
-
-    #     return df
-    
-    # def create_dataframes_from_mresnova_json(self, data):
-    #     """
-    #     Returns a dictionary of pandas dataframes for each technique in the data dictionary.
-    #     """
-    #     dataframes = {}
-    #     for k, v in data.items():
-    #         if k in ["H1_1D", "C13_1D", "HSQC", "HMBC", "COSY", "NOESY", "H1_pureshift"]:
-    #             if v["type"].lower() == "2d":
-    #                 df = self.get_2D_dataframe_from_json(data, k)
-    #                 dataframes[k] = df
-    #             elif v["type"].lower() == "1d":
-    #                 df = self.get_1d_dataframe_from_json(data, k)
-    #                 dataframes[k] = df
-    #         elif k in ["smiles"]:
-    #             dataframes["molecule"]  = pd.DataFrame([data["smiles"]], columns=["smiles"])
-
-    #     return dataframes
-
-    # def write_excel_file_from_mresnova_df_dict(self, df_frames:dict, excel_path: pathlib.Path)->bool:
-
-    #     # check if path is valid
-    #     if not excel_path.parent.exists():
-    #         return False
-    #     else:
-    #         with pd.ExcelWriter(excel_path) as writer:
-    #             # check if path is valid
-    #             for k, df in df_frames.items():
-    #                 df.to_excel(writer, sheet_name=k)
-    #         return True
-
-
     def newFromMresNova(self):
 
         jsonfilepathlist = QFileDialog.getOpenFileName(
@@ -1268,38 +1070,35 @@ class MainWidget(QMainWindow):
         # check if jsoonfilepath exists
         if not jsonfilepath.exists():
             return
-        
+
         # read in json file
         data = mnovautils.read_in_mesrenova_json(jsonfilepath)
-        print(data.keys())
+        data = mnovautils.check_for_multiple_HSQC_expts(data)
 
         # check if json file contains a molecule ask user to add one if not
         smiles_str = ""
-        print("smiles_str", smiles_str, type(smiles_str))
         if "smiles" not in data.keys():
-            print("No smiles found in json file")
             # read in excel file to get smiles string before over writing it
             excel_path = jsonfilepath.parent / (jsonfilepath.parent.name + ".xlsx")
-            print("excel_path", excel_path, excel_path.exists())
             if excel_path.exists():
                 try:
                     df = pd.read_excel(excel_path, sheet_name="molecule")
-                    print("df\n", df)
                     smiles_str = df["smiles"][0]
-                    print("smiles_str", smiles_str, type(smiles_str))
                 except ValueError as ve:
                     smiles_str = ""
                     print("No sheet named molecule found in excel file")
-                    
+                    warning_dialog("No sheet named molecule found in excel file", "No sheet named molecule found in excel file", self.nmrproblem.qtstarted)
+
             else:
                 smiles_str = ""
 
             try:
-                mol = Chem.MolFromSmiles('')
+                mol = Chem.MolFromSmiles("")
                 smilesPNG = Draw.MolToImage(mol)
                 print("smilesPNG:", smilesPNG)
             except Exception as e:
                 print("Exception:", e)
+                warning_dialog("Exception:", e, self.nmrproblem.qtstarted)
                 smilesPNG = None
 
             dlg = SmilesDialog(smiles_str, smilesPNG)
@@ -1310,7 +1109,11 @@ class MainWidget(QMainWindow):
             if dlg.exec():
                 smile_str = dlg.get_smiles_string()
                 if Chem.MolFromSmiles(smile_str):
-                    self.warning_dialog("Invalid smiles string", "Invalid smiles string", self.nmrproblem.qtstarted)
+                    warning_dialog(
+                        "Invalid smiles string",
+                        "Invalid smiles string",
+                        self.nmrproblem.qtstarted,
+                    )
                     return
                 else:
                     data["smiles"] = smile_str
@@ -1325,30 +1128,34 @@ class MainWidget(QMainWindow):
 
         # create a new excel file based on the json file parent folder name
         excel_fn = jsonfilepath.parent.name + ".xlsx"
-        print("excel_fn", excel_fn)
 
         # create a a pathlib Path object for the new excel file and the parent folder
         folderpath = jsonfilepath.parent
         excel_path = folderpath / excel_fn
-        print("excel_path", excel_path)
 
-        if not mnovautils.write_excel_file_from_mresnova_df_dict(dataframes, excel_path):
+        if excel_path.exists():
+            if not mnovautils.make_excel_backup(excel_path):
+                return
+        if not mnovautils.write_excel_file_from_mresnova_df_dict(
+            dataframes, excel_path, True
+        ):
             return
 
-
-
         if excel_path.parent.exists():
-            data_info = nmrProblem.parse_argv([excel_fn, str(folderpath), excel_fn], True)
+            data_info = nmrProblem.parse_argv(
+                [excel_fn, str(folderpath), excel_fn], True
+            )
             xy3_dlg = XY3dialog(
                 java_available=java.JAVA_AVAILABLE,
-                sheets_missing=nmrProblem.get_missing_sheets(data_info["excel_fn"], True)
+                sheets_missing=nmrProblem.get_missing_sheets(
+                    data_info["excel_fn"], True
+                ),
             )
             if xy3_dlg.exec():
                 xy3_calc_method, expts_available = xy3_dlg.get_method()
                 # add "molecule" to expts_available
                 expts_available.append("molecule")
 
-                print("line 1143: nmrproblem")
                 self.nmrproblem = nmrProblem.NMRproblem(
                     # nmrproblem = TestExcelSimpleNMR(
                     data_info,
@@ -1380,20 +1187,20 @@ class MainWidget(QMainWindow):
             "All Files (*);;Python Files (*.py)",
             options=options,
         )
-        print("openFile: fileName", fileName)
         if fileName:
             workingdir, fn = os.path.split(fileName)
             data_info = nmrProblem.parse_argv([fn, workingdir, fn], True)
             xy3_dlg = XY3dialog(
                 java_available=java.JAVA_AVAILABLE,
-                sheets_missing=nmrProblem.get_missing_sheets(data_info["excel_fn"], True)
+                sheets_missing=nmrProblem.get_missing_sheets(
+                    data_info["excel_fn"], True
+                ),
             )
             if xy3_dlg.exec():
                 xy3_calc_method, expts_available = xy3_dlg.get_method()
                 # add "molecule" to expts_available
                 expts_available.append("molecule")
 
-                print("line 1143: nmrproblem")
                 self.nmrproblem = nmrProblem.NMRproblem(
                     # nmrproblem = TestExcelSimpleNMR(
                     data_info,
@@ -1423,47 +1230,54 @@ class MainWidget(QMainWindow):
                 if isinstance(v, np.ndarray):
                     self.nmrproblem.xy3[k] = v.tolist()
 
-            with open(
-                os.path.join(self.nmrproblem.problemDirectoryPath, "xy3.json"), "w"
-            ) as fp:
-                json.dump(self.nmrproblem.xy3, fp, indent=2)
+        # taken outside of the loop to avoid overwriting xy3
+        with open(
+            os.path.join(self.nmrproblem.problemDirectoryPath, "xy3.json"), "w"
+        ) as fp:
+            json.dump(self.nmrproblem.xy3, fp, indent=2)
 
         # update C13 info based on xy3
 
         # using coordinates of xy3, match them to the coordinates in expected_molecule.molprops_df
-        for k, [x,y] in self.nmrproblem.xy3.items():
+        for k, [x, y] in self.nmrproblem.xy3.items():
             idx_c13 = int(k[1:])
             # find the closest row in expected_molecule.molprops_df based on x,y
-            idx = self.nmrproblem.expected_molecule.molprops_df.apply(lambda row: math.sqrt((row['x']-x)**2 + (row['y']-y)**2), axis=1).idxmin()
+            idx = self.nmrproblem.expected_molecule.molprops_df.apply(
+                lambda row: math.sqrt((row["x"] - x) ** 2 + (row["y"] - y) ** 2), axis=1
+            ).idxmin()
 
-            self.nmrproblem.c13.loc[idx_c13, 'C'] = idx
-            self.nmrproblem.c13.loc[idx_c13, 'predicted'] = self.nmrproblem.expected_molecule.molprops_df.loc[idx, 'ppm']
-            self.nmrproblem.c13.loc[idx_c13, 'x'] = self.nmrproblem.expected_molecule.molprops_df.loc[idx, 'x']
-            self.nmrproblem.c13.loc[idx_c13, 'y'] = self.nmrproblem.expected_molecule.molprops_df.loc[idx, 'y']
+            self.nmrproblem.c13.loc[idx_c13, "C"] = idx
+            self.nmrproblem.c13.loc[
+                idx_c13, "predicted"
+            ] = self.nmrproblem.expected_molecule.molprops_df.loc[idx, "ppm"]
+            self.nmrproblem.c13.loc[
+                idx_c13, "x"
+            ] = self.nmrproblem.expected_molecule.molprops_df.loc[idx, "x"]
+            self.nmrproblem.c13.loc[
+                idx_c13, "y"
+            ] = self.nmrproblem.expected_molecule.molprops_df.loc[idx, "y"]
 
         # create a html results file
         tohtml = problemtohtml.ProblemToHTML(self.nmrproblem)
         tohtml.write_html_report()
 
-
-
         # Logic for saving a file goes here...
         # self.centralWidget.setText("<b>File > Save</b> clicked")
 
-    def copyContent(self):
-        pass
-        # Logic for copying content goes here...
-        # self.centralWidget.setText("<b>Edit > Copy</b> clicked")
+    # def copyContent(self):
+    #     pass
+    #     # Logic for copying content goes here...
+    #     # self.centralWidget.setText("<b>Edit > Copy</b> clicked")
 
-    def pasteContent(self):
-        pass
-        # Logic for pasting content goes here...
-        # self.centralWidget.setText("<b>Edit > Paste</b> clicked")
+    # def pasteContent(self):
+    #     pass
+    #     # Logic for pasting content goes here...
+    #     # self.centralWidget.setText("<b>Edit > Paste</b> clicked")
 
-    def cutContent(self):
-        pass
-        # Logic for cutting content goes here...
-        # self.centralWidget.setText("<b>Edit > Cut</b> clicked")
+    # def cutContent(self):
+    #     pass
+    #     # Logic for cutting content goes here...
+    #     # self.centralWidget.setText("<b>Edit > Cut</b> clicked")
 
     def helpContent(self):
         webbrowser.open("https://github.com/EricHughesABC/simpleNMR")
@@ -1477,29 +1291,29 @@ class MainWidget(QMainWindow):
         # Logic for showing an about dialog content goes here...
         # self.centralWidget.setText("<b>Help > About...</b> clicked")
 
-    def populateOpenRecent(self):
-        # Step 1. Remove the old options from the menu
-        self.openRecentMenu.clear()
-        # Step 2. Dynamically create the actions
-        actions = []
-        filenames = [f"File-{n}" for n in range(5)]
-        for filename in filenames:
-            action = QAction(filename, self)
-            action.triggered.connect(partial(self.openRecentFile, filename))
-            actions.append(action)
-        # Step 3. Add the actions to the menu
-        self.openRecentMenu.addActions(actions)
+    # def populateOpenRecent(self):
+    #     # Step 1. Remove the old options from the menu
+    #     self.openRecentMenu.clear()
+    #     # Step 2. Dynamically create the actions
+    #     actions = []
+    #     filenames = [f"File-{n}" for n in range(5)]
+    #     for filename in filenames:
+    #         action = QAction(filename, self)
+    #         action.triggered.connect(partial(self.openRecentFile, filename))
+    #         actions.append(action)
+    #     # Step 3. Add the actions to the menu
+    #     self.openRecentMenu.addActions(actions)
 
-    def openRecentFile(self, filename):
-        pass
-        # Logic for opening a recent file goes here...
-        # self.centralWidget.setText(f"<b>{filename}</b> opened")
+    # def openRecentFile(self, filename):
+    #     pass
+    #     # Logic for opening a recent file goes here...
+    #     # self.centralWidget.setText(f"<b>{filename}</b> opened")
 
-    def getWordCount(self):
-        # Logic for computing the word count goes here...
-        return 42
+    # def getWordCount(self):
+    #     # Logic for computing the word count goes here...
+    #     return 42
 
-        # self.show()
+    #     # self.show()
 
     def axes_leave_callback(self, event):
 
@@ -1521,54 +1335,53 @@ class MainWidget(QMainWindow):
                 self.spectraPlot.c13spec_ax.figure.canvas.draw_idle()
                 self.spectraPlot.h1spec_ax.figure.canvas.draw_idle()
 
-    def loadPage(self):
+    # def loadPage(self):
 
-        url = QUrl.fromUserInput("https://jsme-editor.github.io/dist/JSME_minimal.html")
+    #     url = QUrl.fromUserInput("https://jsme-editor.github.io/dist/JSME_minimal.html")
 
-        if url.isValid():
-            self.webEngineView.load(url)
+    #     if url.isValid():
+    #         self.webEngineView.load(url)
 
-    def warning_dialog(self, return_message, title_message, qstarted):
-        if qstarted:
-        # create qt5 warning dialog with return_message
-            msg_box = QMessageBox()
-            msg_box.setIcon(QMessageBox.Warning)
-            msg_box.setText(return_message)
-            msg_box.setStandardButtons(QMessageBox.Ok)
-            msg_box.exec()
-            msg_box.setWindowTitle(title_message)
-        else:
-            print(return_message)
-
+    # def warning_dialog(self, return_message, title_message, qstarted):
+    #     if qstarted:
+    #         # create qt5 warning dialog with return_message
+    #         msg_box = QMessageBox()
+    #         msg_box.setIcon(QMessageBox.Warning)
+    #         msg_box.setText(return_message)
+    #         msg_box.setStandardButtons(QMessageBox.Ok)
+    #         msg_box.exec()
+    #         msg_box.setWindowTitle(title_message)
+    #     else:
+    #         print(return_message)
 
     @pyqtSlot()
     def on_sync_click(self):
-        # self.nmrproblem.sync()
-        print("sync clicked")
-        print(self.nmrproblem.problemDirectoryPath)
-
         mnova_dir = pathlib.Path(self.nmrproblem.problemDirectoryPath)
         mnova_fn = mnova_dir / (mnova_dir.name + "_mresnova.json")
-        print(mnova_fn, mnova_fn.is_file())
 
         if not mnova_fn.is_file():
-            self.warning_dialog(f"{mnova_fn} does not exist", "MNOVA json file does not exist", self.nmrproblem.qtstarted)
+            warning_dialog(
+                f"{mnova_fn} does not exist",
+                "MNOVA json file does not exist",
+                self.nmrproblem.qtstarted,
+            )
             return
 
-        # read in hson file
+        # read in json file
         jsonfilepath = pathlib.Path(mnova_fn)
 
-        
         # read in json file
         data = mnovautils.read_in_mesrenova_json(jsonfilepath)
-
-        print("data.keys()", data.keys())
-        print("self.nmrproblem.expts_available", self.nmrproblem.expts_available)
+        data = mnovautils.check_for_multiple_HSQC_expts(data)
 
         # check that the json file contains a smiles string
         if "smiles" not in data.keys():
-            self.warning_dialog("smiles not in json file", "No smiles in json file", self.nmrproblem.qtstarted)
-            # allow user to add smiles string to dataframe or  or use old smiles string from nmrproblem if present
+            warning_dialog(
+                "smiles not in json file",
+                "No smiles in json file",
+                self.nmrproblem.qtstarted,
+            )
+            # allow user to add smiles string to dataframe or  use old smiles string from nmrproblem if present
             # open smiles dialog
             if self.nmrproblem.smiles != "":
                 smilesStr = self.nmrproblem.smiles
@@ -1583,41 +1396,59 @@ class MainWidget(QMainWindow):
 
             # table_widget = MyTabWidget(dlg, self.nmrproblem)
             if dlg.exec():
-                print("Success!", dlg.get_smiles_string())
                 smilesStr = dlg.get_smiles_string()
                 # check if smiles string is valid
                 mol = Chem.MolFromSmiles(smilesStr)
                 if mol is None:
-                    self.warning_dialog("smiles string is invalid", "smiles string is invalid", self.nmrproblem.qtstarted)
+                    warning_dialog(
+                        "smiles string is invalid",
+                        "smiles string is invalid",
+                        self.nmrproblem.qtstarted,
+                    )
                     return
                 else:
                     # add smiles string to molecule dataframe
                     data["smiles"] = smilesStr
-                # print(type(dlg.table_widget))
             else:
                 print("Cancel!")
                 return
 
         # check that the smiles string is the same as the one in the nmrproblem
         if data["smiles"] != self.nmrproblem.smiles:
-            self.warning_dialog("smiles string mismatch with json file", "smiles string mismatch with json file", self.nmrproblem.qtstarted)
+            warning_dialog(
+                "smiles string mismatch with json file",
+                "smiles string mismatch with json file",
+                self.nmrproblem.qtstarted,
+            )
             return
-        
+
         # check that HSQC data is in the json file
         if "HSQC" not in data.keys():
-            self.warning_dialog("HSQC data not in json file", "HSQC data not in json file", self.nmrproblem.qtstarted)
+            warning_dialog(
+                "HSQC data not in json file",
+                "HSQC data not in json file",
+                self.nmrproblem.qtstarted,
+            )
             return
-        
+
         dataframes = mnovautils.create_dataframes_from_mresnova_json(data)
 
         # check that the HSQC dataframe is not empty
         if dataframes["HSQC"].empty:
-            self.warning_dialog("HSQC dataframe is empty", "HSQC dataframe is empty", self.nmrproblem.qtstarted)
+            warning_dialog(
+                "HSQC dataframe is empty",
+                "HSQC dataframe is empty",
+                self.nmrproblem.qtstarted,
+            )
             return
-        
+
         # check that the molecule dataframe is not empty
         if dataframes["molecule"].empty:
-            self.warning_dialog("molecule dataframe is empty", "molecule dataframe is empty", self.nmrproblem.qtstarted)
+            warning_dialog(
+                "molecule dataframe is empty",
+                "molecule dataframe is empty",
+                self.nmrproblem.qtstarted,
+            )
             # allow user to add smiles string to dataframe or  or use old smiles string from nmrproblem if present
             # open smiles dialog
             if self.nmrproblem.smiles != "":
@@ -1633,12 +1464,15 @@ class MainWidget(QMainWindow):
 
             # table_widget = MyTabWidget(dlg, self.nmrproblem)
             if dlg.exec():
-                print("Success!", dlg.get_smiles_string())
                 smilesStr = dlg.get_smiles_string()
                 # check if smiles string is valid
                 mol = Chem.MolFromSmiles(smilesStr)
                 if mol is None:
-                    self.warning_dialog("smiles string is invalid", "smiles string is invalid", self.nmrproblem.qtstarted)
+                    warning_dialog(
+                        "smiles string is invalid",
+                        "smiles string is invalid",
+                        self.nmrproblem.qtstarted,
+                    )
                     return
                 else:
                     # add smiles string to molecule dataframe
@@ -1647,98 +1481,63 @@ class MainWidget(QMainWindow):
             else:
                 print("Cancel!")
                 return
-        
+
         # save dataframes to excel file
-        print("dataframes.keys()", dataframes.keys())
-        print("self.nmrproblem.expts_available", self.nmrproblem.expts_available)
 
         # create a new excel file based on the json file parent folder name
         excel_fn = jsonfilepath.parent.name + ".xlsx"
-        print("excel_fn", excel_fn)
 
         # create a a pathlib Path object for the new excel file and the parent folder
         folderpath = jsonfilepath.parent
         excel_path = folderpath / excel_fn
-        print("excel_path", excel_path)
-
+        if excel_path.exists():
+            if not mnovautils.make_excel_backup(excel_path):
+                return
         # save the dataframes to the excel file
-        if not mnovautils.write_excel_file_from_mresnova_df_dict(dataframes, excel_path):
-            self.warning_dialog("could not save excel file", "could not save excel file", self.nmrproblem.qtstarted)
+        if not mnovautils.write_excel_file_from_mresnova_df_dict(
+            dataframes, excel_path
+        ):
+            warning_dialog(
+                "could not save excel file",
+                "could not save excel file",
+                self.nmrproblem.qtstarted,
+            )
             return
         # with pd.ExcelWriter(excel_path) as writer:
         #     for k, v in dataframes.items():
         #         v.to_excel(writer, sheet_name=k)
 
         # sync nmrproblem from newly saved excel file
-        print("syncing nmrproblem from excel file")
-        print("folderpath", folderpath)
-        rtn_ok, msg = self.nmrproblem.sync_class_from_mnova_excel( str(folderpath))
-        print("rtn_ok", rtn_ok)
+        # rtn_ok, msg = self.nmrproblem.sync_class_from_mnova_excel(str(folderpath))
+        rtn_ok, msg = self.nmrproblem.init_class_from_excel(str(folderpath))
         if rtn_ok:
             self.nmrproblem.data_complete = True
         else:
             self.nmrproblem.data_complete = False
             return
 
-
-    
         self.nmrproblem.attempt_to_assign_integrals_to_nmrproblem()
-        
+
         if self.nmrproblem.data_complete:
+
+            # set xlims of 13C and 1H 1D spectra to +/- 10% of biggest and smallest ppm
+            self.nmrproblem.min_max_1D_ppm = []
+
+            h1 = self.nmrproblem.h1
+
+            ppm_min = h1.ppm.min() - (h1.ppm.max() - h1.ppm.min()) * 0.3
+            ppm_max = h1.ppm.max() + (h1.ppm.max() - h1.ppm.min()) * 0.3
+
+            self.nmrproblem.min_max_1D_ppm.append((ppm_max, ppm_min))
+            c13 = self.nmrproblem.c13
+
+            ppm_min = c13.ppm.min() - (c13.ppm.max() - c13.ppm.min()) * 0.30
+            ppm_max = c13.ppm.max() + (c13.ppm.max() - c13.ppm.min()) * 0.30
+
+            self.nmrproblem.min_max_1D_ppm.append((ppm_max, ppm_min))
 
             self.nmrproblem.initiate_df_data_complete()
             self.initiate_windows(self.nmrproblem)
-
-
-    # @pyqtSlot()
-    # def on_click(self):
-    #     smilesText = self.smilesInput.text()
-    #     QMessageBox.question(
-    #         self, "Smiles", "Molecule: " + smilesText, QMessageBox.Ok, QMessageBox.Ok
-    #     )
-
-    #     with open(
-    #         os.path.join(
-    #             self.nmrproblem.problemDirectoryPath,
-    #             self.nmrproblem.problemDirectory + ".smi",
-    #         ),
-    #         "w",
-    #     ) as fp:
-    #         fp.write(smilesText)
-
-    #     # save smiles string to nmrproblem
-    #     self.nmrproblem.smiles = smilesText
-
-    #     molecule = Chem.MolFromSmiles(smilesText)
-    #     Draw.MolToFile(molecule, "molecule.png", size=(XYDIM, XYDIM))
-    #     # self.nmrproblem.png = Image.open("molecule.png").transpose(
-    #     #     PIL.Image.FLIP_LEFT_RIGHT
-    #     # )
-    #     self.nmrproblem.png = Image.open("molecule.png")
-
-    #     if hasattr(self.moleculePlot, "bkgnd"):
-    #         self.moleculePlot.bkgnd.set_data(self.nmrproblem.png)
-    #     else:
-    #         self.moleculePlot.bkgnd = self.moleculePlot.ax.imshow(
-    #             # np.fliplr(self.nmrproblem.png),
-    #             self.nmrproblem.png,
-    #             aspect="auto",
-    #             extent=[0, 1, 1, 0],
-    #             alpha=0.6,
-    #         )
-
-    #         if not isinstance(nmrproblem.png, type(None)):
-    #             self.bkgnd = self.ax.imshow(
-    #                 np.fliplr(nmrproblem.png),
-    #                 aspect="auto",
-    #                 extent=[0,1,1,0],
-    #                 alpha=0.4,
-    #             )
-
-    # # ax.set_xlim(-0.1,1.1)
-    # # ax.set_ylim(1.1, -0.1)
-    #         self.ax.set_xlim(-0.1, 1.1)
-    #         self.ax.set_ylim(1.1, -0.1)
 
     def highlight_hmbc_peaks(self, lbl, sel):
         if lbl[0] == "H":
@@ -1806,43 +1605,10 @@ class MainWidget(QMainWindow):
         self.old_node = False
 
 
-# def define_hsqc_f2integral(nmrproblem):
-
-#     h1 = nmrproblem.h1
-#     hsqc = nmrproblem.hsqc
-
-#     if "f2_integral" not in hsqc.columns:
-#         hsqc["f2_integral"] = 0
-
-#     for i in h1.index:
-#         if i in hsqc.index:
-#             hsqc.loc[i, "f2_integral"] = int(
-#                 np.round(h1.loc[hsqc.loc[i, "f2_i"], "integral"])
-#             )
-
-
-# def define_c13_attached_protons(nmrproblem):
-#     c13 = nmrproblem.c13
-#     hsqc = nmrproblem.hsqc
-
-#     c13["attached_protons"] = 0
-
-#     for i in c13.ppm.index:
-#         dddf = hsqc[hsqc.f1_ppm == c13.loc[i, "ppm"]]
-
-#         if dddf.shape[0]:
-#             c13.loc[i, "attached_protons"] = int(dddf.f2_integral.sum())
-
-
 if __name__ == "__main__":
-
-    print("main::platform.system", platform.system())
-    print("main::java_available", java.JAVA_AVAILABLE)
-    print("main::java_command", java.JAVA_COMMAND)
 
     # set current working directory to the directory of this file
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
-
 
     app = QApplication(sys.argv)
 
@@ -1852,7 +1618,6 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
 
         data_info = nmrProblem.parse_argv()
-        print("data_info = ", data_info)
         xy3_dlg = XY3dialog(
             java_available=java.JAVA_AVAILABLE,
             sheets_missing=nmrProblem.get_missing_sheets(data_info["excel_fn"], True),
@@ -1864,7 +1629,6 @@ if __name__ == "__main__":
             expts_available.append("molecule")
 
             # data_info = nmrProblem.parse_argv()
-            print("line 1430: nmrproblem")
             nmrproblem = nmrProblem.NMRproblem(
                 # nmrproblem = TestExcelSimpleNMR(
                 data_info,
@@ -1877,7 +1641,6 @@ if __name__ == "__main__":
         else:
             # start the GUI with empty data
             data_info = nmrProblem.parse_argv(my_argv=[""])
-            print("line 1441: nmrproblem")
             nmrproblem = nmrProblem.NMRproblem(
                 # nmrproblem = TestExcelSimpleNMR(
                 data_info,
@@ -1889,7 +1652,6 @@ if __name__ == "__main__":
 
     else:
         data_info = nmrProblem.parse_argv()
-        print("line 1441: nmrproblem")
         nmrproblem = nmrProblem.NMRproblem(
             # nmrproblem = TestExcelSimpleNMR(
             data_info,
@@ -1922,14 +1684,10 @@ if __name__ == "__main__":
             nmrproblem.define_hsqc_f2integral()
             nmrproblem.define_c13_attached_protons()
 
-        print("nnmrproblem.c13\n===============\n\n", nmrproblem.c13)
-
         nmrProblem.build_model(nmrproblem)
         nmrProblem.build_molecule_graph_network(nmrproblem)
         # nmrProblem.build_xy3_representation_of_molecule(nmrproblem)
-        print("main: build xy3")
         nmrproblem.build_xy3()
-        print("xy3:", nmrproblem.xy3)
         # save dataframes to json
         nmrproblem.save_dataframes_in_nmrproblem_to_json()
 

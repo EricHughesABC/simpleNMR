@@ -531,9 +531,7 @@ class MatplotlibH1C13Plot(Figure):
 
     def display_annotation_H1_from_molplot(self, lbl, annot, nmrproblem):
         """Display annotation for H1 from molplot"""
-        highlighted_H1_lbls = nmrproblem.hsqc[nmrproblem.hsqc.f2Cp_i == lbl][
-            "f2H_i"
-        ]
+        highlighted_H1_lbls = nmrproblem.hsqc[nmrproblem.hsqc.f2Cp_i == lbl]["f2H_i"]
 
         def format_annotation_text(atom_index, atom_label):
             ppm = nmrproblem.h1.loc[atom_index, "ppm"]
@@ -541,11 +539,14 @@ class MatplotlibH1C13Plot(Figure):
             jcoupling = nmrproblem.h1.loc[atom_index, "jCouplingClass"]
             jcouplingvals = nmrproblem.h1.loc[atom_index, "jCouplingVals"]
             jcouplingvals = simpleNMRutils.stringify_vals(jcouplingvals)
-            return f"{atom_label}: {ppm:.2f} ppm\nInt: {integral:.1f}\nJ: {jcoupling}: {jcouplingvals} Hz"
+            if jcoupling == "u":
+                return f"{atom_label}: {ppm:.2f} ppm\nInt: {integral:.1f}"
+            else:   
+                return f"{atom_label}: {ppm:.2f} ppm\nInt: {integral:.1f}\nJ: {jcoupling}: {jcouplingvals} Hz"
 
         if highlighted_H1_lbls.empty:
             return
-        
+
         x_vals = []
         annot_text_list = []
         for idx in highlighted_H1_lbls.index:
@@ -566,7 +567,6 @@ class MatplotlibH1C13Plot(Figure):
         annot.set_text(annot_text)
         annot.xy = (x, y)
         annot.set_visible(True)
-
 
     def hide_annotation(self, annot):
         """hide annotation"""

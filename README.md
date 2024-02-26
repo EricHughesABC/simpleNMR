@@ -278,7 +278,7 @@ To install the script so that it has its own menu item and menu bar, the followi
 
    ![mnova_options_newtab](readMePngs/mnova_options_newtab.png)
 
-3. Find the simpleNMR.qs script the all commands list and then click on add to transfer it to the Customize Ribbon list
+3. Find the simpleNMR.qs script in the `All Commands` list and then click on `Add` to transfer it to the `Customize the Ribbon` list
 
    ![mnova_options_add](readMePngs/mnova_options_add.png)
 
@@ -288,10 +288,10 @@ To install the script so that it has its own menu item and menu bar, the followi
 
    
 
-5. If everything works after restarting MestReNova
+5. If everything works after restarting MestReNova the new simpleNMR menu and command should be present.
 
    ![mnova_simpleNMR](readMePngs/mnova_simpleNMR.png)
 
-6.  The icon will not be displayed as this requires copying the image `simpleNMRlogo.png` to the same directory where the script has been installed and changing the first line in the script to the same directory.
+6.  The icon will not be displayed as this requires copying the image `simpleNMRlogo.png` to be copied tothe same directory where the script has been installed and changing the first line in the script to point to the same directory.
 
    ![mnova_simpleNMR_2](readMePngs/mnova_simpleNMR_2.png)
