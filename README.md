@@ -26,11 +26,11 @@ The second method requires a modern Python 3.7 or later working Python environme
 
 #### SimpleNMR executables
 
-1. **Windows 10**: [simpleNMRwin10](https://github.com/EricHughesABC/simpleNMR/releases/download/verrsion_0.0.10/simpleNMRwin10.exe
+1. **Windows 10**: [simpleNMRwin10](https://github.com/EricHughesABC/simpleNMR/releases/download/verrsion_0.0.11/simpleNMRwin10.exe
     "simpleNMRwin10")
 
 
-2. **macOS** [simpleNMRmac](https://github.com/EricHughesABC/simpleNMR/releases/download/verrsion_0.0.10/simpleNMRmacOs
+2. **macOS** [simpleNMRmac](https://github.com/EricHughesABC/simpleNMR/releases/download/verrsion_0.0.11/simpleNMRmacOs
     "simpleNMRmac")
 
    1. **Change Permissions**: In a command line window change the permissions on the file
