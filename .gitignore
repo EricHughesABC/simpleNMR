@@ -24,6 +24,9 @@ test*.*
 # backup excel files
 exampleProblems/*/excel_backup/*.xlsx
 
+# ignore files in simpleNMRexe
+simpleNMRexe/*
+
 # Development files notebooks
 develop/
 
