@@ -139,6 +139,14 @@ class MainWidget(QMainWindow):
 
         if self.nmrproblem.data_complete:
 
+            print("line 142")
+            print("nmrproblem.c13")
+            print(nmrproblem.c13)
+            print("nmrproblem.h1")
+            print(self.nmrproblem.h1)
+            print("nmrproblem.hsqc")
+            print(self.nmrproblem.hsqc)
+
             nmrproblem.save_dataframes_in_nmrproblem_to_json()
 
             self.initiate_windows(self.nmrproblem)
@@ -907,6 +915,14 @@ class MainWidget(QMainWindow):
             )
 
             if self.nmrproblem.data_complete:
+
+                print("line 918")
+                print("nmrproblem.c13")
+                print(self.nmrproblem.c13)
+                print("nmrproblem.h1")
+                print(self.nmrproblem.h1)
+                print("nmrproblem.hsqc")
+                print(self.nmrproblem.hsqc)
                 self.nmrproblem.initiate_df_data_complete()
                 self.initiate_windows(self.nmrproblem)
         else:
@@ -1168,6 +1184,11 @@ class MainWidget(QMainWindow):
                 return
 
             if self.nmrproblem.data_complete:
+                print("line 1180")
+                print("nmrproblem.h1")
+                print(nmrproblem.h1)
+                print("nmrproblem.hsqc")
+                print(nmrproblem.hsqc)
                 self.nmrproblem.initiate_df_data_complete()
                 self.initiate_windows(self.nmrproblem)
 
@@ -1216,6 +1237,16 @@ class MainWidget(QMainWindow):
 
                 self.nmrproblem.define_hsqc_f2integral()
                 self.nmrproblem.initiate_df_data_complete()
+
+                print("nmrproblem.c13")
+                print(self.nmrproblem.c13[['ppm', 'numProtons', 'f1_i', 'f2_i', 'f1C_i', 'f2C_i']])
+                print(self.nmrproblem.c13.columns)
+
+                print("line 1234")
+                print("nmrproblem.h1")
+                print(self.nmrproblem.h1)
+                print("nmrproblem.hsqc")
+                print(self.nmrproblem.hsqc)
                 self.initiate_windows(self.nmrproblem)
         # Logic for opening an existing file goes here...
         # self.centralWidget.setText("<b>File > Open...</b> clicked")
@@ -1537,6 +1568,14 @@ class MainWidget(QMainWindow):
             self.nmrproblem.min_max_1D_ppm.append((ppm_max, ppm_min))
 
             self.nmrproblem.initiate_df_data_complete()
+
+            print("nmrproblem.c13")
+            print(self.nmrproblem.c13)
+            print("line 1561")
+            print("nmrproblem.h1")
+            print(self.nmrproblem.h1)
+            print("nmrproblem.hsqc")
+            print(self.nmrproblem.hsqc)
             self.initiate_windows(self.nmrproblem)
 
     def highlight_hmbc_peaks(self, lbl, sel):
@@ -1662,6 +1701,12 @@ if __name__ == "__main__":
         )
 
     if nmrproblem.data_complete:
+
+        print("line 1692")
+        print("nmrproblem.h1")
+        print(nmrproblem.h1)
+        print("nmrproblem.hsqc")
+        print(nmrproblem.hsqc)
         if (nmrproblem.c13_from_hsqc) or (nmrproblem.h1_df_integral_added):
             # nmrproblem.df.loc["integral", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
             nmrproblem.df.loc[

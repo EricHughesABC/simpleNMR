@@ -336,6 +336,8 @@ def build_model(nmrproblem):
     h1fn = r"csTables/h1_chemical_shift_table.jsn"
     c13fn = r"csTables/c13_chemical_shift_table.jsn"
 
+
+
     nmrproblem.H1df_orig, nmrproblem.C13df_orig = read_in_cs_tables(h1fn, c13fn)
 
     nmrproblem.calcProbDistFunctions(nmrproblem.H1df_orig, nmrproblem.C13df_orig)
@@ -834,6 +836,8 @@ class NMRproblem:
 
     def attempt_to_assign_integrals_to_nmrproblem(self):
 
+        print(self.c13[["ppm", "numProtons", "attached_protons"]])
+
         if self.c13_from_hsqc:
 
             if "CH3CH" not in self.hsqc.columns:
@@ -852,13 +856,25 @@ class NMRproblem:
                 print("added CH0, CH1, CH2, CH3, CH3CH1 to c13")
                 print(self.c13)
 
+        print(self.c13[["ppm", "numProtons", "attached_protons"]])
+
+        
         if self.c13_from_hsqc and self.H1_data_missing:
 
             ch3_df = self.expected_molecule.molprops_df[
                 self.expected_molecule.molprops_df.CH3
             ]
+
+            ch3ch1_df = self.expected_molecule.molprops_df[
+                self.expected_molecule.molprops_df.CH3CH1
+            ]
             # drop duplicate rows based on c13ppm
-            # ch3_df = ch3_df.drop_duplicates(subset=["ppm"])
+            print("drop duplicates")
+            print(ch3_df.shape[0])
+
+            if ch3ch1_df.shape[0] > self.hsqc[self.hsqc.CH3CH].shape[0]:
+                ch3_df = ch3_df.drop_duplicates(subset=["ppm"])
+            print(ch3_df.shape[0])
 
             # sort ch3_df by ppm, lowest to highest
             ch3_df = ch3_df.sort_values(by=["ppm"])
@@ -879,15 +895,36 @@ class NMRproblem:
                     ch3ch_df.drop(closest_match.index, inplace=True)
 
             # update corresponding integral in h1 frame
-            ch3_df = self.c13[self.c13.numProtons == 3]
-            for idx, ppm in zip(ch3_df.index, ch3_df.ppm):
-                # find the closest match in the hsqc dataframe
-                closest_match = self.hsqc.iloc[
-                    (self.hsqc["f1_ppm"] - ppm).abs().argsort()[:1]
-                ]
-                # update the integral in the h1 dataframe
-                self.h1.loc[closest_match.index, "integral"] = 3
-                self.h1.loc[closest_match.index, "numProtons"] = 3
+            # f1_i     C13 index in hsqc
+            # f2_i     H1 index in hsqc
+            # f2p_i    H1 index based on C13 index in hsqc
+            # ch3_df = self.c13[self.c13.numProtons == 3]
+            # for idx, ppm in zip(ch3_df.index, ch3_df.ppm):
+            #     # find the closest match in the hsqc dataframe
+            #     closest_match = self.hsqc.iloc[
+            #         (self.hsqc["f1_ppm"] - ppm).abs().argsort()[:1]
+            #     ]
+            #     # update the integral in the h1 dataframe
+            #     self.h1.loc[closest_match.index, "integral"] = 3
+            #     self.h1.loc[closest_match.index, "numProtons"] = 3
+
+            # for idx in self.c13[self.c13.numProtons == 3].index:
+            #     # obtain the row in the hsqc dataframe based on f1_i
+            #     hsqc_row = self.hsqc[self.hsqc.f1_i == idx]
+
+            #     # update the integral in the hsqc dataframe
+            #     self.hsqc.loc[hsqc_row.index, "integral"] = 3
+            #     # update the numProtons in the hsqc dataframe
+            #     self.hsqc.loc[hsqc_row.index, "numProtons"] = 3
+            #     # update the integral in the h1 dataframe
+            #     for f2_i in hsqc_row.f2_i.values:
+            #         if f2_i in self.h1.index:
+            #             self.h1.loc[f2_i, "integral"] = 3
+            #             # update the numProtons in the h1 dataframe
+            #             self.h1.loc[f2_i, "numProtons"] = 3
+            #         else:
+            #             print(f"index {f2_i} not in h1 dataframe")
+
 
             # update h1 integrals for CH2 groups
             ch2_df = self.hsqc[self.hsqc_df.CH2]
@@ -922,8 +959,34 @@ class NMRproblem:
                     self.c13.loc[cidx, "attached_protons"] += numprotons
                     self.c13.loc[cidx, f"CH{numprotons}"] = True
 
+        for CH_x in [ 1, 2, 3]:
+           for idx in self.c13[self.c13.numProtons == CH_x].index:
+                # obtain the row in the hsqc dataframe based on f1_i
+                hsqc_row = self.hsqc[self.hsqc.f1_i == idx]
+
+                # update the integral in the hsqc dataframe
+                self.hsqc.loc[hsqc_row.index, "integral"] = CH_x
+                # update the numProtons in the hsqc dataframe
+                self.hsqc.loc[hsqc_row.index, "numProtons"] = CH_x
+                # update the integral in the h1 dataframe
+                for f2_i in hsqc_row.f2_i.values:
+                    if f2_i in self.h1.index:
+                        if hsqc_row.shape[0] == 2:
+                            self.h1.loc[f2_i, "integral"] = int(CH_x/2)
+                            self.h1.loc[f2_i, "numProtons"] = int(CH_x/2)
+                        else:
+                            self.h1.loc[f2_i, "integral"] = CH_x
+                            # update the numProtons in the h1 dataframe
+                            self.h1.loc[f2_i, "numProtons"] = CH_x
+                    else:
+                        print(f"index {f2_i} not in h1 dataframe")
+        print("attempt_to_assign_integrals_to_nmrproblem")                
+        print(self.c13[["ppm", "numProtons", "attached_protons"]])
+
     def initiate_df_data_complete(self):
         self.define_hsqc_f2integral()
+        self.check_and_ammend_CH1groups_greater_than_1()
+        self.check_and_ammend_CH3groups_greater_than_3()
         if (self.c13_from_hsqc) or (self.h1_df_integral_added):
             # nmrproblem.df.loc["integral", nmrproblem.carbonAtoms] = nmrproblem.c13.attached_protons.values
             self.df.loc[
@@ -938,6 +1001,8 @@ class NMRproblem:
         else:
             self.define_hsqc_f2integral()
             self.define_c13_attached_protons()
+
+        print(self.df.loc[["integral", "attached protons", "C13 hyb"], self.carbonAtoms+ self.protonAtoms])
 
         build_model(self)
         build_molecule_graph_network(self)
@@ -1459,6 +1524,48 @@ class NMRproblem:
                     # np.round(h1.loc[hsqc.loc[i, "f2_i"], "integral"])
                     np.round(h1.loc[hsqc.loc[i, "f2_i"], "numProtons"])
                 )
+                # # check if "f2_integral" is greater than 3 and "f1_ppm" is less than 67ppm set "f2_integral" to 3
+                # if hsqc.loc[i, "f2_integral"] > 3 and hsqc.loc[i, "f1_ppm"] < 67:
+                #     hsqc.loc[i, "f2_integral"] = 3
+                #     h1.loc[hsqc.loc[i, "f2_i"], "numProtons"] = 3
+                #     h1.loc[hsqc.loc[i, "f2_i"], "integral"] = 3
+
+                # # check if "f2_integral" is equal to  2 and "f1_ppm" is greater than 67ppm and "intensity is > 0 then set "f2_integral" to 1
+                # if (
+                #     hsqc.loc[i, "f2_integral"] == 2
+                #     and hsqc.loc[i, "f1_ppm"] > 67
+                #     and hsqc.loc[i, "intensity"] > 0
+                # ):
+                #     hsqc.loc[i, "f2_integral"] = 1
+                #     h1.loc[hsqc.loc[i, "f2_i"], "numProtons"] = 1
+                #     h1.loc[hsqc.loc[i, "f2_i"], "integral"] = 1
+
+    def check_and_ammend_CH3groups_greater_than_3(self):
+
+        # CH3 first
+        print(self.hsqc.shape)
+        if self.hsqc.shape[0] == 0:
+            return
+        hsqc = self.hsqc.query("f2_integral > 3 & f1_ppm < 67 ")
+        self.hsqc.loc[hsqc.index, "f2_integral"] = 3
+        self.h1.loc[hsqc.f2_i, "numProtons"] = 3
+        self.h1.loc[hsqc.f2_i, "integral"] = 3
+        self.c13.loc[hsqc.f1_i, "numProtons"] = 3
+        self.c13.loc[hsqc.f1_i, "attached_protons"] = 3
+
+
+    def check_and_ammend_CH1groups_greater_than_1(self):
+
+        # CH1 next
+        if self.hsqc.shape[0] == 0:
+            return
+        hsqc = self.hsqc.query("f2_integral == 2 & f1_ppm > 67  & intensity > 0")
+        self.h1.loc[hsqc.f2_i, "numProtons"] = 1
+        self.h1.loc[hsqc.f2_i, "integral"] = 1
+        self.c13.loc[hsqc.f1_i, "numProtons"] = 1
+        self.c13.loc[hsqc.f1_i, "attached_protons"] = 1
+
+
 
     def define_c13_attached_protons(self):
         c13 = self.c13
@@ -1803,29 +1910,6 @@ class NMRproblem:
         return self.c13_df
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     def init_class_from_excel(self, excelFileNameDirName: str, excel_fn=None):
         """
         read in class parameters from excel file found in problem directory if found
@@ -1846,6 +1930,7 @@ class NMRproblem:
         
 
         return_error, return_status, return_message = self.tidy_up_excel_data()
+
         if return_error:
             warning_dialog(return_message,
                            "Error in Excel File",
@@ -1984,6 +2069,8 @@ class NMRproblem:
         ):
             self.h1_df = self.init_h1_from_pureshift()
             self.define_hsqc_f2integral()
+            self.check_and_ammend_CH3groups_greater_than_3()
+            self.check_and_ammend_CH1groups_greater_than_1()
             self.c13_from_hsqc = True
 
         elif (
@@ -1993,6 +2080,8 @@ class NMRproblem:
         ):
             self.h1_df = self.init_h1_from_pureshift()
             self.define_hsqc_f2integral()
+            self.check_and_ammend_CH3groups_greater_than_3()
+            self.check_and_ammend_CH1groups_greater_than_1()
             print("self.h1_df\n", self.h1_df)
             self.c13_df = self.init_c13_from_hsqc_and_hmbc()
             # self.init_h1_and_pureshift_from_c13_hsqc_hmbc_cosy()

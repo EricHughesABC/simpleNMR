@@ -25,7 +25,7 @@ class Aboutdialog(QDialog):
 
         # add message about the program
         self.message = QLabel(
-            "simpleNMR version 0.0.13  29February2024\n\nWritten by Eric Hughes\n\nMIT License\n\nAlan Kenwright has been instrumental in the design and implementation."
+            "simpleNMR version 0.0.14  06March2024\n\nWritten by Eric Hughes\n\nMIT License\n\nAlan Kenwright has been instrumental in the design and implementation."
         )
         self.message.setWordWrap(True)
 

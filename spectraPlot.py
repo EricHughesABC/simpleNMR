@@ -536,6 +536,8 @@ class MatplotlibH1C13Plot(Figure):
         def format_annotation_text(atom_index, atom_label):
             ppm = nmrproblem.h1.loc[atom_index, "ppm"]
             integral = nmrproblem.h1.loc[atom_index, "integral"]
+            print("atom_index", atom_index, "integral", integral)
+            print(nmrproblem.h1["integral"])
             jcoupling = nmrproblem.h1.loc[atom_index, "jCouplingClass"]
             jcouplingvals = nmrproblem.h1.loc[atom_index, "jCouplingVals"]
             jcouplingvals = simpleNMRutils.stringify_vals(jcouplingvals)
