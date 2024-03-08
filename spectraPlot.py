@@ -382,6 +382,10 @@ class MatplotlibH1C13Plot(Figure):
     def plotDistributions(self, nmrprblm, ax0):
         """plot distributions"""
 
+
+        CB_color_cycle = ['#377eb8', '#ff7f00', '#4daf4a',
+                        '#f781bf', '#a65628', '#984ea3',
+                        '#999999', '#e41a1c', '#dede00']
         atoms = [nmrprblm.protonAtoms, nmrprblm.carbonAtoms]
         xxx_labels = ["$^{1}$H [ppm]", "$^{13}$C [ppm]"]
 
@@ -399,9 +403,11 @@ class MatplotlibH1C13Plot(Figure):
                 distlist = []
                 j = None
                 for j, d in nmrprblm.distribution_data[atom_id].items():
+                    print("j", j, type(j))
                     if isinstance(j, (int, float)):
                         (distr,) = ax.plot(
-                            d["xxx"], d["yyy"], "-", label=d.loc[0, "label"]
+
+                            d["xxx"], d["yyy"], "-", label=d.loc[0, "label"], c=CB_color_cycle[j%len(CB_color_cycle)]
                         )
 
                         distr.set_visible(False)

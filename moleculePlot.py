@@ -30,9 +30,17 @@ import nx_pylab
 import simpleNMRutils
 from spectraPlot import MatplotlibH1C13Plot
 
+CB_color_cycle = ['#377eb8', '#ff7f00', '#4daf4a',
+                  '#f781bf', '#a65628', '#984ea3',
+                  '#999999', '#e41a1c', '#dede00']
+
 PLOTLINECOLORS = ("blue", "orange", "green", "red", "purple")
 SCATTERFACECOLORS = ("blue", "orange", "green", "red", "purple")
 SCATTEREDGECOLORS = ("blue", "orange", "green", "red", "purple")
+
+PLOTLINECOLORS = CB_color_cycle
+SCATTERFACECOLORS = CB_color_cycle
+SCATTEREDGECOLORS = CB_color_cycle
 
 YELLOW = (1.0, 1.0, 0.0, 1.0)
 RED = (1.0, 0.0, 0.0, 1.0)
@@ -90,6 +98,14 @@ class MatplotlibMoleculePlot(Figure):
             Line2D([0], [0], color="green", lw=4),
             Line2D([0], [0], color="purple", lw=4),
         ]
+
+        custom_lines = [
+            Line2D([0], [0], color=CB_color_cycle[0], lw=4),
+            Line2D([0], [0], color=CB_color_cycle[1], lw=4),
+            Line2D([0], [0], color=CB_color_cycle[2], lw=4),
+            Line2D([0], [0], color=CB_color_cycle[3], lw=4),
+        ]
+        CB_color_cycle
 
         self.ax.legend(custom_lines, ["- C -", "- CH", "- CH$_2$", "- CH$_3$"])
 
@@ -523,8 +539,13 @@ if __name__ == "__main__":
         def display_distributions(self, carbon_pks, hydrogen_pks, specplot):
             """display distributions"""
             # add highlighted distributions
+            CB_color_cycle = ['#377eb8', '#ff7f00', '#4daf4a',
+                  '#f781bf', '#a65628', '#984ea3',
+                  '#999999', '#e41a1c', '#dede00']
             colors = ["b", "g", "r", "c", "m", "y", "k"]
-
+            colors = ['#377eb8', '#ff7f00', '#4daf4a',
+                  '#f781bf', '#a65628', '#984ea3',
+                  '#999999', '#e41a1c', '#dede00']
             # used to dsplay legends of highlighted distributions
             plines_h = []
             plabels_h = []
@@ -543,7 +564,7 @@ if __name__ == "__main__":
                     # sel.extras.append(self.cursor.add_highlight(aa))
                     mpl_component.set_visible(True)
                     mpl_component.set_linewidth(0.75)
-                    mpl_component.set_color(colors[i % 7])
+                    mpl_component.set_color(colors[i % len(colors)])
                     # do not add legend info if plot is just single line showing where peak pos is
                     if i < numplots:
                         plabels_h.append(mpl_component.get_label())
@@ -557,7 +578,7 @@ if __name__ == "__main__":
                     # sel.extras.append(self.cursor.add_highlight(aa))
                     mpl_component.set_visible(True)
                     mpl_component.set_linewidth(0.75)
-                    mpl_component.set_color(colors[i % 7])
+                    mpl_component.set_color(colors[i % len(colors)])
                     if i < numplots:
                         plabels_c.append(mpl_component.get_label())
                         plines_c.append(mpl_component)

@@ -76,9 +76,26 @@ PLOTLINECOLORS = ("blue", "orange", "green", "red", "purple")
 SCATTERFACECOLORS = ("blue", "orange", "green", "red", "purple")
 SCATTEREDGECOLORS = ("blue", "orange", "green", "red", "purple")
 
+PLOTLINECOLORS = ['#377eb8', '#ff7f00', '#4daf4a',
+                  '#f781bf', '#a65628', '#984ea3',
+                  '#999999', '#e41a1c', '#dede00']
+
+SCATTERFACECOLORS = ['#377eb8', '#ff7f00', '#4daf4a',
+                  '#f781bf', '#a65628', '#984ea3',
+                  '#999999', '#e41a1c', '#dede00']
+
+SCATTEREDGECOLORS = ['#377eb8', '#ff7f00', '#4daf4a',
+                  '#f781bf', '#a65628', '#984ea3',
+                  '#999999', '#e41a1c', '#dede00']
+
+
 YELLOW = (1.0, 1.0, 0.0, 1.0)
 RED = (1.0, 0.0, 0.0, 1.0)
 WHITE = (1.0, 1.0, 1.0, 1.0)
+
+CB_color_cycle = ['#377eb8', '#ff7f00', '#4daf4a',
+                  '#f781bf', '#a65628', '#984ea3',
+                  '#999999', '#e41a1c', '#dede00']
 
 # Test if we can run JAVA
 # global JAVA_AVAILABLE
