@@ -210,14 +210,20 @@ pyinstaller simpleNMR_with_includes-F.spec
 
 ```markdown
  about_dialog.py
+ exampleProblems.py
  excelheaders.py
- expectedMolecule.py
+ expectedmolecule.py
  java.py
+ mnovautils.py
  moleculePlot.py
  nmrProblem.py
  nx_pylab.py
+ problemtohtml.py
  qt5_tabs_001.py
+ qtutils.py
  simpleNMR.py
+ simpleNMRutils.py
+ smiles_dialog.py
  spectraPlot.py
  xy3_dialog.py
  jre
