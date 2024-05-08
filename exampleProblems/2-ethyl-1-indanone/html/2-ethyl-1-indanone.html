@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Highlight Atom on Table Row Hover</title>
+  <title>2-ethyl-1-indanone</title>
   <style>
     .highlight {
       fill: red;
@@ -2942,8 +2942,8 @@ L 270.087 67.9102
         <table border="1" class="dataframe" id="summary_table">
   <thead>
     <tr style="text-align: right;">
-      <th>atom idx</th>
       <th>carbon atom</th>
+      <th>atom idx</th>
       <th>predicted</th>
       <th>carbon</th>
       <th>proton</th>
@@ -2955,96 +2955,96 @@ L 270.087 67.9102
   </thead>
   <tbody>
     <tr>
-      <td>0</td>
       <td>11</td>
+      <td>0</td>
       <td>11.61</td>
       <td>11.6</td>
       <td>1.00</td>
       <td>3</td>
       <td>3</td>
       <td>t</td>
-      <td>[7.42, 7.42]</td>
+      <td>[7.41]</td>
     </tr>
     <tr>
-      <td>1</td>
       <td>10</td>
+      <td>1</td>
       <td>24.46</td>
       <td>24.5</td>
       <td>1.97,1.53</td>
       <td>2</td>
       <td>1, 1</td>
-      <td>dqd, m</td>
-      <td>[4.56, 7.5, 13.7]</td>
+      <td>dqd, ddq</td>
+      <td>[4.58, 7.51, 13.7], [7.33, 9.11, 13.7]</td>
     </tr>
     <tr>
-      <td>11</td>
       <td>9</td>
+      <td>11</td>
       <td>32.32</td>
       <td>32.3</td>
       <td>3.31,2.81</td>
       <td>2</td>
       <td>1, 1</td>
-      <td>ddq, dd</td>
-      <td>[0.777, 7.89, 17.1], [3.92, 17.1]</td>
+      <td>ddq, m</td>
+      <td>[0.793, 7.87, 17.1]</td>
     </tr>
     <tr>
-      <td>2</td>
       <td>8</td>
+      <td>2</td>
       <td>48.74</td>
       <td>48.7</td>
       <td>2.61</td>
       <td>1</td>
       <td>1</td>
-      <td>dddd</td>
-      <td>[3.92, 4.59, 7.86, 9.14]</td>
+      <td>m</td>
+      <td></td>
     </tr>
     <tr>
-      <td>6</td>
       <td>7</td>
+      <td>6</td>
       <td>123.80</td>
       <td>123.8</td>
       <td>7.74</td>
       <td>1</td>
       <td>1</td>
-      <td>ddq</td>
-      <td>[0.574, 1.25, 7.69]</td>
+      <td>ddt</td>
+      <td>[0.648, 1.29, 7.67]</td>
     </tr>
     <tr>
-      <td>9</td>
       <td>6</td>
+      <td>9</td>
       <td>126.51</td>
       <td>126.5</td>
       <td>7.45</td>
       <td>1</td>
       <td>1</td>
       <td>dp</td>
-      <td>[0.953, 7.68]</td>
+      <td>[0.958, 7.68]</td>
     </tr>
     <tr>
-      <td>7</td>
       <td>5</td>
+      <td>7</td>
       <td>127.20</td>
       <td>127.3</td>
       <td>7.35</td>
       <td>1</td>
       <td>1</td>
-      <td>ddt</td>
-      <td>[0.855, 7.22, 8.52]</td>
+      <td>ddq</td>
+      <td>[0.853, 7.18, 7.6]</td>
     </tr>
     <tr>
-      <td>8</td>
       <td>4</td>
+      <td>8</td>
       <td>134.49</td>
       <td>134.6</td>
       <td>7.57</td>
       <td>1</td>
       <td>1</td>
-      <td>td</td>
-      <td>[1.24, 7.42]</td>
+      <td>ddd</td>
+      <td>[1.27, 7.23, 7.62]</td>
     </tr>
     <tr>
-      <td>5</td>
       <td>3</td>
+      <td>5</td>
       <td>136.92</td>
       <td>137.0</td>
       <td></td>
@@ -3054,8 +3054,8 @@ L 270.087 67.9102
       <td></td>
     </tr>
     <tr>
-      <td>10</td>
       <td>2</td>
+      <td>10</td>
       <td>153.81</td>
       <td>153.8</td>
       <td></td>
@@ -3065,8 +3065,8 @@ L 270.087 67.9102
       <td></td>
     </tr>
     <tr>
-      <td>3</td>
       <td>1</td>
+      <td>3</td>
       <td>208.97</td>
       <td>208.9</td>
       <td></td>
@@ -3102,7 +3102,7 @@ L 270.087 67.9102
   const rows = document.querySelectorAll('tbody tr');
 
   function highlightAtom() {
-    const atomNumberCell = this.getElementsByTagName('td')[0];
+    const atomNumberCell = this.getElementsByTagName('td')[1];
     if (atomNumberCell && atomNumberCell.textContent) {
       const atomNumber = atomNumberCell.textContent;
       const atomClass = `atom-${atomNumber}`;

@@ -334,6 +334,7 @@ class ProblemToHTML:
             svg2=self.svg_str2,
             svg3=self.svg_str3,
             table=summary_table,
+            title=self.nmrproblem.problemDirectory,
         )
 
         # save summary html to file results_summary.html in directory html

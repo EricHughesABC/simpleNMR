@@ -30,6 +30,9 @@ from PyQt5.QtWidgets import QSpinBox
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QAction
 
+from qtutils import warning_dialog
+
+
 from functools import partial
 
 from matplotlib.backends.backend_qt5agg import (
@@ -69,7 +72,8 @@ from smiles_dialog import SmilesDialog
 
 import simpleNMRutils
 import mnovautils
-from qtutils import warning_dialog
+
+import problemToD3html
 
 
 PLOTLINECOLORS = ("blue", "orange", "green", "red", "purple")
@@ -1308,6 +1312,13 @@ class MainWidget(QMainWindow):
         # create a html results file
         tohtml = problemtohtml.ProblemToHTML(self.nmrproblem)
         tohtml.write_html_report()
+
+        d3html = problemToD3html.ProblemToD3html(self.nmrproblem)        
+
+
+
+
+        
 
         # Logic for saving a file goes here...
         # self.centralWidget.setText("<b>File > Save</b> clicked")

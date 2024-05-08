@@ -92,12 +92,12 @@ class MatplotlibMoleculePlot(Figure):
         self.xmax = 1.1
         self.ymax = 1.1
 
-        custom_lines = [
-            Line2D([0], [0], color="blue", lw=4),
-            Line2D([0], [0], color="orange", lw=4),
-            Line2D([0], [0], color="green", lw=4),
-            Line2D([0], [0], color="purple", lw=4),
-        ]
+        # custom_lines = [
+        #     Line2D([0], [0], color="blue", lw=4),
+        #     Line2D([0], [0], color="orange", lw=4),
+        #     Line2D([0], [0], color="green", lw=4),
+        #     Line2D([0], [0], color="purple", lw=4),
+        # ]
 
         custom_lines = [
             Line2D([0], [0], color=CB_color_cycle[0], lw=4),

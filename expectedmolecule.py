@@ -86,6 +86,8 @@ class expectedMolecule:
                 "aromatic",
             ],
         )
+
+        self.molprops_df["numProtons"] = self.molprops_df["totalNumHs"].astype(int)
         self.molprops_df = self.molprops_df.set_index(["idx"])
         self.molprops_df["idx"] = self.molprops_df.index
 
@@ -132,6 +134,10 @@ class expectedMolecule:
                 # check if atom is carbon
                 if self.mol.GetAtomWithIdx(atom).GetSymbol() == "C":
                     self.molprops_df.loc[atom, "ring_size"] = len(ring)
+
+        # add ring info to molprops_df
+        self.add_ring_info_to_dataframe()
+        print("molprops_df\n", self.molprops_df)
 
         self.has_symmetry = (
             len(self.mol.GetSubstructMatches(self.mol, uniquify=False, maxMatches=3))
@@ -303,6 +309,22 @@ class expectedMolecule:
             nSystems.append(ringAts)
             systems = nSystems
         return systems
+    
+    def add_ring_info_to_dataframe(self):
+        ring_info = self.mol.GetRingInfo()
+
+        for i, ring in enumerate(ring_info.AtomRings()):
+            if f"ring_idx{i+1}" not in self.molprops_df.columns:
+                self.molprops_df[f"ring_idx{i}"] = -1
+                self.molprops_df[f"ring_size{i}"] = 0
+            for atom_idx in ring:
+                # check if atom is a carbon atom
+                if atom_idx in self.molprops_df.index:    
+                
+                    self.molprops_df.loc[atom_idx, f"ring_idx{i}"] = i
+                    self.molprops_df.loc[atom_idx, f"ring_size{i}"] = len(ring)
+                else:
+                    print(f"atom_idx {atom_idx} not in mol.molprops_df.index")
 
     def _repr_png_(self):
         return self.mol._repr_png_()
