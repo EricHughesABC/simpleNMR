@@ -26,11 +26,11 @@ The second method requires a modern Python 3.7 or later working Python environme
 
 #### SimpleNMR executables
 
-1. **Windows 10**: [simpleNMRwin10](https://github.com/EricHughesABC/simpleNMR/releases/download/verrsion_0.0.11/simpleNMRwin10.exe
+1. **Windows 10**: [simpleNMRwin10](https://github.com/EricHughesABC/simpleNMR/releases/download/v0.015/simpleNMR.exe
     "simpleNMRwin10")
 
 
-2. **macOS** [simpleNMRmac](https://github.com/EricHughesABC/simpleNMR/releases/download/verrsion_0.0.11/simpleNMRmacOs
+2. **macOS** [simpleNMRmac](https://github.com/EricHughesABC/simpleNMR/releases/download/v0.015/simpleNMRmac
     "simpleNMRmac")
 
    1. **Change Permissions**: In a command line window change the permissions on the file
@@ -43,7 +43,7 @@ The second method requires a modern Python 3.7 or later working Python environme
 
 #### Installing the exampleProblems from GitHub
 
-There are a number of example problems in the folder `exampleProblems`. To obtain this folder from the GitHub repository download the zip or tar.gz file of the source code from the releases folder  [simpleNMR Release v0.0.10](https://github.com/EricHughesABC/simpleNMR/releases/tag/verrsion_0.0.10) and unzip the file.
+There are a number of example problems in the folder `exampleProblems`. To obtain this folder from the GitHub repository download the zip or tar.gz file of the source code from the releases folder  [simpleNMR Release v0.0.15](https://github.com/EricHughesABC/simpleNMR/archive/refs/tags/v0.015.tar.gz) and unzip the file.
 
 #### Installation from Github
 
@@ -210,14 +210,20 @@ pyinstaller simpleNMR_with_includes-F.spec
 
 ```markdown
  about_dialog.py
+ exampleProblems.py
  excelheaders.py
- expectedMolecule.py
+ expectedmolecule.py
  java.py
+ mnovautils.py
  moleculePlot.py
  nmrProblem.py
  nx_pylab.py
+ problemtohtml.py
  qt5_tabs_001.py
+ qtutils.py
  simpleNMR.py
+ simpleNMRutils.py
+ smiles_dialog.py
  spectraPlot.py
  xy3_dialog.py
  jre
