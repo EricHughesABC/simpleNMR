@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<style>
+    .tooltip {
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 8px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        pointer-events: none;
+        display: inline-block;
+        max-width: 480px; /* Set max-width for the tooltip */
+    }
+
+    /* Style for the SVG border */
+    svg {
+        position: relative; /* Set position relative to make it a positioning context */
+        border: 1px solid black; /* 1px solid black border */
+        border-radius: 50px; /* Adjust the value to change the roundness of the corners */
+    }
+
+    .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+ 
+    .container {
+        display: flex; /* Use flexbox */
+        justify-content: center; /* Center the content horizontally */
+        margin: 0 auto; /* Set the left and right margins to auto to center the container */
+    }
+
+    .group {
+        border: 1px solid black;
+        border-radius: 10px; /* Adjust the value to change the roundness of the corners */
+        display: block;
+        margin-right: 10px; /* Add some space between the groups */
+        padding: 10px; /* Add padding inside the border *
+        padding: 10px; /* Add padding inside the border */
+    }
+
+    .group:last-child {
+        margin-right: 0; /* Remove margin from the last group */
+    }
+
+    .color-container {
+        position: relative;
+        display: inline-block;
+        
+    }
+
+    .color-box {
+        width: 100px;
+        height: 50px;
+        border-radius: 7px;
+    }
+
+    .striped-rectangle {
+        width: 100px;
+        height: 50px;
+        background: repeating-linear-gradient(90deg, #ccc, #ccc 10px, #fff 10px, #fff 20px);
+    }
+
+    .color-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: black; /* Adjust text color as needed */
+    }
+
+    .orange { background-color: #FFA500; }
+    .green { background-color: #98FB98; }
+    .yellow { background-color: yellow; }
+    .cyan { background-color: #00FFFF; }
+    .grey { background-color: #808080; }
+    .blue { background-color: #ADD8E6; }
+</style>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+<body>
+
+     <!-- SVG container with background molecule image -->
+    <br>
+    {{svg_container}} 
+
+    <!-- Tooltip for displaying node information -->
+    <div id="tooltip" class="tooltip">Tooltip content</div>
+    <br>
+   
+    <div class="container">
+        <!-- First four boxes -->
+        <div class="group">
+            <div class="color-container">
+                <div class="color-box orange"></div>
+                <div class="color-text">-C-</div>
+            </div>
+            <div class="color-container">
+                <div class="color-box green"></div>
+                <div class="color-text">-CH</div>
+            </div>
+            <div class="color-container">
+                <div class="color-box yellow"></div>
+                <div class="color-text">-CH<sub>2</sub></div>
+            </div>
+            <div class="color-container">
+                <div class="color-box cyan"></div>
+                <div class="color-text">-CH<sub>3</sub></div>
+            </div>
+        </div>
+        <!-- Last two boxes -->
+        <div class="group">
+            <div class="color-container">
+                <div class="color-box grey"></div>
+                <div class="color-text">HMBC</div>
+            </div>
+            <div class="color-container">
+                <div class="color-box blue"></div>
+                <div class="color-text">COSY</div>
+            </div>
+        </div>
+    </div>
+        
+  <script>
+    // Create the SVG container
+    const svg = d3.select("svg");
+    const width = +svg.attr("width");
+    const height = +svg.attr("height");
+
+    // Get the corresponding DOM element
+    var svgNode = svg.node();
+    // Get the dimensions of the SVG element
+    var svgWidth = svgNode.clientWidth;
+    var svgHeight = svgNode.clientHeight;
+
+    // Define scale functions for x and y coordinates
+    const xScale = d3.scaleLinear().domain([0, 1]).range([0, width-{{translateX}}*2]);
+    const yScale = d3.scaleLinear().domain([0, 1]).range([0, height-{{translateY}}*2]);
+
+    // define colour blind friendly colours with 50% transparency
+    const orange = 'rgba(255, 165, 0, 1)';
+    const blue = 'rgba(173, 216, 230, 1)';
+    const green = 'rgba(152, 251, 152, 1)';
+    const yellow = 'rgba(255, 255, 0, 1)';
+    const purple = 'rgba(128, 0, 128, 1)';
+    const cyan = 'rgba(0, 255, 255, 1)';
+    const grey = 'rgba(128, 128, 128, 1)';
+
+    const black = 'rgba(0, 0, 0, 1)';
+    const white = 'rgba(255, 255, 255, 1)';
+
+    // assign colours to parts of the molecule
+    const CH3 = cyan;
+    const CH2 = yellow;
+    const CH = green;
+    const C = orange;
+
+    const cosyEdgeColor = blue;
+    const cosyEdgeHoverOpacity = 0.0;
+    const hmbcEdgeColor = grey;
+
+    const nodeHoverColor = "lightgrey";
+    const nodeHoverOpacity = 0.4;
+    const textHoverOpacity = 0;
+
+    // define node dimensions
+    const nodeRadius = 22;
+    const nodeRadiusSmall = 15;
+    const nodeRadiusLarge = 26;
+
+    // define edge widths
+    const cosyEdgeWidth = 8;
+    const hmbcEdgeWidth = 8;
+    const noesyEdgeWidth = 8;
+
+    // Define color scale for nodes based on numProtons
+    const colorScale = d3.scaleOrdinal()
+      .domain([0, 1, 2, 3])
+      .range([C, CH, CH2, CH3]); // Blue, Orange, Green, Red
+
+    // Define the graph data
+    const nodes = {{graph_nodes}};
+    const links = {{graph_edges}};
+
+    // Set initial positions of nodes and links
+    nodes.forEach(node => {
+        node.x = xScale(node.x)+{{translateX}};
+        node.y = yScale(node.y)+{{translateY}};
+    });
+
+    // Filter links that have the attribute cosy as true
+    // const cosyLinks = links.filter(link => link.cosy);
+    const cosyLinks = links.filter(eachLink => eachLink.cosy);
+
+    // Create the COSY links to start
+    const link = svg.selectAll(".link")
+      .data(cosyLinks)
+      .enter().append("line")
+      .attr("class", "link")
+      .attr("stroke", cosyEdgeColor)
+      .attr("x1", d => nodes[d.source-1].x)
+      .attr("y1", d => nodes[d.source-1].y)
+      .attr("x2", d => nodes[d.target-1].x)
+      .attr("y2", d => nodes[d.target-1].y)
+      .attr("stroke", blue) // Set the stroke color for links to blue
+      .attr("stroke-width", cosyEdgeWidth); // Set the stroke width to 8 pixels
+
+    // Create the nodes
+    const node = svg.selectAll(".node")
+      .data(nodes)
+      .enter().append("g")
+      .attr("class", "node")
+      .attr("transform", d => `translate(${d.x},${d.y})`)
+      .on("mouseover", (event, d) => handleMouseOver(event, d)) // Call function when mouseover
+      .on("mouseout", (event, d) => handleMouseOut(event, d))  // Call function when mouseout
+      .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended));
+
+    // Add circles to represent nodes
+    node.append("circle")
+      .attr("r", nodeRadius)
+      .attr("fill", d => colorScale(d.numProtons)) // Set fill color based on numProtons
+
+    // Append text
+    node.append("text")
+        .attr("class", "node-text")
+        .text(d => d.id) // Display the id
+        .attr("dy", -8) // Center the text vertically
+        .attr("font-size", "12px") // Set font size to 16 pixels
+        .attr("text-anchor", "middle"); // Center the text horizontally
+
+    // // Append ppm text
+    node.append("text")
+        .attr("class", "node-text")
+        .text(d => d.ppm.toFixed(2)) // Display the id
+        .attr("dy", +8) // Center the text vertically
+        .attr("font-size", "12px") // Set font size to 16 pixels
+        .attr("text-anchor", "middle"); // Center the text horizontally
+
+    // Tooltip for node hover
+    const tooltip = d3.select("#tooltip");
+
+    tooltip.style("opacity", 0);
+
+    let hmbcLinks = []; // Track hmbc links separately
+    var circlenodes = document.querySelectorAll('.node circle');
+    var textnodes = document.querySelectorAll('.node text');
+
+    // Drag handlers
+    function dragstarted(event, d) {
+        // change the opacity of the cosy links to 0
+        link.style("opacity", 0);
+        // Remove hmbc links
+        hmbcLinks.forEach(eachHMBClink => eachHMBClink.remove());
+        hmbcLinks = []; // Clear the hmbc links array
+      d3.select(this).raise().classed("active", true);
+    }
+
+    function dragged(event, d) {
+      d.x = event.x;
+      d.y = event.y;
+      d3.select(this).attr("transform", `translate(${d.x},${d.y})`);
+      link.filter(l => l.source === d.id).attr("x1", d.x).attr("y1", d.y);
+      link.filter(l => l.target === d.id).attr("x2", d.x).attr("y2", d.y);
+    }
+
+    function dragended(event, d) {
+      d3.select(this).classed("active", false);
+    //   handleMouseOut(event, d); // Call handleMouseOut function to reset the view
+    }
+
+    // Function to find nearest neighbors of a node with a specific attribute
+    function findNearestNeighbors(nodeId, attribute) {
+        const neighbors = [];
+        const nonNeighbors = [];
+
+        // Iterate through the links
+        links.forEach(link => {
+            if (link[attribute] && (link.source === nodeId || link.target === nodeId)) {
+                neighbors.push(link.source === nodeId ? link.target : link.source);
+            }
+        });
+
+        // Iterate through all nodes to find non-neighbors
+        nodes.forEach(node => {
+            if (node.id !== nodeId && !neighbors.includes(node.id)) {
+                nonNeighbors.push(node.id);
+            }
+        });
+
+        return { neighbors, nonNeighbors };
+    }
+
+    // Function to handle mouseover event
+    function handleMouseOver(event, d) {
+        // Display tooltip
+        if (event) {
+            // generate the html sub string for d.H1 ppm which is an array
+
+            // When numProtons is 0
+            if (d.numProtons == 0) {
+                var htmlstr =  `C${d.id} <b>${generateHTMLnumProtonsString(d.numProtons)}</b>: <sup>13</sup>C = ${d.ppm.toFixed(2)} ppm`;
+            } else if (d.H1_ppm.length == 1) {
+                // Expect d.H1 to be an array of length 1
+                var htmlstr =  `C${d.id} <b>${generateHTMLnumProtonsString(d.numProtons)}</b>: <sup>13</sup>C = ${d.ppm.toFixed(2)} ppm, <sup>1</sup>H = ${d.H1_ppm[0].toFixed(2)} ppm`;
+                    // htmlstr = htmlstr + `<br>J's : ${d.jCouplingClass[0]} : ${d.jCouplingVals[0]} Hz`;
+            } else {
+                // Expect d.H1 to be an array of length 2
+                var htmlstr =  `C${d.id} <b>${generateHTMLnumProtonsString(d.numProtons)}</b>: <sup>13</sup>C = ${d.ppm.toFixed(2)} ppm, <sup>1</sup>H = ${d.H1_ppm[0].toFixed(2)} & ${d.H1_ppm[1].toFixed(2)} ppm`;
+                // add the J coupling values
+                // htmlstr = htmlstr + `<br>J's : ${d.jCouplingClass[0]} : ${d.jCouplingVals[0]} Hz, ${d.jCouplingClass[1]} : ${d.jCouplingVals[1]} Hz`;
+            }
+
+            // var htmlstr =  `C${d.id} ${generateHTMLnumProtonsString(d.numProtons)}: <sup>13</sup>C = ${d.ppm.toFixed(2)} ppm, <sup>1</sup>H = xxx ppm`;
+            tooltip.transition()
+                .duration(200)
+                .style("opacity", 9.75);
+            tooltip.html(htmlstr)    
+                .style("left", (-99999) + "px")
+                .style("top", (-99999) + "px")
+                .style("display", "inline-block");
+
+            var tooltipDiv = d3.select('#tooltip');
+
+            // Get the corresponding DOM element
+            var tooltipNode = tooltipDiv.node();
+
+            var pageWidth = document.documentElement.clientWidth;
+
+            // Get the dimensions of the div element
+            var tooltipWidth = tooltipNode.clientWidth;
+            var tooltipHeight = tooltipNode.clientHeight;
+            var tooltipX = (pageWidth - tooltipWidth) / 2;
+
+            tooltip.html(htmlstr) 
+                .style("left", (tooltipX) + "px")
+                .style("top", (30) + "px")
+                .style("display", "inline-block");
+            // Increase the radius
+            d3.select(event.target)
+                .transition()
+                .duration(100)
+                .attr("r", nodeRadiusLarge);
+
+            // select all the nodes circles
+            // var circlenodes = document.querySelectorAll('.node circle');
+
+            // Define the attribute to find nearest neighbors
+            const attribute = "hmbc";
+            const attribute2 = "noesy";
+            
+            // Call the function to find nearest neighbors
+            const hmbcNearestNodes = findNearestNeighbors(d.id, attribute);
+            const noesyNearestNodes = findNearestNeighbors(d.id, attribute2);
+
+            const nearestNeighborIDs = hmbcNearestNodes.neighbors;
+            const nearestNeighborIDs2 = noesyNearestNodes.neighbors;
+    
+            // change the fill color of non-neighbors to grey
+            // hmbcNearestNodes.nonNeighbors.forEach(nonNeighborId => {
+            //     circlenodes[nonNeighborId-1].style.fill = nodeHoverColor;
+            // });
+            // change the opacity of the nodes to 0.5
+            hmbcNearestNodes.nonNeighbors.forEach(nonNeighborId => {
+                circlenodes[nonNeighborId-1].style.opacity = nodeHoverOpacity;
+            });
+            // set the font colour to grey for all the text nodes
+            hmbcNearestNodes.nonNeighbors.forEach(i => {
+                var ii = (i-1)*2;
+                textnodes[ii].style.fill = nodeHoverColor;
+                textnodes[ii+1].style.fill = nodeHoverColor;
+            });
+
+            // set the text opacity to 0 for all the non-neighbors
+            hmbcNearestNodes.nonNeighbors.forEach(i => {
+                var ii = (i-1)*2;
+                textnodes[ii].style.opacity = textHoverOpacity;
+                textnodes[ii+1].style.opacity = textHoverOpacity;
+            });
+
+            // decrease the size of the circles for the non-neighbors to 10
+            hmbcNearestNodes.nonNeighbors.forEach(nonNeighborId => {
+                circlenodes[nonNeighborId-1].setAttribute("r", nodeRadiusSmall);
+            });
+
+            // increase the size of the circles for the nearest neighbors
+            nearestNeighborIDs.forEach(neighborID => {
+                circlenodes[neighborID-1].setAttribute("r", nodeRadiusLarge);
+            });
+
+            // change the opacity of the cosy links to 0
+            link.style("opacity", 0);
+
+            // Add hmbc links to nearest neighbors
+            nearestNeighborIDs.forEach(neighborID => {
+                const neighborNode = nodes.find(node => node.id === neighborID);
+                if (neighborNode) {
+                    const link = svg.insert("line", ".node")
+                        .attr("class", "link")
+                        .attr("x1", d.x)
+                        .attr("y1", d.y)
+                        .attr("x2", neighborNode.x)
+                        .attr("y2", neighborNode.y)
+                        .attr("stroke", grey)
+                        .attr("stroke-width", hmbcEdgeWidth); // Set the stroke width to 2 pixels
+                    hmbcLinks.push(link); // Track the hmbc links
+                }
+            });
+
+            nearestNeighborIDs2.forEach(neighborID => {
+                const neighborNode = nodes.find(node => node.id === neighborID);
+                    if (neighborNode) {
+                        // Calculate control points for the curve
+                        // const control1X = d.x + (neighborNode.x - d.x) / 3;
+                        // const control1Y = d.y;
+                        // const control2X = neighborNode.x - (neighborNode.x - d.x) / 3;
+                        // const control2Y = neighborNode.y;
+
+                        const path = d3.path();
+                        path.moveTo(d.x, d.y);
+                        path.quadraticCurveTo(0, 0, neighborNode.x, neighborNode.y);
+
+                        const link = svg.insert("path", ".node")
+                            .attr("class", "link")
+                            .attr("fill", "none")
+                            .attr("stroke", grey)
+                            .attr("stroke-width", noesyEdgeWidth) // Set the stroke width to 7 pixels
+                            .attr("stroke-dasharray", "5,5") // Set the stroke-dasharray for dashed lines
+                            .attr("d", path); // Generate the curved link path using cubic Bezier curve
+                        hmbcLinks.push(link); // Track the hmbc links
+                    }
+            });
+        }
+    }
+
+    // Function to handle mouseout event
+    function handleMouseOut(event, d) {
+        // set the opacity of all the circles to 1
+        // var circlenodes = document.querySelectorAll('.node circle');
+
+        // change the opacity of the text nodes to 1
+        textnodes.forEach( t => {
+            t.style.opacity = 1;
+        });
+
+        // reset the font colour of the text in the nodes to black
+        textnodes.forEach( t => {
+            t.style.fill = 'black';
+        });
+
+        // set the opacity of all the nodes to 1
+        circlenodes.forEach( c => {
+            c.style.opacity = 1;
+        });
+
+        // reset the fill color of all the circles to their original color
+        // loop through the nodes to get the id and numProtons
+        nodes.forEach(d => {
+            circlenodes[d.id-1].style.fill = colorScale(d.numProtons);
+            // reset the size of the circles
+            circlenodes[d.id-1].setAttribute("r", nodeRadius);
+        }
+        );
+
+        // Hide the tooltip
+        tooltip.transition()
+                .duration(100)
+                .style("opacity", 0);
+        // Revert the radius
+        d3.select(event.target)
+            .transition()
+            .duration(100)
+            .attr("r", nodeRadius);
+
+        // Remove hmbc links
+        hmbcLinks.forEach(link => link.remove());
+        hmbcLinks = []; // Clear the hmbc links array
+
+        // change the opacity of the cosy links to 1
+        link.style("opacity", 1);
+    }
+
+    function generateHTMLnumProtonsString(index) {
+        switch (index) {
+            case 0:
+            return "-C-";
+            case 1:
+            return "-CH";
+            case 2:
+            return "-CH<sub>2</sub>";
+            case 3:
+            return "-CH<sub>3</sub>";
+            default:
+            return "<p>Invalid index</p>";
+        }
+    }
+  </script>
+</body>
+</html>
