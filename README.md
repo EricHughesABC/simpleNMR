@@ -1,3 +1,8 @@
+-----
+Please be aware that we have developed *simpleNMR* to be embedded in MNOVA software tools and the results are now displayed in an interactive HTML file. The calculations are performed on a server hosted on pythonanywhere.com
+The home page and help can be found at [simplenmr.pythonanywhere.com](https://simplenmr.pythonanywhere.com/).   The server software uses flask and the github site for the software is at [simpleNMRtools](https://github.com/EricHughesABC/simpleNMRtools) if you want to download it and run it locally.  There are examples of how to run simpleNMR using JEOL jason and Bruker Topspin in the following repos: [simpleNMRjeolTools](https://github.com/EricHughesABC/simpleNMRjeolTools)  and [simpleNMRBrukerTools](https://github.com/EricHughesABC/simpleNMRbrukerTools), but they are less developed.
+-----
+
 # simpleNMR
 
 simpleNMR is a Python/QT5/matPlotlib program. It runs on Windows and MacOS. The aim of the software is to present the information derived from processing NMR spectra using commercial software such as MestReNova (chemical shifts, integrals, coupling patterns, and correlations from standard 2D experiments) in a way that makes it easier for the user to understand and keep track of the information while verifying a proposed structure.
